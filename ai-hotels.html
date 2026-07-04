@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حوس بيا - المستشار الذكي للفنادق</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ===== AI HOTELS PAGE STYLES ===== */
+        :root {
+            --ai-glow: 0 0 30px rgba(14,165,233, 0.4);
+        }
+
+        /* Hero */
+        .ai-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #0d2b3e 50%, #0f172a 100%);
+            padding: 80px 20px 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .ai-hero::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at 50% 0%, rgba(14,165,233,0.25) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .ai-brain-icon {
+            width: 100px; height: 100px;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border-radius: 30px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; color: white;
+            margin: 0 auto 30px;
+            box-shadow: 0 0 30px rgba(14,165,233,0.5);
+            animation: pulse-teal 2s infinite;
+            position: relative; z-index: 1;
+        }
+        @keyframes pulse-teal {
+            0%, 100% { box-shadow: 0 0 20px rgba(14,165,233,0.4); }
+            50% { box-shadow: 0 0 60px rgba(14,165,233,0.9), 0 0 90px rgba(20,184,166,0.3); }
+        }
+        .ai-hero h1 { font-size: 3rem; font-weight: 900; color: white; position: relative; z-index: 1; margin-bottom: 15px; }
+        .ai-hero h1 span { color: #0ea5e9; }
+        .ai-hero p { color: #94a3b8; font-size: 1.15rem; max-width: 600px; margin: 0 auto 40px; position: relative; z-index: 1; }
+        .ai-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(14,165,233,0.15); border: 1px solid rgba(14,165,233,0.4);
+            color: #0ea5e9; padding: 8px 20px; border-radius: 30px;
+            font-size: 0.9rem; font-weight: 700;
+            position: relative; z-index: 1; margin-bottom: 30px;
+        }
+
+        /* Stats row */
+        .hero-stats {
+            display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;
+            position: relative; z-index: 1; margin-top: 10px;
+        }
+        .hero-stat { text-align: center; }
+        .hero-stat-num { font-size: 1.8rem; font-weight: 900; color: #0ea5e9; display: block; }
+        .hero-stat-lbl { color: #64748b; font-size: 0.8rem; }
+
+        /* Step Progress Bar */
+        .steps-wrapper { max-width: 700px; margin: -30px auto 0; position: relative; z-index: 10; padding: 0 20px; }
+        .steps-bar {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 20px 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .step-item { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; }
+        .step-circle {
+            width: 44px; height: 44px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; font-weight: 800; transition: 0.4s;
+            border: 2px solid var(--border-color); color: var(--text-sec);
+            background: var(--main-bg);
+        }
+        .step-circle.active { background: #0ea5e9; border-color: #0ea5e9; color: white; box-shadow: 0 0 20px rgba(14,165,233,0.5); }
+        .step-circle.done  { background: #14b8a6; border-color: #14b8a6; color: white; }
+        .step-label { font-size: 0.8rem; color: var(--text-sec); text-align: center; font-weight: 600; }
+        .step-label.active { color: #0ea5e9; }
+        .step-label.done   { color: #14b8a6; }
+        .step-line { flex: 1; height: 2px; background: var(--border-color); margin: 0 10px; margin-bottom: 22px; transition: 0.4s; }
+        .step-line.done { background: #14b8a6; }
+
+        /* Wizard Panels */
+        .wizard-wrapper { max-width: 900px; margin: 40px auto; padding: 0 20px 80px; }
+        .wizard-panel { display: none; }
+        .wizard-panel.active { display: block; animation: fadeSlide 0.4s ease; }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .panel-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 25px; padding: 40px;
+        }
+        .panel-title  { font-size: 1.6rem; font-weight: 800; color: white; margin-bottom: 8px; }
+        .panel-subtitle { color: var(--text-sec); margin-bottom: 35px; font-size: 1rem; }
+
+        /* Preference Cards Grid */
+        .prefs-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;
+        }
+        .pref-card {
+            background: var(--main-bg); border: 2px solid var(--border-color);
+            border-radius: 16px; padding: 20px 12px; text-align: center;
+            cursor: pointer; transition: 0.3s; user-select: none;
+        }
+        .pref-card:hover { border-color: #0ea5e9; transform: translateY(-3px); }
+        .pref-card.selected {
+            border-color: #0ea5e9; background: rgba(14,165,233,0.1);
+            box-shadow: 0 0 20px rgba(14,165,233,0.25);
+        }
+        .pref-card.selected .pref-icon { transform: scale(1.15); }
+        .pref-icon  { font-size: 2rem; margin-bottom: 10px; display: block; transition: 0.3s; }
+        .pref-label { font-size: 0.9rem; font-weight: 700; color: white; }
+        .pref-check {
+            width: 22px; height: 22px; border-radius: 50%;
+            background: #0ea5e9; color: white;
+            font-size: 0.7rem; display: none;
+            align-items: center; justify-content: center;
+            margin: 8px auto 0;
+        }
+        .pref-card.selected .pref-check { display: flex; }
+
+        /* Stars Selector */
+        .stars-selector {
+            display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 30px;
+        }
+        .star-pill {
+            padding: 10px 22px; border-radius: 30px;
+            border: 2px solid var(--border-color); color: var(--text-sec);
+            cursor: pointer; transition: 0.3s; font-weight: 700; font-size: 0.9rem;
+            background: var(--main-bg); display: flex; align-items: center; gap: 6px;
+        }
+        .star-pill:hover { border-color: #f59e0b; color: #f59e0b; }
+        .star-pill.selected { border-color: #f59e0b; background: rgba(245,158,11,0.12); color: #f59e0b; }
+
+        /* City Selector */
+        .cities-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px;
+        }
+        .city-card {
+            background: var(--main-bg); border: 2px solid var(--border-color);
+            border-radius: 14px; padding: 16px 12px; text-align: center;
+            cursor: pointer; transition: 0.3s;
+        }
+        .city-card:hover { border-color: #14b8a6; transform: translateY(-2px); }
+        .city-card.selected { border-color: #14b8a6; background: rgba(20,184,166,0.1); }
+        .city-icon  { font-size: 1.6rem; display: block; margin-bottom: 6px; }
+        .city-label { font-size: 0.85rem; font-weight: 700; color: white; }
+        .city-sub   { font-size: 0.72rem; color: var(--text-sec); margin-top: 3px; }
+
+        /* Nights Pills */
+        .nights-pills { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; }
+        .nights-pill {
+            padding: 10px 22px; border-radius: 30px;
+            border: 2px solid var(--border-color); color: var(--text-sec);
+            cursor: pointer; transition: 0.3s; font-weight: 700; font-size: 0.9rem;
+            background: var(--main-bg);
+        }
+        .nights-pill:hover  { border-color: #0ea5e9; color: #0ea5e9; }
+        .nights-pill.selected { border-color: #0ea5e9; background: rgba(14,165,233,0.12); color: #0ea5e9; }
+
+        /* Amenity Toggles */
+        .amenities-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px;
+        }
+        .amenity-card {
+            background: var(--main-bg); border: 2px solid var(--border-color);
+            border-radius: 14px; padding: 14px; text-align: center;
+            cursor: pointer; transition: 0.3s;
+        }
+        .amenity-card:hover   { border-color: #0ea5e9; }
+        .amenity-card.selected { border-color: #0ea5e9; background: rgba(14,165,233,0.1); }
+        .amenity-icon  { font-size: 1.5rem; display: block; margin-bottom: 6px; }
+        .amenity-label { font-size: 0.82rem; font-weight: 700; color: white; }
+
+        /* Budget Slider */
+        .budget-slider-wrap { margin-bottom: 30px; }
+        .budget-labels { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.85rem; color: var(--text-sec); }
+        .budget-value { font-size: 2rem; font-weight: 900; color: #0ea5e9; text-align: center; margin-bottom: 15px; direction: ltr; }
+        input[type="range"] {
+            width: 100%; height: 6px;
+            -webkit-appearance: none; appearance: none;
+            border-radius: 5px; outline: none;
+            background: linear-gradient(to left,
+                #0ea5e9 0%, #0ea5e9 var(--range-pct, 30%),
+                var(--border-color) var(--range-pct, 30%), var(--border-color) 100%);
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 22px; height: 22px;
+            background: #0ea5e9; border-radius: 50%;
+            cursor: pointer; box-shadow: 0 0 10px rgba(14,165,233,0.6);
+        }
+
+        /* Guest Selector */
+        .guests-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 30px; }
+        .guest-card {
+            background: var(--main-bg); border: 2px solid var(--border-color);
+            border-radius: 14px; padding: 18px 10px; text-align: center;
+            cursor: pointer; transition: 0.3s;
+        }
+        .guest-card:hover   { border-color: #0ea5e9; }
+        .guest-card.selected { border-color: #0ea5e9; background: rgba(14,165,233,0.1); }
+        .guest-icon  { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+        .guest-label { font-size: 0.85rem; font-weight: 700; color: white; }
+        .guest-desc  { font-size: 0.72rem; color: var(--text-sec); margin-top: 4px; }
+
+        /* Navigation Buttons */
+        .wizard-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+        .btn-prev {
+            background: transparent; border: 2px solid var(--border-color);
+            color: var(--text-sec); padding: 14px 30px; border-radius: 12px;
+            font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.3s;
+            font-family: 'Changa', sans-serif;
+        }
+        .btn-prev:hover { border-color: white; color: white; }
+        .btn-next, .btn-analyze {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: #0f172a; border: none; padding: 14px 35px; border-radius: 12px;
+            font-size: 1.05rem; font-weight: 800; cursor: pointer; transition: 0.3s;
+            font-family: 'Changa', sans-serif; display: flex; align-items: center; gap: 10px;
+        }
+        .btn-next:hover, .btn-analyze:hover {
+            transform: translateY(-2px); box-shadow: 0 10px 30px rgba(14,165,233,0.5);
+        }
+        .selection-counter { font-size: 0.9rem; color: var(--text-sec); }
+        .selection-counter span { color: #0ea5e9; font-weight: 700; }
+
+        /* AI Loading */
+        .ai-loading { display: none; text-align: center; padding: 60px 20px; }
+        .ai-loading.active { display: block; }
+        .loading-brain {
+            width: 120px; height: 120px;
+            background: linear-gradient(135deg, #0ea5e9, #14b8a6);
+            border-radius: 30px; margin: 0 auto 30px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 4rem; color: white;
+            animation: analyzing 1.5s ease-in-out infinite;
+        }
+        @keyframes analyzing {
+            0%   { transform: scale(1)    rotate(0deg);  box-shadow: 0 0 20px rgba(14,165,233,0.4); }
+            25%  { transform: scale(1.05) rotate(-3deg); box-shadow: 0 0 50px rgba(14,165,233,0.8); }
+            50%  { transform: scale(1)    rotate(0deg);  box-shadow: 0 0 20px rgba(20,184,166,0.4); }
+            75%  { transform: scale(1.05) rotate(3deg);  box-shadow: 0 0 50px rgba(20,184,166,0.8); }
+            100% { transform: scale(1)    rotate(0deg);  box-shadow: 0 0 20px rgba(14,165,233,0.4); }
+        }
+        .loading-status { font-size: 1.2rem; color: white; font-weight: 700; margin-bottom: 10px; }
+        .loading-sub    { color: var(--text-sec); margin-bottom: 30px; }
+        .loading-bar-wrap {
+            max-width: 400px; margin: 0 auto 20px;
+            background: var(--border-color); border-radius: 10px; height: 8px; overflow: hidden;
+        }
+        .loading-bar-fill {
+            height: 100%; border-radius: 10px;
+            background: linear-gradient(90deg, #0ea5e9, #14b8a6);
+            animation: loadFill 2.5s ease-out forwards;
+        }
+        @keyframes loadFill { from { width: 0%; } to { width: 100%; } }
+        .loading-steps { display: flex; flex-direction: column; gap: 8px; max-width: 350px; margin: 0 auto; }
+        .loading-step  { display: flex; align-items: center; gap: 10px; color: var(--text-sec); font-size: 0.9rem; }
+        .loading-step.done { color: #0ea5e9; }
+        .loading-step i { width: 20px; text-align: center; }
+
+        /* Results */
+        .results-header {
+            background: linear-gradient(135deg, rgba(14,165,233,0.1), rgba(20,184,166,0.1));
+            border: 1px solid rgba(14,165,233,0.25); border-radius: 20px;
+            padding: 25px 30px; margin-bottom: 30px;
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;
+        }
+        .results-title    { font-size: 1.4rem; font-weight: 800; color: white; }
+        .results-subtitle { color: var(--text-sec); margin-top: 5px; font-size: 0.95rem; }
+        .results-count {
+            background: rgba(14,165,233,0.12); border: 1px solid rgba(14,165,233,0.3);
+            color: #0ea5e9; padding: 10px 20px; border-radius: 12px;
+            font-size: 1.3rem; font-weight: 900;
+        }
+        .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+
+        /* Hotel Result Card */
+        .result-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; overflow: hidden; transition: 0.3s; position: relative;
+        }
+        .result-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); border-color: rgba(14,165,233,0.3); }
+        .result-card-image {
+            height: 190px; background-size: cover; background-position: center; position: relative;
+        }
+        .result-card-image::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 55%;
+            background: linear-gradient(transparent, rgba(15,23,42,0.95));
+        }
+        .match-badge {
+            position: absolute; top: 14px; right: 14px; z-index: 2;
+            padding: 5px 13px; border-radius: 30px;
+            font-size: 0.82rem; font-weight: 800; color: white;
+        }
+        .match-badge.high   { background: linear-gradient(135deg, #10b981, #059669); }
+        .match-badge.medium { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+        .match-badge.low    { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+        .stars-badge {
+            position: absolute; top: 14px; left: 14px; z-index: 2;
+            background: rgba(0,0,0,0.55); padding: 5px 11px; border-radius: 20px;
+            color: #f59e0b; font-size: 0.82rem; font-weight: 700;
+        }
+        .wishlist-btn {
+            position: absolute; bottom: 14px; left: 14px; z-index: 2;
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2); color: white;
+            cursor: pointer; font-size: 0.95rem; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .wishlist-btn:hover, .wishlist-btn.liked { background: rgba(239,68,68,0.8); border-color: transparent; }
+        .result-card-body   { padding: 18px 20px; }
+        .result-card-name   { font-size: 1.12rem; font-weight: 800; color: white; margin-bottom: 5px; }
+        .result-card-loc    { font-size: 0.85rem; color: var(--text-sec); margin-bottom: 12px; display: flex; align-items: center; gap: 5px; }
+        .result-card-loc i  { color: #0ea5e9; }
+        .amenities-row      { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+        .amenity-tag {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);
+            padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; color: var(--text-sec);
+            display: flex; align-items: center; gap: 4px;
+        }
+        .amenity-tag i { color: #0ea5e9; font-size: 0.7rem; }
+
+        /* Match reasons */
+        .match-reasons {
+            background: rgba(14,165,233,0.05); border: 1px solid rgba(14,165,233,0.15);
+            border-radius: 12px; padding: 11px 14px; margin-bottom: 12px;
+        }
+        .match-reasons-title { font-size: 0.78rem; color: #0ea5e9; font-weight: 700; margin-bottom: 6px; }
+        .match-reason { font-size: 0.78rem; color: #94a3b8; display: flex; align-items: center; gap: 5px; }
+        .match-reason i { color: #0ea5e9; font-size: 0.68rem; }
+
+        .result-card-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid var(--border-color); padding-top: 13px;
+        }
+        .result-price       { font-size: 1.1rem; font-weight: 900; color: white; }
+        .result-price span  { font-size: 0.78rem; color: var(--text-sec); font-weight: 400; }
+        .loyalty-hint {
+            background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
+            color: #f59e0b; padding: 3px 9px; border-radius: 20px; font-size: 0.76rem;
+            display: flex; align-items: center; gap: 4px; font-weight: 700;
+        }
+        .btn-book-result {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: #0f172a; border: none; padding: 9px 18px; border-radius: 10px;
+            font-size: 0.88rem; font-weight: 800; cursor: pointer; transition: 0.3s;
+            font-family: 'Changa', sans-serif;
+        }
+        .btn-book-result:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(14,165,233,0.5); }
+
+        /* No results / Redo */
+        .no-results { text-align: center; padding: 60px 20px; display: none; }
+        .no-results i { font-size: 4rem; color: var(--text-sec); margin-bottom: 20px; display: block; }
+        .no-results h3 { color: white; font-size: 1.4rem; margin-bottom: 10px; }
+        .no-results p  { color: var(--text-sec); }
+        .redo-section {
+            text-align: center; margin-top: 40px; padding: 30px;
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px;
+        }
+        .btn-redo {
+            background: transparent; border: 2px solid #0ea5e9; color: #0ea5e9;
+            padding: 14px 35px; border-radius: 12px; font-size: 1rem; font-weight: 800;
+            cursor: pointer; transition: 0.3s; font-family: 'Changa', sans-serif;
+        }
+        .btn-redo:hover { background: #0ea5e9; color: #0f172a; }
+
+        /* Booking Modal */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+            z-index: 1000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 25px; width: 95%; max-width: 560px; max-height: 90vh; overflow-y: auto;
+        }
+        .modal-img { height: 200px; background-size: cover; background-position: center; position: relative; }
+        .modal-img-overlay { position: absolute; inset: 0; background: linear-gradient(transparent, rgba(15,23,42,0.92)); }
+        .modal-img-text { position: absolute; bottom: 20px; right: 20px; color: white; }
+        .modal-img-text h3 { font-size: 1.3rem; font-weight: 800; }
+        .modal-img-text p  { font-size: 0.88rem; color: #e2e8f0; }
+        .modal-close-btn {
+            position: absolute; top: 15px; left: 15px;
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(0,0,0,0.5); border: none; color: white;
+            cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center;
+        }
+        .modal-body { padding: 25px; }
+        .modal-price-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(14,165,233,0.08); border: 1px solid rgba(14,165,233,0.2);
+            border-radius: 12px; padding: 12px 18px; margin-bottom: 20px;
+        }
+        .modal-price   { font-size: 1.4rem; font-weight: 900; color: white; }
+        .modal-loyalty { color: #f59e0b; font-size: 0.9rem; font-weight: 700; }
+        .form-row   { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; color: var(--text-sec); font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px 15px;
+            background: var(--main-bg); border: 1px solid var(--border-color);
+            border-radius: 10px; color: white; font-family: 'Changa', sans-serif; font-size: 0.95rem;
+        }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #0ea5e9; }
+        .safe-badge {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 10px; padding: 10px 15px; margin-bottom: 20px;
+            color: #10b981; font-size: 0.85rem; font-weight: 600;
+        }
+        .btn-confirm {
+            width: 100%; background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: #0f172a; border: none; padding: 16px; border-radius: 12px;
+            font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s;
+            font-family: 'Changa', sans-serif;
+        }
+        .btn-confirm:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(14,165,233,0.5); }
+
+        /* Success Modal */
+        .success-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            z-index: 1001; align-items: center; justify-content: center;
+        }
+        .success-overlay.active { display: flex; }
+        .success-box {
+            background: var(--card-bg); border: 1px solid rgba(14,165,233,0.4);
+            border-radius: 25px; padding: 50px; text-align: center; max-width: 420px;
+        }
+        .success-icon {
+            width: 90px; height: 90px; border-radius: 50%;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; color: white; margin: 0 auto 25px;
+            box-shadow: 0 0 30px rgba(14,165,233,0.5);
+        }
+        .success-title  { font-size: 1.6rem; font-weight: 800; color: white; margin-bottom: 10px; }
+        .success-text   { color: var(--text-sec); margin-bottom: 20px; }
+        .success-points {
+            background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 12px; padding: 15px; margin-bottom: 25px;
+            color: #f59e0b; font-size: 1.1rem; font-weight: 700;
+        }
+        .btn-close-success {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: #0f172a; border: none; padding: 14px 40px; border-radius: 12px;
+            font-size: 1rem; font-weight: 800; cursor: pointer; font-family: 'Changa', sans-serif;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .prefs-grid, .guests-grid { grid-template-columns: repeat(2, 1fr); }
+            .cities-grid, .amenities-grid { grid-template-columns: repeat(2, 1fr); }
+            .ai-hero h1  { font-size: 2.2rem; }
+            .panel-card  { padding: 25px 18px; }
+            .form-row    { grid-template-columns: 1fr; }
+            .results-header { flex-direction: column; }
+            .steps-bar   { padding: 15px; }
+            .step-label  { font-size: 0.68rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+    <div class="header-inner">
+        <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <nav>
+            <a href="index.html" >الرئيسية</a>
+            <a href="programs.html">البرامج</a>
+            <a href="ai-programmes.html"> المستشار السياحي</a>
+            <a href="ai-hotels.html" class="active">المستشار الفندقي</a>
+            <a href="hotels.html" >الفنادق</a>
+            <a href="souvenirs.html">التذكارات</a>
+            <a href="bookings.html">حجوزاتي</a>
+            <a href="contact.html">اتصل بنا</a>
+        </nav>
+        <div class="header-actions">
+            <button class="theme-toggle" onclick="toggleTheme()" title="تغيير المظهر">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+            <div id="authArea"></div>
+        </div>
+    </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="ai-hero">
+    <div class="ai-brain-icon"><i class="fas fa-hotel"></i></div>
+    <div class="ai-badge"><i class="fas fa-magic"></i> ذكاء اصطناعي مخصص للفنادق</div>
+    <h1>اعثر على <span>فندقك المثالي</span><br>بلمسة ذكية</h1>
+    <p>أجب على أسئلة بسيطة ونختار لك أفضل الفنادق التي تناسب ذوقك وميزانيتك وعدد ليالي إقامتك تماماً</p>
+    <div class="hero-stats">
+        <div class="hero-stat">
+            <span class="hero-stat-num">+30</span>
+            <span class="hero-stat-lbl">فندق ونزل</span>
+        </div>
+        <div class="hero-stat">
+            <span class="hero-stat-num">5⭐</span>
+            <span class="hero-stat-lbl">أعلى تصنيف</span>
+        </div>
+        <div class="hero-stat">
+            <span class="hero-stat-num">97%</span>
+            <span class="hero-stat-lbl">رضا العملاء</span>
+        </div>
+    </div>
+</section>
+
+<!-- ===== STEPS BAR ===== -->
+<div class="steps-wrapper">
+    <div class="steps-bar">
+        <div class="step-item">
+            <div class="step-circle active" id="sc1"><i class="fas fa-sliders-h"></i></div>
+            <div class="step-label active" id="sl1">التفضيلات</div>
+        </div>
+        <div class="step-line" id="line1"></div>
+        <div class="step-item">
+            <div class="step-circle" id="sc2">2</div>
+            <div class="step-label" id="sl2">الإقامة</div>
+        </div>
+        <div class="step-line" id="line2"></div>
+        <div class="step-item">
+            <div class="step-circle" id="sc3">3</div>
+            <div class="step-label" id="sl3">الميزانية</div>
+        </div>
+        <div class="step-line" id="line3"></div>
+        <div class="step-item">
+            <div class="step-circle" id="sc4"><i class="fas fa-list"></i></div>
+            <div class="step-label" id="sl4">النتائج</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== WIZARD ===== -->
+<div class="wizard-wrapper">
+
+    <!-- STEP 1: Preferences & City -->
+    <div class="wizard-panel active" id="step1">
+        <div class="panel-card" data-aos="fade-up">
+            <h2 class="panel-title"><i class="fas fa-sliders-h" style="color:#0ea5e9"></i> ما الذي تبحث عنه في فندقك؟</h2>
+            <p class="panel-subtitle">اختر واحدة أو أكثر من المميزات المهمة لك</p>
+
+            <div class="prefs-grid">
+                <div class="pref-card" data-type="هدوء" onclick="togglePref(this)">
+                    <span class="pref-icon">🤫</span>
+                    <div class="pref-label">هدوء وراحة</div>
+                    <div class="pref-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="pref-card" data-type="إطلالة" onclick="togglePref(this)">
+                    <span class="pref-icon">🌅</span>
+                    <div class="pref-label">إطلالة جميلة</div>
+                    <div class="pref-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="pref-card" data-type="مسبح" onclick="togglePref(this)">
+                    <span class="pref-icon">🏊</span>
+                    <div class="pref-label">مسبح</div>
+                    <div class="pref-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="pref-card" data-type="فطور" onclick="togglePref(this)">
+                    <span class="pref-icon">🍳</span>
+                    <div class="pref-label">فطور شامل</div>
+                    <div class="pref-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="pref-card" data-type="موقع" onclick="togglePref(this)">
+                    <span class="pref-icon">📍</span>
+                    <div class="pref-label">قريب من المعالم</div>
+                    <div class="pref-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="pref-card" data-type="واي فاي" onclick="togglePref(this)">
+                    <span class="pref-icon">📶</span>
+                    <div class="pref-label">واي فاي سريع</div>
+                    <div class="pref-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="pref-card" data-type="عائلي" onclick="togglePref(this)">
+                    <span class="pref-icon">👨‍👩‍👧</span>
+                    <div class="pref-label">صديق للعائلات</div>
+                    <div class="pref-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="pref-card" data-type="فاخر" onclick="togglePref(this)">
+                    <span class="pref-icon">💎</span>
+                    <div class="pref-label">فخامة وتميز</div>
+                    <div class="pref-check"><i class="fas fa-check"></i></div>
+                </div>
+            </div>
+
+            <p style="color:var(--text-sec); font-weight:700; margin-bottom:14px; margin-top:10px;"><i class="fas fa-map-marker-alt" style="color:#0ea5e9; margin-left:6px;"></i> أي مدينة تفضل؟</p>
+            <div class="cities-grid">
+                <div class="city-card selected" data-city="أي مدينة" onclick="selectCity(this)">
+                    <span class="city-icon">🌍</span>
+                    <div class="city-label">أي مدينة</div>
+                    <div class="city-sub">اعرض الكل</div>
+                </div>
+                <div class="city-card" data-city="الأغواط" onclick="selectCity(this)">
+                    <span class="city-icon">🏜️</span>
+                    <div class="city-label">الأغواط</div>
+                    <div class="city-sub">بوابة الصحراء</div>
+                </div>
+                <div class="city-card" data-city="تمنراست" onclick="selectCity(this)">
+                    <span class="city-icon">🏔️</span>
+                    <div class="city-label">تمنراست</div>
+                    <div class="city-sub">قلب الأهقار</div>
+                </div>
+                <div class="city-card" data-city="غرداية" onclick="selectCity(this)">
+                    <span class="city-icon">🕌</span>
+                    <div class="city-label">غرداية</div>
+                    <div class="city-sub">تراث اليونسكو</div>
+                </div>
+                <div class="city-card" data-city="وهران" onclick="selectCity(this)">
+                    <span class="city-icon">🌊</span>
+                    <div class="city-label">وهران</div>
+                    <div class="city-sub">جوهرة الغرب</div>
+                </div>
+                <div class="city-card" data-city="قسنطينة" onclick="selectCity(this)">
+                    <span class="city-icon">🌉</span>
+                    <div class="city-label">قسنطينة</div>
+                    <div class="city-sub">مدينة الجسور</div>
+                </div>
+            </div>
+
+            <p style="color:var(--text-sec); font-weight:700; margin-bottom:14px; margin-top:10px;"><i class="fas fa-star" style="color:#f59e0b; margin-left:6px;"></i> تصنيف الفندق المفضل؟</p>
+            <div class="stars-selector">
+                <div class="star-pill selected" data-stars="0" onclick="selectStars(this)">⭐ أي تصنيف</div>
+                <div class="star-pill" data-stars="2" onclick="selectStars(this)">⭐⭐ نجمتان فأكثر</div>
+                <div class="star-pill" data-stars="3" onclick="selectStars(this)">⭐⭐⭐ 3 نجوم فأكثر</div>
+                <div class="star-pill" data-stars="4" onclick="selectStars(this)">⭐⭐⭐⭐ 4 نجوم فأكثر</div>
+                <div class="star-pill" data-stars="5" onclick="selectStars(this)">⭐⭐⭐⭐⭐ 5 نجوم</div>
+            </div>
+
+            <div class="wizard-nav">
+                <span class="selection-counter">تم اختيار <span id="prefCount">0</span> تفضيل</span>
+                <button class="btn-next" onclick="goStep(2)">التالي <i class="fas fa-arrow-left"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 2: Stay Details -->
+    <div class="wizard-panel" id="step2">
+        <div class="panel-card" data-aos="fade-up">
+            <h2 class="panel-title"><i class="fas fa-bed" style="color:#f59e0b"></i> تفاصيل الإقامة</h2>
+            <p class="panel-subtitle">أخبرنا بمدة إقامتك ومن سيرافقك</p>
+
+            <p style="color:var(--text-sec); font-weight:700; margin-bottom:12px;">عدد الليالي المطلوب؟</p>
+            <div class="nights-pills">
+                <div class="nights-pill" data-nights="1" onclick="selectNights(this)">ليلة واحدة</div>
+                <div class="nights-pill" data-nights="2" onclick="selectNights(this)">ليلتان</div>
+                <div class="nights-pill" data-nights="3" onclick="selectNights(this)">3 ليالٍ</div>
+                <div class="nights-pill" data-nights="5" onclick="selectNights(this)">5 ليالٍ</div>
+                <div class="nights-pill" data-nights="7" onclick="selectNights(this)">أسبوع كامل</div>
+                <div class="nights-pill" data-nights="14" onclick="selectNights(this)">أكثر من أسبوع</div>
+            </div>
+
+            <p style="color:var(--text-sec); font-weight:700; margin-bottom:12px; margin-top:28px;">مع من ستقيم؟</p>
+            <div class="guests-grid">
+                <div class="guest-card" data-type="منفرد" onclick="selectGuest(this)">
+                    <span class="guest-icon">🧍</span>
+                    <div class="guest-label">منفرد</div>
+                    <div class="guest-desc">غرفة مفردة</div>
+                </div>
+                <div class="guest-card" data-type="زوجين" onclick="selectGuest(this)">
+                    <span class="guest-icon">👫</span>
+                    <div class="guest-label">زوجين</div>
+                    <div class="guest-desc">غرفة مزدوجة</div>
+                </div>
+                <div class="guest-card" data-type="عائلة" onclick="selectGuest(this)">
+                    <span class="guest-icon">👨‍👩‍👧‍👦</span>
+                    <div class="guest-label">عائلة</div>
+                    <div class="guest-desc">جناح عائلي</div>
+                </div>
+                <div class="guest-card" data-type="مجموعة" onclick="selectGuest(this)">
+                    <span class="guest-icon">👥</span>
+                    <div class="guest-label">مجموعة</div>
+                    <div class="guest-desc">غرف متعددة</div>
+                </div>
+            </div>
+
+            <p style="color:var(--text-sec); font-weight:700; margin-bottom:12px; margin-top:28px;">المرافق التي تريدها؟</p>
+            <div class="amenities-grid">
+                <div class="amenity-card" data-amenity="واي فاي مجاني" onclick="toggleAmenity(this)">
+                    <span class="amenity-icon">📶</span>
+                    <div class="amenity-label">واي فاي مجاني</div>
+                </div>
+                <div class="amenity-card" data-amenity="فطور" onclick="toggleAmenity(this)">
+                    <span class="amenity-icon">🍳</span>
+                    <div class="amenity-label">فطور مشمول</div>
+                </div>
+                <div class="amenity-card" data-amenity="مسبح" onclick="toggleAmenity(this)">
+                    <span class="amenity-icon">🏊</span>
+                    <div class="amenity-label">مسبح</div>
+                </div>
+                <div class="amenity-card" data-amenity="موقف سيارات" onclick="toggleAmenity(this)">
+                    <span class="amenity-icon">🅿️</span>
+                    <div class="amenity-label">موقف سيارات</div>
+                </div>
+                <div class="amenity-card" data-amenity="مطعم" onclick="toggleAmenity(this)">
+                    <span class="amenity-icon">🍽️</span>
+                    <div class="amenity-label">مطعم داخلي</div>
+                </div>
+                <div class="amenity-card" data-amenity="تكييف" onclick="toggleAmenity(this)">
+                    <span class="amenity-icon">❄️</span>
+                    <div class="amenity-label">تكييف هواء</div>
+                </div>
+            </div>
+
+            <div class="wizard-nav">
+                <button class="btn-prev" onclick="goStep(1)"><i class="fas fa-arrow-right"></i> السابق</button>
+                <button class="btn-next" onclick="goStep(3)">التالي <i class="fas fa-arrow-left"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 3: Budget -->
+    <div class="wizard-panel" id="step3">
+        <div class="panel-card" data-aos="fade-up">
+            <h2 class="panel-title"><i class="fas fa-wallet" style="color:#f59e0b"></i> ما هي ميزانيتك للليلة الواحدة؟</h2>
+            <p class="panel-subtitle">حرك المؤشر لتحديد الحد الأقصى للسعر بالليلة بالدينار الجزائري</p>
+
+            <div class="budget-slider-wrap">
+                <div class="budget-value" id="budgetDisplay">5,000 دج / ليلة</div>
+                <input type="range" id="budgetSlider" min="500" max="20000" step="500" value="5000"
+                    oninput="updateBudget(this.value)">
+                <div class="budget-labels">
+                    <span>500 دج</span>
+                    <span>اقتصادي</span>
+                    <span>فاخر</span>
+                    <span>20,000 دج</span>
+                </div>
+            </div>
+
+            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:20px;">
+                <p style="color:var(--text-sec); font-weight:700; margin-bottom:15px;"><i class="fas fa-calendar-alt" style="color:#0ea5e9; margin-left:8px;"></i> تواريخ الإقامة (اختياري)</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>تاريخ الوصول</label>
+                        <input type="date" id="checkInDate">
+                    </div>
+                    <div class="form-group">
+                        <label>تاريخ المغادرة</label>
+                        <input type="date" id="checkOutDate">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div style="background:linear-gradient(135deg, rgba(14,165,233,0.08), rgba(20,184,166,0.08)); border:1px solid rgba(14,165,233,0.2); border-radius:16px; padding:20px; margin-bottom:25px;">
+                <p style="color:white; font-weight:700; margin-bottom:15px;"><i class="fas fa-clipboard-list" style="color:#0ea5e9; margin-left:8px;"></i> ملخص اختياراتك</p>
+                <div style="display:flex; flex-wrap:wrap; gap:10px;" id="prefSummary"></div>
+            </div>
+
+            <div class="wizard-nav">
+                <button class="btn-prev" onclick="goStep(2)"><i class="fas fa-arrow-right"></i> السابق</button>
+                <button class="btn-analyze" onclick="runAI()">
+                    <i class="fas fa-search-location"></i> ابحث عن الفندق المثالي
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI LOADING -->
+    <div class="ai-loading" id="aiLoading">
+        <div class="loading-brain"><i class="fas fa-hotel"></i></div>
+        <p class="loading-status">الذكاء الاصطناعي يبحث عن فندقك المثالي...</p>
+        <p class="loading-sub">يرجى الانتظار بينما نحلل تفضيلاتك</p>
+        <div class="loading-bar-wrap">
+            <div class="loading-bar-fill" id="loadingBar"></div>
+        </div>
+        <div class="loading-steps">
+            <div class="loading-step" id="ls1"><i class="fas fa-circle-notch fa-spin"></i> تحليل تفضيلاتك</div>
+            <div class="loading-step" id="ls2"><i class="fas fa-clock"></i> مطابقة المرافق المطلوبة</div>
+            <div class="loading-step" id="ls3"><i class="fas fa-clock"></i> فلترة حسب الميزانية</div>
+            <div class="loading-step" id="ls4"><i class="fas fa-clock"></i> احتساب نقاط التوافق</div>
+        </div>
+    </div>
+
+    <!-- STEP 4: Results -->
+    <div class="wizard-panel" id="step4">
+        <div class="results-header" data-aos="fade-up">
+            <div>
+                <div class="results-title">🏨 فنادق مختارة خصيصاً لك</div>
+                <div class="results-subtitle" id="resultsSummaryText">بناءً على تفضيلاتك اخترنا أفضل الفنادق</div>
+            </div>
+            <div class="results-count" id="resultsCount">0 فندق</div>
+        </div>
+
+        <div class="results-grid" id="resultsGrid"></div>
+        <div class="no-results" id="noResults">
+            <i class="fas fa-bed"></i>
+            <h3>لم نجد فنادق مناسبة</h3>
+            <p>جرب رفع الميزانية أو تغيير المدينة والتفضيلات</p>
+        </div>
+
+        <div class="redo-section" data-aos="fade-up">
+            <p style="color:var(--text-sec); margin-bottom:15px;">هل تريد نتائج مختلفة؟</p>
+            <button class="btn-redo" onclick="resetWizard()">
+                <i class="fas fa-redo"></i> ابدأ البحث من جديد
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== BOOKING MODAL ===== -->
+<div class="modal-overlay" id="bookModal">
+    <div class="modal-box">
+        <div class="modal-img" id="modalImg">
+            <div class="modal-img-overlay"></div>
+            <button class="modal-close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-img-text">
+                <h3 id="modalTitle"></h3>
+                <p id="modalSubtitle"></p>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="modal-price-row">
+                <div>
+                    <div style="color:var(--text-sec); font-size:0.82rem; margin-bottom:4px;">السعر بالليلة</div>
+                    <div class="modal-price"><span id="modalPrice"></span> دج</div>
+                </div>
+                <div class="modal-loyalty"><i class="fas fa-star"></i> +<span id="modalPoints"></span> نقطة ولاء</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> الاسم الكامل</label>
+                    <input type="text" id="bkName" placeholder="اسمك الكامل">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> رقم الهاتف</label>
+                    <input type="tel" id="bkPhone" placeholder="0xxx xxx xxx">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-sign-in-alt"></i> تاريخ الوصول</label>
+                    <input type="date" id="bkCheckIn">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-sign-out-alt"></i> تاريخ المغادرة</label>
+                    <input type="date" id="bkCheckOut">
+                </div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-users"></i> عدد الأشخاص</label>
+                <select id="bkGuests">
+                    <option value="1">1 شخص</option>
+                    <option value="2" selected>2 أشخاص</option>
+                    <option value="3">3 أشخاص</option>
+                    <option value="4">4 أشخاص</option>
+                    <option value="5">5+ أشخاص</option>
+                </select>
+            </div>
+            <div class="safe-badge">
+                <i class="fas fa-shield-alt"></i>
+                حجز مجاني مع إلغاء مرن قبل 48 ساعة من موعد الوصول
+            </div>
+            <button class="btn-confirm" onclick="confirmBooking()">
+                <i class="fas fa-check-circle"></i> تأكيد الحجز
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SUCCESS MODAL ===== -->
+<div class="success-overlay" id="successModal">
+    <div class="success-box">
+        <div class="success-icon"><i class="fas fa-check"></i></div>
+        <h3 class="success-title">تم الحجز بنجاح! 🎉</h3>
+        <p class="success-text">سيتواصل معك فريق الفندق قريباً لتأكيد الحجز</p>
+        <div class="success-points">
+            <i class="fas fa-star"></i> ربحت <span id="successPoints">0</span> نقطة ولاء!
+        </div>
+        <button class="btn-close-success" onclick="closeSuccess()">رائع!</button>
+    </div>
+</div>
+
+<!-- AOS -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 600, once: true });
+
+// ==================== XSS PROTECTION ====================
+function escHtml(str) {
+    return String(str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+// ==================== THEME ====================
+function toggleTheme() {
+    const next = localStorage.getItem('theme') === 'light' ? 'dark' : 'light';
+    localStorage.setItem('theme', next);
+    document.body.classList.toggle('light-mode', next === 'light');
+    document.getElementById('themeIcon').className = next === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+}
+(function() {
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('themeIcon').className = 'fas fa-sun';
+    }
+})();
+
+// ==================== AUTH ====================
+function initAuth() {
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+    const area = document.getElementById('authArea') || document.getElementById('authLinks');
+    if (!area) return;
+    if (user) {
+        const name = user.name || user.originalName || user.username || 'مستخدم';
+        const initial = name.trim().charAt(0).toUpperCase();
+        area.innerHTML = `
+            <a href="profile.html" class="btn-auth-user">
+                <span class="auth-avatar"></span>
+                <span class="auth-name"></span>
+            </a>
+            <button class="btn-nav-logout" onclick="logout()" title="تسجيل الخروج" type="button"><i class="fas fa-sign-out-alt"></i></button>`;
+        area.querySelector('.auth-avatar').textContent = initial;
+        area.querySelector('.auth-name').textContent = name;
+    } else {
+        area.innerHTML = `<a href="login.html" class="btn-auth-login">
+            <i class="fas fa-sign-in-alt"></i> دخول</a>`;
+    }
+}
+window.logout = function () {
+    if (confirm('تسجيل الخروج؟')) { localStorage.removeItem('hawsbiyaUser'); location.reload(); }
+};
+initAuth();
+
+// ==================== FALLBACK HOTELS DATA ====================
+const FALLBACK_HOTELS = [
+    {
+        id:1, name:'فندق الواحة الكبير', location:'الأغواط', city:'الأغواط',
+        stars:4, pricePerNight:5500,
+        image:'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=600',
+        amenities:['واي فاي مجاني','فطور','مسبح','موقف سيارات','تكييف'],
+        description:'فندق فاخر في قلب الأغواط مع إطلالة رائعة على الواحة التاريخية',
+        tags:['هدوء','إطلالة','فاخر','عائلي'],
+        rating:4.7
+    },
+    {
+        id:2, name:'نزل الصحراء الأزرق', location:'الأغواط', city:'الأغواط',
+        stars:3, pricePerNight:2800,
+        image:'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&q=80&w=600',
+        amenities:['واي فاي مجاني','تكييف','موقف سيارات'],
+        description:'نزل هادئ واقتصادي مع موقع ممتاز في مركز المدينة',
+        tags:['هدوء','موقع','واي فاي'],
+        rating:4.2
+    },
+    {
+        id:3, name:'فندق الأهقار الأسطوري', location:'تمنراست', city:'تمنراست',
+        stars:5, pricePerNight:9500,
+        image:'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=600',
+        amenities:['واي فاي مجاني','فطور','مسبح','مطعم','موقف سيارات','تكييف'],
+        description:'تجربة إقامة استثنائية في قلب الصحراء الكبرى بإطلالة على جبال الأهقار',
+        tags:['فاخر','إطلالة','مسبح','فطور','هدوء'],
+        rating:4.9
+    },
+    {
+        id:4, name:'بيت الضيافة تمنراست', location:'تمنراست', city:'تمنراست',
+        stars:2, pricePerNight:1500,
+        image:'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&q=80&w=600',
+        amenities:['واي فاي مجاني','فطور','تكييف'],
+        description:'بيت ضيافة أصيل بأجواء بربرية صحراوية، اقتصادي ومريح',
+        tags:['هدوء','فطور','واي فاي'],
+        rating:4.3
+    },
+    {
+        id:5, name:'فندق القصبة غرداية', location:'غرداية', city:'غرداية',
+        stars:4, pricePerNight:4200,
+        image:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&q=80&w=600',
+        amenities:['واي فاي مجاني','فطور','مطعم','موقف سيارات','تكييف'],
+        description:'فندق تراثي داخل القصبة التاريخية مع وجبة فطور مغاربية أصيلة',
+        tags:['ثقافي','موقع','فطور','عائلي','إطلالة'],
+        rating:4.6
+    },
+    {
+        id:6, name:'فندق المدية سبليندور', location:'وهران', city:'وهران',
+        stars:5, pricePerNight:11000,
+        image:'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&q=80&w=600',
+        amenities:['واي فاي مجاني','فطور','مسبح','مطعم','موقف سيارات','تكييف'],
+        description:'فندق خمس نجوم فاخر مع مسبح على السطح وإطلالة على البحر الأبيض المتوسط',
+        tags:['فاخر','مسبح','إطلالة','فطور','عائلي'],
+        rating:4.8
+    },
+    {
+        id:7, name:'نزل السيرتا الذهبية', location:'قسنطينة', city:'قسنطينة',
+        stars:3, pricePerNight:3300,
+        image:'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&q=80&w=600',
+        amenities:['واي فاي مجاني','مطعم','تكييف','موقف سيارات'],
+        description:'نزل أنيق قريب من جسور قسنطينة الشهيرة بأسعار معقولة',
+        tags:['موقع','واي فاي','هدوء'],
+        rating:4.1
+    },
+    {
+        id:8, name:'فندق الأغواط بالاس', location:'الأغواط', city:'الأغواط',
+        stars:5, pricePerNight:8800,
+        image:'https://images.unsplash.com/photo-1601918774946-25832a4be0d6?auto=format&fit=crop&q=80&w=600',
+        amenities:['واي فاي مجاني','فطور','مسبح','مطعم','موقف سيارات','تكييف'],
+        description:'أفخم فنادق الأغواط مع خدمة على مدار الساعة ومسبح خارجي',
+        tags:['فاخر','مسبح','إطلالة','فطور','عائلي','هدوء'],
+        rating:4.9
+    }
+];
+
+// ==================== STATE ====================
+let selectedPrefs  = [];
+let selectedCity   = 'أي مدينة';
+let selectedStars  = 0;
+let selectedNights = 0;
+let selectedGuest  = '';
+let selectedAmenities = [];
+let budget         = 5000;
+let currentHotel   = null;
+
+// ==================== STEP 1: Prefs ====================
+function togglePref(card) {
+    card.classList.toggle('selected');
+    const type = card.dataset.type;
+    if (card.classList.contains('selected')) {
+        if (!selectedPrefs.includes(type)) selectedPrefs.push(type);
+    } else {
+        selectedPrefs = selectedPrefs.filter(p => p !== type);
+    }
+    document.getElementById('prefCount').textContent = selectedPrefs.length;
+}
+
+function selectCity(card) {
+    document.querySelectorAll('.city-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedCity = card.dataset.city;
+}
+
+function selectStars(pill) {
+    document.querySelectorAll('.star-pill').forEach(p => p.classList.remove('selected'));
+    pill.classList.add('selected');
+    selectedStars = parseInt(pill.dataset.stars);
+}
+
+// ==================== STEP 2: Stay ====================
+function selectNights(pill) {
+    document.querySelectorAll('.nights-pill').forEach(p => p.classList.remove('selected'));
+    pill.classList.add('selected');
+    selectedNights = parseInt(pill.dataset.nights);
+}
+
+function selectGuest(card) {
+    document.querySelectorAll('.guest-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedGuest = card.dataset.type;
+}
+
+function toggleAmenity(card) {
+    card.classList.toggle('selected');
+    const am = card.dataset.amenity;
+    if (card.classList.contains('selected')) {
+        if (!selectedAmenities.includes(am)) selectedAmenities.push(am);
+    } else {
+        selectedAmenities = selectedAmenities.filter(a => a !== am);
+    }
+}
+
+// ==================== STEP 3: Budget ====================
+function updateBudget(val) {
+    budget = parseInt(val);
+    document.getElementById('budgetDisplay').textContent = parseInt(val).toLocaleString('ar-DZ') + ' دج / ليلة';
+    const pct = ((val - 500) / (20000 - 500)) * 100;
+    document.getElementById('budgetSlider').style.setProperty('--range-pct', pct + '%');
+    updateSummary();
+}
+
+function updateSummary() {
+    const el = document.getElementById('prefSummary');
+    if (!el) return;
+    const tags = [];
+    if (selectedPrefs.length)    tags.push(...selectedPrefs.map(p => `<span style="background:rgba(14,165,233,0.12);border:1px solid rgba(14,165,233,0.3);color:#0ea5e9;padding:5px 12px;border-radius:20px;font-size:0.82rem;">${escHtml(p)}</span>`));
+    if (selectedCity !== 'أي مدينة') tags.push(`<span style="background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.3);color:#14b8a6;padding:5px 12px;border-radius:20px;font-size:0.82rem;">📍 ${escHtml(selectedCity)}</span>`);
+    if (selectedNights)           tags.push(`<span style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;padding:5px 12px;border-radius:20px;font-size:0.82rem;">🌙 ${selectedNights} ليالٍ</span>`);
+    if (selectedGuest)            tags.push(`<span style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#10b981;padding:5px 12px;border-radius:20px;font-size:0.82rem;">${escHtml(selectedGuest)}</span>`);
+    if (selectedAmenities.length) tags.push(...selectedAmenities.map(a => `<span style="background:rgba(255,255,255,0.05);border:1px solid var(--border-color);color:#94a3b8;padding:5px 12px;border-radius:20px;font-size:0.82rem;">✓ ${escHtml(a)}</span>`));
+    el.innerHTML = tags.length ? tags.join('') : '<span style="color:var(--text-sec)">لم تختر تفضيلات بعد</span>';
+}
+
+// ==================== WIZARD NAV ====================
+function goStep(n) {
+    if (n === 3) updateSummary();
+    document.querySelectorAll('.wizard-panel').forEach(p => p.classList.remove('active'));
+
+    const circles = [1,2,3,4].map(i => document.getElementById('sc'+i));
+    const labels  = [1,2,3,4].map(i => document.getElementById('sl'+i));
+    const lines   = [1,2,3].map(i => document.getElementById('line'+i));
+
+    circles.forEach((c,i) => {
+        c.classList.remove('active','done');
+        labels[i].classList.remove('active','done');
+        if (i+1 < n)  { c.classList.add('done');   labels[i].classList.add('done');   }
+        if (i+1 === n){ c.classList.add('active');  labels[i].classList.add('active'); }
+    });
+    lines.forEach((l,i) => { l.classList.toggle('done', i+1 < n); });
+
+    const panel = document.getElementById('step'+n);
+    if (panel) { panel.classList.add('active'); window.scrollTo({top:300,behavior:'smooth'}); }
+}
+
+// ==================== AI SCORING ====================
+function scoreHotel(h) {
+    let score = 0;
+    const reasons = [];
+
+    // City match (30 pts)
+    if (selectedCity === 'أي مدينة' || h.city === selectedCity) {
+        score += 30;
+        if (selectedCity !== 'أي مدينة') reasons.push('يقع في المدينة المختارة');
+    }
+
+    // Budget match (25 pts)
+    if (h.pricePerNight <= budget) {
+        const saving = budget - h.pricePerNight;
+        score += 25;
+        if (saving > 2000) { score += 5; reasons.push(`يوفر ${saving.toLocaleString()} دج من ميزانيتك`); }
+        else reasons.push('ضمن الميزانية المحددة');
+    } else {
+        // partial credit if within 20%
+        if (h.pricePerNight <= budget * 1.2) { score += 10; reasons.push('قريب من ميزانيتك'); }
+    }
+
+    // Stars match (20 pts)
+    if (selectedStars === 0 || h.stars >= selectedStars) {
+        score += 20;
+        if (h.stars > selectedStars) { score += 3; reasons.push(`${h.stars} نجوم — أعلى من المطلوب`); }
+        else reasons.push(`يطابق التصنيف المطلوب (${h.stars} نجوم)`);
+    }
+
+    // Prefs/tags match (15 pts)
+    let prefMatches = 0;
+    selectedPrefs.forEach(p => {
+        if (h.tags && h.tags.some(t => t.includes(p) || p.includes(t))) prefMatches++;
+    });
+    if (prefMatches > 0) {
+        score += Math.min(15, prefMatches * 5);
+        reasons.push(`يتوافق مع ${prefMatches} من اهتماماتك`);
+    }
+
+    // Amenities match (10 pts)
+    let amMatches = 0;
+    selectedAmenities.forEach(am => {
+        if (h.amenities && h.amenities.some(a => a.toLowerCase().includes(am.toLowerCase().split(' ')[0]))) amMatches++;
+    });
+    if (amMatches > 0) {
+        score += Math.min(10, amMatches * 3);
+        reasons.push(`يوفر ${amMatches} من المرافق المطلوبة`);
+    }
+
+    // Guest type bonus
+    if (selectedGuest === 'عائلة' && h.tags && h.tags.includes('عائلي')) { score += 5; reasons.push('مناسب للعائلات'); }
+    if (selectedGuest === 'زوجين' && h.stars >= 4) { score += 4; reasons.push('مثالي للأزواج'); }
+
+    // Rating bonus (up to 5 pts)
+    if (h.rating >= 4.8) { score += 5; reasons.push(`تقييم ممتاز ${h.rating}⭐`); }
+    else if (h.rating >= 4.5) { score += 3; reasons.push(`تقييم عالٍ ${h.rating}⭐`); }
+
+    return { score: Math.min(100, score), reasons: reasons.slice(0, 3) };
+}
+
+// ==================== RUN AI ====================
+function runAI() {
+    // Show all steps as done except 4
+    [1,2,3].forEach(i => {
+        document.getElementById('sc'+i).classList.remove('active');
+        document.getElementById('sc'+i).classList.add('done');
+        document.getElementById('sl'+i).classList.remove('active');
+        document.getElementById('sl'+i).classList.add('done');
+        if (i < 3) document.getElementById('line'+i).classList.add('done');
+    });
+    document.getElementById('line3').classList.add('done');
+
+    document.querySelectorAll('.wizard-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('aiLoading').classList.add('active');
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+
+    // Reset loading bar
+    const bar = document.getElementById('loadingBar');
+    bar.style.animation = 'none';
+    void bar.offsetWidth;
+    bar.style.animation = 'loadFill 2.5s ease-out forwards';
+
+    // Animate loading steps
+    const steps = ['ls1','ls2','ls3','ls4'];
+    const msgs  = ['تحليل تفضيلاتك','مطابقة المرافق المطلوبة','فلترة حسب الميزانية','احتساب نقاط التوافق'];
+    steps.forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.classList.remove('done');
+        el.innerHTML = `<i class="fas fa-clock"></i> ${msgs[i]}`;
+        setTimeout(() => {
+            el.innerHTML = `<i class="fas fa-circle-notch fa-spin" style="color:#0ea5e9"></i> ${msgs[i]}`;
+            setTimeout(() => {
+                el.classList.add('done');
+                el.innerHTML = `<i class="fas fa-check-circle"></i> ${msgs[i]}`;
+            }, 500);
+        }, i * 600);
+    });
+
+    // Fetch from API with fallback
+    setTimeout(() => {
+        fetch('/api/hotels')
+            .then(r => r.ok ? r.json() : Promise.reject())
+            .then(data => showResults(data))
+            .catch(() => showResults(FALLBACK_HOTELS));
+    }, 2700);
+}
+
+// ==================== SHOW RESULTS ====================
+function showResults(hotels) {
+    document.getElementById('aiLoading').classList.remove('active');
+
+    const sc4 = document.getElementById('sc4');
+    const sl4 = document.getElementById('sl4');
+    sc4.classList.add('active');
+    sl4.classList.add('active');
+
+    // Score & filter
+    let scored = hotels.map(h => {
+        const { score, reasons } = scoreHotel(h);
+        return { ...h, score, reasons };
+    });
+
+    // Filter out very low scores
+    scored = scored.filter(h => h.score >= 20);
+
+    // Sort by score desc
+    scored.sort((a, b) => b.score - a.score);
+
+    const grid = document.getElementById('resultsGrid');
+    const noRes = document.getElementById('noResults');
+
+    document.getElementById('step4').classList.add('active');
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+
+    if (scored.length === 0) {
+        grid.innerHTML = '';
+        noRes.style.display = 'block';
+        document.getElementById('resultsCount').textContent = '0 فندق';
+        document.getElementById('resultsSummaryText').textContent = 'جرب توسيع ميزانيتك أو تغيير التفضيلات';
+        return;
+    }
+
+    noRes.style.display = 'none';
+    document.getElementById('resultsCount').textContent = scored.length + ' فندق';
+
+    const summaryParts = [];
+    if (selectedCity !== 'أي مدينة') summaryParts.push(`في ${selectedCity}`);
+    if (selectedNights) summaryParts.push(`لـ ${selectedNights} ليالٍ`);
+    if (selectedGuest)  summaryParts.push(`لـ${selectedGuest}`);
+    document.getElementById('resultsSummaryText').textContent =
+        'بناءً على تفضيلاتك' + (summaryParts.length ? ' ' + summaryParts.join('، ') : '');
+
+    grid.innerHTML = scored.map((h, idx) => {
+        const ptsPerNight = Math.round((h.pricePerNight || 0) * 0.005);
+        const totalNights = selectedNights || 1;
+        const totalPrice  = h.pricePerNight * totalNights;
+        const totalPts    = ptsPerNight * totalNights;
+        const matchClass  = h.score >= 75 ? 'high' : h.score >= 50 ? 'medium' : 'low';
+        const stars       = '⭐'.repeat(h.stars || 0);
+        const wishKey     = 'hawsbiya_hotel_wishlist';
+        const wishlist    = JSON.parse(localStorage.getItem(wishKey) || '[]');
+        const isWished    = wishlist.includes(h.id);
+
+        const amenitiesHtml = (h.amenities || []).slice(0, 4).map(a => {
+            const icons = {'واي فاي':'wifi','مسبح':'swimming-pool','فطور':'egg','موقف':'parking','مطعم':'utensils','تكييف':'snowflake'};
+            const icon  = Object.entries(icons).find(([k]) => a.includes(k));
+            return `<span class="amenity-tag"><i class="fas fa-${icon ? icon[1] : 'check'}"></i> ${escHtml(a)}</span>`;
+        }).join('');
+
+        const reasonsHtml = h.reasons.length ? `
+            <div class="match-reasons">
+                <div class="match-reasons-title">💡 لماذا اخترناه لك</div>
+                ${h.reasons.map(r => `<div class="match-reason"><i class="fas fa-circle"></i> ${escHtml(r)}</div>`).join('')}
+            </div>` : '';
+
+        return `
+        <div class="result-card" data-aos="fade-up" data-aos-delay="${idx * 80}">
+            <div class="result-card-image" style="background-image:url('${escHtml(h.image || '')}')">
+                <div class="match-badge ${matchClass}">🎯 ${h.score}% توافق</div>
+                <div class="stars-badge">${stars}</div>
+                <button class="wishlist-btn ${isWished ? 'liked' : ''}" id="wish-${h.id}"
+                    onclick="toggleWishlist(${h.id}, this)">
+                    <i class="fas fa-heart"></i>
+                </button>
+            </div>
+            <div class="result-card-body">
+                <div class="result-card-name">${escHtml(h.name)}</div>
+                <div class="result-card-loc"><i class="fas fa-map-marker-alt"></i>${escHtml(h.location || h.city || '')}</div>
+                <div class="amenities-row">${amenitiesHtml}</div>
+                ${reasonsHtml}
+                <div class="result-card-footer">
+                    <div>
+                        <div class="result-price">
+                            ${(h.pricePerNight || 0).toLocaleString('ar-DZ')} دج
+                            <span>/ ليلة</span>
+                        </div>
+                        ${totalNights > 1 ? `<div style="font-size:0.78rem;color:var(--text-sec);">
+                            الإجمالي: ${totalPrice.toLocaleString('ar-DZ')} دج</div>` : ''}
+                        <div class="loyalty-hint" style="margin-top:5px;">
+                            <i class="fas fa-star"></i> +${totalPts} نقطة
+                        </div>
+                    </div>
+                    <button class="btn-book-result" onclick="openModal(${idx}, ${JSON.stringify(scored).replace(/"/g,'&quot;')})">
+                        احجز الآن
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+
+    // Store for modal access
+    window._scoredHotels = scored;
+}
+
+// ==================== WISHLIST ====================
+function toggleWishlist(id, btn) {
+    const key = 'hawsbiya_hotel_wishlist';
+    let list  = JSON.parse(localStorage.getItem(key) || '[]');
+    if (list.includes(id)) {
+        list = list.filter(x => x !== id);
+        btn.classList.remove('liked');
+    } else {
+        list.push(id);
+        btn.classList.add('liked');
+    }
+    localStorage.setItem(key, JSON.stringify(list));
+}
+
+// ==================== MODAL ====================
+function openModal(idx) {
+    const h = window._scoredHotels[idx];
+    if (!h) return;
+    currentHotel = h;
+
+    const totalNights = selectedNights || 1;
+    const pts = Math.round((h.pricePerNight || 0) * 0.005) * totalNights;
+
+    document.getElementById('modalImg').style.backgroundImage = `url('${h.image || ''}')`;
+    document.getElementById('modalTitle').textContent   = h.name;
+    document.getElementById('modalSubtitle').textContent = `${h.location || h.city} — ${h.stars || ''}⭐`;
+    document.getElementById('modalPrice').textContent   = (h.pricePerNight || 0).toLocaleString('ar-DZ');
+    document.getElementById('modalPoints').textContent  = pts;
+
+    // Pre-fill dates if provided
+    const ci = document.getElementById('checkInDate');
+    const co = document.getElementById('checkOutDate');
+    if (ci && ci.value) document.getElementById('bkCheckIn').value  = ci.value;
+    if (co && co.value) document.getElementById('bkCheckOut').value = co.value;
+
+    document.getElementById('bookModal').classList.add('active');
+}
+
+function closeModal() { document.getElementById('bookModal').classList.remove('active'); }
+
+// ==================== CONFIRM BOOKING ====================
+async function confirmBooking() {
+    const name    = document.getElementById('bkName').value.trim();
+    const phone   = document.getElementById('bkPhone').value.trim();
+    const checkIn = document.getElementById('bkCheckIn').value;
+    const checkOut= document.getElementById('bkCheckOut').value;
+    const guests  = document.getElementById('bkGuests').value;
+
+    if (!name || !phone) {
+        alert('يرجى إدخال الاسم ورقم الهاتف');
+        return;
+    }
+    if (!checkIn) { alert('يرجى تحديد تاريخ الوصول'); return; }
+
+    const h      = currentHotel;
+    const nights = selectedNights || 1;
+    const total  = (h.pricePerNight || 0) * nights;
+    const pts    = Math.round(total * 0.005);
+    const user   = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+
+    const payload = {
+        type: 'hotel', name, phone,
+        price: total, travelers: parseInt(guests),
+        checkIn, checkOut: checkOut || '',
+        userId: user ? user.id : 0
+    };
+
+    try {
+        const r = await fetch('/api/bookings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (!r.ok) throw new Error();
+    } catch {
+        // Offline fallback
+        const bookings = JSON.parse(localStorage.getItem('hawsbiya_bookings') || '[]');
+        bookings.push({ ...payload, id: Date.now(), status: 'pending', createdAt: new Date().toISOString() });
+        localStorage.setItem('hawsbiya_bookings', JSON.stringify(bookings));
+    }
+
+    document.getElementById('bookModal').classList.remove('active');
+    document.getElementById('successPoints').textContent = pts;
+    document.getElementById('successModal').classList.add('active');
+}
+
+function closeSuccess() {
+    document.getElementById('successModal').classList.remove('active');
+    window.location.href = 'bookings.html';
+}
+
+// ==================== RESET ====================
+function resetWizard() {
+    selectedPrefs    = [];
+    selectedCity     = 'أي مدينة';
+    selectedStars    = 0;
+    selectedNights   = 0;
+    selectedGuest    = '';
+    selectedAmenities= [];
+    budget           = 5000;
+
+    document.querySelectorAll('.pref-card, .nights-pill, .guest-card, .amenity-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.city-card').forEach(c => c.classList.remove('selected'));
+    document.querySelector('.city-card[data-city="أي مدينة"]')?.classList.add('selected');
+    document.querySelectorAll('.star-pill').forEach(p => p.classList.remove('selected'));
+    document.querySelector('.star-pill[data-stars="0"]')?.classList.add('selected');
+    document.getElementById('prefCount').textContent  = '0';
+    document.getElementById('budgetSlider').value     = 5000;
+    document.getElementById('budgetDisplay').textContent = '5,000 دج / ليلة';
+    document.getElementById('resultsGrid').innerHTML  = '';
+    document.getElementById('noResults').style.display = 'none';
+
+    goStep(1);
+}
+
+// Init budget slider
+updateBudget(5000);
+</script>
+</body>
+</html>

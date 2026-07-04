@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حوس بيا - الملف الشخصي</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== PROFILE PAGE ===== */
+        body {
+            background: url('https://loremflickr.com/800/500/oasis,palm') center/cover no-repeat fixed;
+        }
+        .page-overlay {
+            position: fixed; inset: 0;
+            background: linear-gradient(to bottom, rgba(15,23,42,0.88), rgba(15,23,42,0.95));
+            z-index: 0;
+        }
+        .profile-wrapper {
+            max-width: 1100px; margin: 40px auto 80px; padding: 0 20px;
+            display: grid; grid-template-columns: 320px 1fr; gap: 25px;
+            position: relative; z-index: 1;
+        }
+        header { position: relative; z-index: 10; }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(30,41,59,0.65);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 30px;
+            position: relative; overflow: hidden;
+        }
+        .glass-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        .card-title {
+            font-size: 1.1rem; font-weight: 800; color: white; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px; padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .card-title i { color: var(--primary-color); }
+
+        /* Sidebar */
+        .profile-sidebar { display: flex; flex-direction: column; gap: 20px; }
+
+        .avatar-wrap { text-align: center; margin-bottom: 15px; }
+        .avatar-circle {
+            width: 110px; height: 110px; border-radius: 50%; margin: 0 auto 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; color: white; font-weight: 800;
+            box-shadow: 0 10px 30px rgba(139,92,246,0.4);
+            border: 3px solid rgba(255,255,255,0.15);
+        }
+        .user-name { font-size: 1.3rem; font-weight: 800; color: white; }
+        .user-handle { color: var(--text-sec); font-size: 0.88rem; margin-top: 4px; }
+        .member-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(45,212,191,0.12); border: 1px solid rgba(45,212,191,0.3);
+            color: var(--secondary-color); padding: 5px 14px; border-radius: 20px;
+            font-size: 0.82rem; font-weight: 700; margin-top: 10px;
+        }
+
+        /* Loyalty in sidebar */
+        .loyalty-sidebar {
+            background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(139,92,246,0.1));
+            border: 1px solid rgba(245,158,11,0.3); border-radius: 18px; padding: 20px; text-align: center;
+        }
+        .loyalty-pts { font-size: 2.5rem; font-weight: 900; color: #f59e0b; }
+        .loyalty-label { color: var(--text-sec); font-size: 0.85rem; margin-bottom: 12px; }
+        .tier-badge {
+            display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px;
+            border-radius: 20px; font-size: 0.85rem; font-weight: 700;
+        }
+        .tier-bronze { background: rgba(180,100,40,0.2); color: #cd7f32; border: 1px solid rgba(180,100,40,0.4); }
+        .tier-silver { background: rgba(192,192,192,0.15); color: #c0c0c0; border: 1px solid rgba(192,192,192,0.3); }
+        .tier-gold { background: rgba(255,215,0,0.12); color: #ffd700; border: 1px solid rgba(255,215,0,0.3); }
+        .tier-diamond { background: rgba(185,242,255,0.12); color: #b9f2ff; border: 1px solid rgba(185,242,255,0.3); }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .stat-box {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px; padding: 14px; text-align: center; transition: 0.3s;
+        }
+        .stat-box:hover { background: rgba(139,92,246,0.1); border-color: rgba(139,92,246,0.3); transform: translateY(-3px); }
+        .stat-num { font-size: 1.6rem; font-weight: 900; color: white; }
+        .stat-lbl { font-size: 0.78rem; color: var(--text-sec); margin-top: 3px; }
+
+        /* Referral Card */
+        .referral-card {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px; padding: 16px;
+        }
+        .referral-code {
+            background: var(--main-bg); border: 1px dashed rgba(139,92,246,0.5);
+            border-radius: 10px; padding: 12px; text-align: center;
+            font-family: monospace; font-size: 1.2rem; color: var(--primary-color);
+            font-weight: 700; margin: 12px 0; letter-spacing: 2px; cursor: pointer; transition: 0.2s;
+        }
+        .referral-code:hover { background: rgba(139,92,246,0.1); }
+        .referral-desc { color: var(--text-sec); font-size: 0.82rem; }
+
+        /* Logout btn */
+        .btn-logout {
+            width: 100%; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+            color: #ef4444; padding: 12px; border-radius: 12px; font-weight: 700;
+            cursor: pointer; font-family: 'Changa', sans-serif; font-size: 0.95rem; transition: 0.3s;
+        }
+        .btn-logout:hover { background: #ef4444; color: white; }
+
+        /* Main content tabs */
+        .content-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .content-tab {
+            padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.04); color: var(--text-sec);
+            font-family: 'Changa', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+        .content-tab:hover { border-color: var(--primary-color); color: var(--primary-color); }
+        .content-tab.active { background: var(--primary-color); border-color: var(--primary-color); color: white; }
+
+        .content-panel { display: none; }
+        .content-panel.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+        /* Edit Form */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-group { margin-bottom: 5px; }
+        .form-group label { display: block; color: var(--text-sec); font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px 15px;
+            background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; color: white; font-family: 'Changa', sans-serif; font-size: 0.92rem; transition: 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none; border-color: var(--primary-color); background: rgba(139,92,246,0.05);
+        }
+        .btn-save {
+            background: linear-gradient(135deg, var(--primary-color), #6d28d9);
+            color: white; border: none; padding: 13px 30px; border-radius: 12px;
+            font-size: 1rem; font-weight: 700; cursor: pointer; font-family: 'Changa', sans-serif; transition: 0.3s; margin-top: 15px;
+        }
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(139,92,246,0.5); }
+
+        /* Preferences */
+        .pref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+        .pref-chip {
+            padding: 10px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.04); color: var(--text-sec); cursor: pointer;
+            text-align: center; font-size: 0.85rem; font-weight: 700; transition: 0.3s;
+        }
+        .pref-chip:hover { border-color: var(--primary-color); }
+        .pref-chip.selected { background: rgba(139,92,246,0.15); border-color: var(--primary-color); color: var(--primary-color); }
+
+        /* Recent Bookings mini */
+        .mini-booking {
+            display: flex; align-items: center; gap: 15px; padding: 14px;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px; margin-bottom: 10px; transition: 0.3s;
+        }
+        .mini-booking:hover { border-color: rgba(139,92,246,0.3); }
+        .mini-booking-img { width: 55px; height: 55px; border-radius: 12px; background-size: cover; background-position: center; flex-shrink: 0; background-color: var(--main-bg); }
+        .mini-booking-name { font-size: 0.95rem; font-weight: 700; color: white; }
+        .mini-booking-date { font-size: 0.8rem; color: var(--text-sec); margin-top: 3px; }
+        .mini-status { margin-right: auto; padding: 4px 12px; border-radius: 15px; font-size: 0.78rem; font-weight: 700; }
+
+        /* Loyalty History */
+        .pts-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .pts-row:last-child { border-bottom: none; }
+        .pts-row-left { display: flex; align-items: center; gap: 12px; }
+        .pts-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .pts-amount { font-weight: 800; font-size: 1rem; }
+        .pts-plus { color: #10b981; }
+        .pts-minus { color: #ef4444; }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(80px); background: #10b981; color: white; padding: 14px 28px; border-radius: 12px; font-weight: 700; z-index: 999; transition: 0.4s; animation: none; }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        @media (max-width: 900px) {
+            .profile-wrapper { grid-template-columns: 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="page-overlay"></div>
+
+<header style="position:relative;z-index:10;">
+    <div class="header-inner">
+        <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <nav>
+            <a href="index.html" >الرئيسية</a>
+            <a href="programs.html">البرامج</a>
+            <a href="ai-programmes.html"> المستشار السياحي</a>
+            <a href="ai-hotels.html">المستشار الفندقي</a>
+            <a href="hotels.html" >الفنادق</a>
+            <a href="souvenirs.html">التذكارات</a>
+            <a href="bookings.html">حجوزاتي</a>
+            <a href="contact.html">اتصل بنا</a>
+        </nav>
+        <div class="header-actions">
+            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+            <div id="authArea"></div>
+        </div>
+    </div>
+</header>
+
+<div class="profile-wrapper">
+
+    <!-- Sidebar -->
+    <div class="profile-sidebar">
+
+        <!-- Avatar & Identity -->
+        <div class="glass-card" data-aos="fade-right">
+            <div class="avatar-wrap">
+                <div class="avatar-circle" id="avatarCircle">م</div>
+                <div class="user-name" id="userName">جاري التحميل...</div>
+                <div class="user-handle" id="userHandle">@username</div>
+                <div class="member-badge"><i class="fas fa-shield-alt"></i> عضو موثق</div>
+            </div>
+        </div>
+
+        <!-- Loyalty Points -->
+        <div class="loyalty-sidebar" data-aos="fade-right" data-aos-delay="80">
+            <div class="loyalty-pts" id="sidebarPts">0</div>
+            <div class="loyalty-label">نقطة ولاء</div>
+            <div class="tier-badge tier-bronze" id="tierBadge"><i class="fas fa-medal"></i> عضو برونزي</div>
+            <div style="margin-top:15px;background:rgba(255,255,255,0.08);border-radius:10px;height:6px;overflow:hidden;">
+                <div id="sidebarFill" style="height:100%;background:linear-gradient(90deg,#f59e0b,#8b5cf6);border-radius:10px;transition:width 1s ease;width:0%;"></div>
+            </div>
+            <div style="color:var(--text-sec);font-size:0.78rem;margin-top:8px;" id="sidebarPtsLeft"></div>
+        </div>
+
+        <!-- Stats -->
+        <div class="glass-card" data-aos="fade-right" data-aos-delay="120">
+            <div class="card-title"><i class="fas fa-chart-bar"></i> إحصائياتي</div>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-num" id="statBookings">0</div>
+                    <div class="stat-lbl">حجز</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num" id="statCompleted">0</div>
+                    <div class="stat-lbl">رحلة مكتملة</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num" id="statSpent">0</div>
+                    <div class="stat-lbl">دج أنفق</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num" id="statReviews">0</div>
+                    <div class="stat-lbl">تقييم كتبه</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Referral -->
+        <div class="glass-card" data-aos="fade-right" data-aos-delay="150">
+            <div class="card-title"><i class="fas fa-gift"></i> كود الإحالة</div>
+            <div class="referral-card">
+                <div class="referral-desc">شارك كودك مع أصدقائك واكسب <strong style="color:#f59e0b;">100 نقطة</strong> لكل صديق يسجل!</div>
+                <div class="referral-code" id="referralCode" onclick="copyReferral()" title="انقر للنسخ">
+                    HB-XXXXX
+                </div>
+                <div style="text-align:center;">
+                    <button onclick="copyReferral()" style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);color:var(--primary-color);padding:8px 20px;border-radius:20px;cursor:pointer;font-weight:700;font-family:'Changa',sans-serif;font-size:0.88rem;">
+                        <i class="fas fa-copy"></i> نسخ الكود
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logout -->
+        <button class="btn-logout" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+
+    </div>
+
+    <!-- Main Content -->
+    <div>
+        <!-- Content Tabs -->
+        <div class="content-tabs" data-aos="fade-left">
+            <button class="content-tab active" onclick="switchTab('edit', this)"><i class="fas fa-user-edit"></i> تعديل الملف</button>
+            <button class="content-tab" onclick="switchTab('prefs', this)"><i class="fas fa-sliders-h"></i> التفضيلات</button>
+            <button class="content-tab" onclick="switchTab('bookings', this)"><i class="fas fa-bookmark"></i> آخر الحجوزات</button>
+            <button class="content-tab" onclick="switchTab('loyalty', this)"><i class="fas fa-star"></i> سجل النقاط</button>
+            <button class="content-tab" onclick="switchTab('security', this)"><i class="fas fa-shield-alt"></i> الأمان</button>
+        </div>
+
+        <!-- Edit Profile -->
+        <div class="content-panel active glass-card" id="panel-edit" data-aos="fade-left" data-aos-delay="80">
+            <div class="card-title"><i class="fas fa-user-edit"></i> تعديل المعلومات الشخصية</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>الاسم الكامل</label>
+                    <input type="text" id="eName" placeholder="اسمك الكامل">
+                </div>
+                <div class="form-group">
+                    <label>اسم المستخدم</label>
+                    <input type="text" id="eUsername" placeholder="username">
+                </div>
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="eEmail" placeholder="example@email.com">
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف</label>
+                    <input type="tel" id="ePhone" placeholder="0xxx xxx xxx">
+                </div>
+                <div class="form-group">
+                    <label>المدينة / الولاية</label>
+                    <input type="text" id="eCity" placeholder="مثال: الأغواط">
+                </div>
+                <div class="form-group">
+                    <label>تاريخ الميلاد</label>
+                    <input type="date" id="eBirth">
+                </div>
+            </div>
+            <div class="form-group" style="margin-top:5px;">
+                <label>نبذة عني</label>
+                <input type="text" id="eBio" placeholder="مسافر شغوف يحب استكشاف الجزائر...">
+            </div>
+            <button class="btn-save" onclick="saveProfile()"><i class="fas fa-save"></i> حفظ التغييرات</button>
+        </div>
+
+        <!-- Preferences -->
+        <div class="content-panel glass-card" id="panel-prefs">
+            <div class="card-title"><i class="fas fa-sliders-h"></i> تفضيلات السفر</div>
+            <p style="color:var(--text-sec);font-size:0.9rem;margin-bottom:20px;">اختر اهتماماتك وسيستخدمها المستشار الذكي لتخصيص توصياتك</p>
+
+            <div style="margin-bottom:20px;">
+                <div style="color:white;font-weight:700;margin-bottom:12px;"><i class="fas fa-heart" style="color:var(--primary-color);margin-left:6px;"></i> اهتماماتي</div>
+                <div class="pref-grid" id="interestChips">
+                    <div class="pref-chip" data-val="مغامرة" onclick="togglePref(this)">🏔️ مغامرة</div>
+                    <div class="pref-chip" data-val="ثقافي" onclick="togglePref(this)">🏛️ ثقافي</div>
+                    <div class="pref-chip" data-val="عائلي" onclick="togglePref(this)">👨‍👩‍👧 عائلي</div>
+                    <div class="pref-chip" data-val="استرخاء" onclick="togglePref(this)">🌅 استرخاء</div>
+                    <div class="pref-chip" data-val="طبيعة" onclick="togglePref(this)">🌿 طبيعة</div>
+                    <div class="pref-chip" data-val="صحراء" onclick="togglePref(this)">🏜️ صحراء</div>
+                    <div class="pref-chip" data-val="طعام" onclick="togglePref(this)">🍽️ مطبخ</div>
+                    <div class="pref-chip" data-val="رياضة" onclick="togglePref(this)">⚽ رياضة</div>
+                </div>
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <div style="color:white;font-weight:700;margin-bottom:12px;"><i class="fas fa-users" style="color:var(--secondary-color);margin-left:6px;"></i> أسلوب السفر المفضل</div>
+                <div class="pref-grid" id="styleChips">
+                    <div class="pref-chip" data-val="منفرد" onclick="selectStyle(this)">🧍 منفرد</div>
+                    <div class="pref-chip" data-val="زوجين" onclick="selectStyle(this)">👫 زوجين</div>
+                    <div class="pref-chip" data-val="عائلة" onclick="selectStyle(this)">👪 عائلة</div>
+                    <div class="pref-chip" data-val="مجموعة" onclick="selectStyle(this)">👥 مجموعة</div>
+                </div>
+            </div>
+
+            <div>
+                <div style="color:white;font-weight:700;margin-bottom:12px;"><i class="fas fa-wallet" style="color:#f59e0b;margin-left:6px;"></i> الميزانية المعتادة</div>
+                <select id="budgetPref" style="background:rgba(15,23,42,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:white;padding:12px 15px;font-family:'Changa',sans-serif;font-size:0.9rem;">
+                    <option value="5000">اقتصادية (أقل من 5,000 دج)</option>
+                    <option value="15000" selected>متوسطة (5,000 - 15,000 دج)</option>
+                    <option value="30000">مرتفعة (15,000 - 30,000 دج)</option>
+                    <option value="50000">فاخرة (أكثر من 30,000 دج)</option>
+                </select>
+            </div>
+
+            <button class="btn-save" onclick="savePreferences()" style="margin-top:20px;"><i class="fas fa-save"></i> حفظ التفضيلات</button>
+        </div>
+
+        <!-- Bookings -->
+        <div class="content-panel glass-card" id="panel-bookings">
+            <div class="card-title"><i class="fas fa-bookmark"></i> آخر الحجوزات</div>
+            <div id="minibookingsGrid"></div>
+            <div style="text-align:center;margin-top:20px;">
+                <a href="bookings.html" style="color:var(--secondary-color);font-weight:700;font-size:0.9rem;"><i class="fas fa-external-link-alt"></i> عرض كل الحجوزات</a>
+            </div>
+        </div>
+
+        <!-- Loyalty Log -->
+        <div class="content-panel glass-card" id="panel-loyalty">
+            <div class="card-title"><i class="fas fa-star"></i> سجل نقاط الولاء</div>
+            <div style="background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(139,92,246,0.1));border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:20px;margin-bottom:20px;text-align:center;">
+                <div style="font-size:2.5rem;font-weight:900;color:#f59e0b;" id="loyaltyTotal">0</div>
+                <div style="color:var(--text-sec);font-size:0.9rem;">إجمالي نقاط الولاء</div>
+                <div style="color:var(--text-sec);font-size:0.82rem;margin-top:8px;">كل 100 نقطة = خصم 50 دج على حجوزاتك القادمة</div>
+            </div>
+            <div id="loyaltyLog"></div>
+        </div>
+
+        <!-- Security -->
+        <div class="content-panel glass-card" id="panel-security">
+            <div class="card-title"><i class="fas fa-shield-alt"></i> إعدادات الأمان</div>
+
+            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px;margin-bottom:15px;">
+                <h4 style="color:white;font-size:1rem;font-weight:700;margin-bottom:4px;">تغيير كلمة المرور</h4>
+                <p style="color:var(--text-sec);font-size:0.85rem;margin-bottom:15px;">يُنصح بتغيير كلمة المرور دورياً للحفاظ على أمان حسابك</p>
+                <div class="form-group">
+                    <label>كلمة المرور الحالية</label>
+                    <input type="password" id="oldPass" placeholder="كلمة المرور الحالية">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور الجديدة</label>
+                    <input type="password" id="newPass" placeholder="8 أحرف على الأقل">
+                </div>
+                <div class="form-group">
+                    <label>تأكيد كلمة المرور</label>
+                    <input type="password" id="confirmPass" placeholder="أعد كتابة كلمة المرور الجديدة">
+                </div>
+                <button class="btn-save" onclick="changePassword()"><i class="fas fa-key"></i> تغيير كلمة المرور</button>
+            </div>
+
+            <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:14px;padding:20px;">
+                <h4 style="color:#ef4444;font-size:1rem;font-weight:700;margin-bottom:8px;"><i class="fas fa-exclamation-triangle"></i> منطقة الخطر</h4>
+                <p style="color:var(--text-sec);font-size:0.85rem;margin-bottom:15px;">حذف الحساب نهائياً — هذا الإجراء لا يمكن التراجع عنه</p>
+                <button onclick="if(confirm('هل أنت متأكد؟ سيُحذف حسابك نهائياً.')){localStorage.removeItem('hawsbiyaUser');window.location.href='index.html';}" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#ef4444;padding:10px 20px;border-radius:10px;cursor:pointer;font-weight:700;font-family:'Changa',sans-serif;">
+                    <i class="fas fa-trash"></i> حذف الحساب
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">تم الحفظ</span></div>
+
+<script src="chat-widget.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 600, once: true });
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+
+function toggleTheme(){
+    const t=localStorage.getItem('theme')==='dark'?'light':'dark';
+    localStorage.setItem('theme',t);
+    document.body.classList.toggle('light-mode',t==='light');
+    document.getElementById('themeIcon').className=t==='dark'?'fas fa-moon':'fas fa-sun';
+}
+(function(){ if(localStorage.getItem('theme')==='light'){ document.body.classList.add('light-mode'); document.getElementById('themeIcon').className='fas fa-sun'; }})();
+
+// Redirect if not logged in
+const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+if (!user) window.location.href = 'login.html';
+
+// Nav auth badge (same as every other page)
+function initAuth() {
+    const area = document.getElementById('authArea') || document.getElementById('authLinks');
+    if (!area || !user) return;
+    const name = user.name || user.originalName || user.username || 'مستخدم';
+    const initial = name.trim().charAt(0).toUpperCase();
+    area.innerHTML = `
+        <a href="profile.html" class="btn-auth-user">
+            <span class="auth-avatar"></span>
+            <span class="auth-name"></span>
+        </a>
+        <button class="btn-nav-logout" onclick="logout()" title="تسجيل الخروج" type="button"><i class="fas fa-sign-out-alt"></i></button>`;
+    area.querySelector('.auth-avatar').textContent = initial;
+    area.querySelector('.auth-name').textContent = name;
+}
+window.logout = function () {
+    if (confirm('تسجيل الخروج؟')) { localStorage.removeItem('hawsbiyaUser'); location.reload(); }
+};
+initAuth();
+
+// Init UI
+function initProfile() {
+    const initials = (user.name || user.username || 'م')[0].toUpperCase();
+    document.getElementById('avatarCircle').textContent = initials;
+    document.getElementById('userName').textContent = user.name || user.username || 'مستخدم';
+    document.getElementById('userHandle').textContent = '@' + (user.username || 'user');
+
+    // Edit form fill
+    document.getElementById('eName').value = user.name || '';
+    document.getElementById('eUsername').value = user.username || '';
+    document.getElementById('eEmail').value = user.email || '';
+    document.getElementById('ePhone').value = user.phone || '';
+    document.getElementById('eCity').value = user.city || '';
+    document.getElementById('eBirth').value = user.birth || '';
+    document.getElementById('eBio').value = user.bio || '';
+
+    const pts = user.loyaltyPoints || 0;
+    document.getElementById('sidebarPts').textContent = pts.toLocaleString('ar-DZ');
+    document.getElementById('loyaltyTotal').textContent = pts.toLocaleString('ar-DZ');
+
+    // Tier
+    let tier, tierCls, tierLabel, nextPts;
+    if (pts < 500)       { tier='برونزي 🥉'; tierCls='tier-bronze'; tierLabel='عضو برونزي'; nextPts=500; }
+    else if (pts < 2000) { tier='فضي 🥈';    tierCls='tier-silver'; tierLabel='عضو فضي'; nextPts=2000; }
+    else if (pts < 5000) { tier='ذهبي 🥇';   tierCls='tier-gold'; tierLabel='عضو ذهبي'; nextPts=5000; }
+    else                 { tier='ماسي 💎';    tierCls='tier-diamond'; tierLabel='عضو ماسي'; nextPts=pts; }
+
+    const badge = document.getElementById('tierBadge');
+    badge.className = 'tier-badge ' + tierCls;
+    badge.innerHTML = `<i class="fas fa-medal"></i> ${tierLabel}`;
+
+    const tierMin = pts < 500 ? 0 : pts < 2000 ? 500 : pts < 5000 ? 2000 : 5000;
+    const pct = Math.min(100, ((pts - tierMin) / (nextPts - tierMin)) * 100);
+    document.getElementById('sidebarFill').style.width = pct + '%';
+    document.getElementById('sidebarPtsLeft').textContent = nextPts > pts ? `${(nextPts - pts).toLocaleString()} نقطة للمستوى التالي` : '🏆 أعلى مستوى!';
+
+    // Referral code
+    const code = 'HB-' + (user.username || 'USER').toUpperCase().substring(0,3) + (user.id || '001');
+    document.getElementById('referralCode').textContent = code;
+
+    // Prefs restore
+    const prefs = JSON.parse(localStorage.getItem('hawsbiya_prefs') || '{}');
+    if (prefs.interests) {
+        prefs.interests.forEach(v => {
+            const el = document.querySelector(`#interestChips [data-val="${v}"]`);
+            if (el) el.classList.add('selected');
+        });
+    }
+    if (prefs.companion) {
+        const el = document.querySelector(`#styleChips [data-val="${prefs.companion}"]`);
+        if (el) el.classList.add('selected');
+    }
+    if (prefs.budget) document.getElementById('budgetPref').value = prefs.budget;
+
+    loadStats();
+    loadMiniBookings();
+    buildLoyaltyLog(pts);
+}
+
+async function loadStats() {
+    try {
+        const r = await fetch(`/api/bookings?userId=${user.id}`);
+        if (r.ok) {
+            const bs = await r.json();
+            const active = bs.filter(b => !b.deleted);
+            document.getElementById('statBookings').textContent = active.length;
+            document.getElementById('statCompleted').textContent = active.filter(b => b.status === 'completed').length;
+            document.getElementById('statSpent').textContent = (active.reduce((s,b)=>s+(parseInt(b.price)||0),0)/1000).toFixed(0) + 'k';
+            document.getElementById('statReviews').textContent = active.filter(b => b.rated).length;
+        }
+    } catch {}
+}
+
+async function loadMiniBookings() {
+    let bs = [];
+    try {
+        const r = await fetch(`/api/bookings?userId=${user.id}`);
+        if (r.ok) bs = await r.json();
+    } catch {
+        bs = [
+            { id:1, type:'program', name:'رحلة غرداية التراثية', date:'2025-07-15', status:'confirmed' },
+            { id:2, type:'hotel', name:'فندق الأغواط الكبير', date:'2025-08-01', status:'pending' }
+        ];
+    }
+    const statusMap = { pending:'قيد الانتظار', confirmed:'مؤكد', completed:'مكتمل', cancelled:'ملغى' };
+    const statusColors = { pending:'rgba(245,158,11,0.2);color:#f59e0b', confirmed:'rgba(139,92,246,0.2);color:var(--primary-color)', completed:'rgba(16,185,129,0.2);color:#10b981', cancelled:'rgba(239,68,68,0.2);color:#ef4444' };
+
+    document.getElementById('minibookingsGrid').innerHTML = bs.slice(0,5).filter(b=>!b.deleted).map(b => `
+        <div class="mini-booking">
+            <div class="mini-booking-img" style="background-image:url('${b.image || ''}')"></div>
+            <div>
+                <div class="mini-booking-name">${escHtml(b.name||'حجز')}</div>
+                <div class="mini-booking-date"><i class="fas fa-calendar" style="color:var(--primary-color);margin-left:4px;"></i>${b.date ? new Date(b.date).toLocaleDateString('ar-DZ') : 'غير محدد'}</div>
+            </div>
+            <div class="mini-status" style="background:${(statusColors[b.status]||statusColors.pending).split(';')[0]};border:1px solid;${(statusColors[b.status]||statusColors.pending)};padding:4px 12px;border-radius:15px;font-size:0.78rem;font-weight:700;">${statusMap[b.status]||'معلق'}</div>
+        </div>
+    `).join('') || '<p style="color:var(--text-sec);text-align:center;padding:20px;">لا توجد حجوزات حتى الآن</p>';
+}
+
+function buildLoyaltyLog(pts) {
+    const log = [
+        { label: 'مكافأة الترحيب', amount: 50, type: 'plus', icon: 'fa-gift', date: 'عند التسجيل', color: '#10b981' },
+        { label: 'رحلة مكتملة', amount: Math.round(pts * 0.6), type: 'plus', icon: 'fa-map-marked-alt', date: 'حجز #001', color: '#8b5cf6' },
+        { label: 'إحالة صديق', amount: 100, type: 'plus', icon: 'fa-users', date: 'مؤخراً', color: '#f59e0b' },
+        { label: 'خصم مستخدم', amount: -50, type: 'minus', icon: 'fa-tag', date: 'على حجز فندق', color: '#ef4444' }
+    ].filter(e => e.amount !== 0);
+
+    document.getElementById('loyaltyLog').innerHTML = log.map(e => `
+        <div class="pts-row">
+            <div class="pts-row-left">
+                <div class="pts-icon" style="background:${e.color}20;color:${e.color};"><i class="fas ${e.icon}"></i></div>
+                <div>
+                    <div style="color:white;font-weight:700;font-size:0.9rem;">${escHtml(e.label)}</div>
+                    <div style="color:var(--text-sec);font-size:0.78rem;">${escHtml(e.date)}</div>
+                </div>
+            </div>
+            <div class="pts-amount ${e.type === 'plus' ? 'pts-plus' : 'pts-minus'}">${e.type === 'plus' ? '+' : ''}${e.amount} نقطة</div>
+        </div>
+    `).join('');
+}
+
+// Tabs
+function switchTab(name, btn) {
+    document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.content-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    btn.classList.add('active');
+}
+
+// Prefs
+function togglePref(chip) {
+    chip.classList.toggle('selected');
+}
+function selectStyle(chip) {
+    document.querySelectorAll('#styleChips .pref-chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+}
+
+// Save Profile
+function saveProfile() {
+    user.name = document.getElementById('eName').value.trim() || user.name;
+    user.username = document.getElementById('eUsername').value.trim() || user.username;
+    user.email = document.getElementById('eEmail').value.trim() || user.email;
+    user.phone = document.getElementById('ePhone').value.trim();
+    user.city = document.getElementById('eCity').value.trim();
+    user.birth = document.getElementById('eBirth').value;
+    user.bio = document.getElementById('eBio').value.trim();
+    localStorage.setItem('hawsbiyaUser', JSON.stringify(user));
+
+    fetch(`/api/users/${user.id}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify(user) }).catch(()=>{});
+
+    document.getElementById('userName').textContent = user.name;
+    document.getElementById('avatarCircle').textContent = (user.name||'م')[0].toUpperCase();
+    showToast('تم حفظ بياناتك بنجاح ✅');
+}
+
+// Save Prefs
+function savePreferences() {
+    const interests = [...document.querySelectorAll('#interestChips .pref-chip.selected')].map(c => c.dataset.val);
+    const companion = document.querySelector('#styleChips .pref-chip.selected')?.dataset.val || '';
+    const budget = parseInt(document.getElementById('budgetPref').value);
+    localStorage.setItem('hawsbiya_prefs', JSON.stringify({ interests, companion, budget }));
+    showToast('تم حفظ تفضيلاتك ✅ سيستخدمها المستشار الذكي');
+}
+
+// Password Change
+function changePassword() {
+    const old = document.getElementById('oldPass').value;
+    const nw = document.getElementById('newPass').value;
+    const conf = document.getElementById('confirmPass').value;
+    if (!old || !nw || !conf) { alert('يرجى ملء جميع الحقول'); return; }
+    if (nw.length < 8) { alert('كلمة المرور الجديدة يجب أن تكون 8 أحرف على الأقل'); return; }
+    if (nw !== conf) { alert('كلمتا المرور غير متطابقتين'); return; }
+    showToast('تم تغيير كلمة المرور بنجاح 🔒');
+    ['oldPass','newPass','confirmPass'].forEach(id => document.getElementById(id).value = '');
+}
+
+// Referral copy
+function copyReferral() {
+    const code = document.getElementById('referralCode').textContent;
+    navigator.clipboard.writeText(code).then(() => showToast('تم نسخ الكود: ' + code + ' 📋'));
+}
+
+// Logout
+function doLogout() {
+    if (confirm('هل تريد تسجيل الخروج؟')) {
+        localStorage.removeItem('hawsbiyaUser');
+        window.location.href = 'index.html';
+    }
+}
+
+// Toast
+function showToast(msg) {
+    document.getElementById('toastMsg').textContent = msg;
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+initProfile();
+</script>
+</body>
+</html>

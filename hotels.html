@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حوس بيا - فنادق وإقامات</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hotels-hero {
+            height:62vh;
+            background:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80') center/cover no-repeat fixed;
+            position:relative; display:flex; align-items:center; justify-content:center; text-align:center;
+            border-radius:0 0 50px 50px; overflow:hidden; margin-bottom:10px;
+        }
+        .hero-overlay { position:absolute; inset:0; background:linear-gradient(to bottom,rgba(15,23,42,0.6),var(--main-bg)); }
+        .hero-content { position:relative; z-index:2; color:white; padding:20px; }
+        .hero-content h2 { font-size:3rem; font-weight:800; text-shadow:0 5px 15px rgba(0,0,0,0.5); margin-bottom:10px; }
+        .hero-content p { font-size:1.2rem; color:#cbd5e1; }
+
+        .filter-container { max-width:1100px; margin:-70px auto 50px; padding:0 20px; position:relative; z-index:10; }
+        .filter-bar {
+            background:var(--card-bg); backdrop-filter:blur(20px);
+            border:1px solid var(--border-color); border-radius:22px; padding:25px;
+            display:flex; gap:15px; flex-wrap:wrap; align-items:flex-end;
+            box-shadow:0 20px 50px rgba(0,0,0,0.15);
+        }
+        .filter-group { flex:1; min-width:170px; }
+        .filter-group label { display:block; color:var(--text-sec); font-size:0.85rem; margin-bottom:8px; font-weight:bold; }
+        .filter-input {
+            width:100%; padding:12px 15px; background:var(--main-bg); color:var(--text-main);
+            border:1px solid var(--border-color); border-radius:12px; font-family:inherit; transition:0.3s;
+        }
+        .filter-input:focus { border-color:var(--secondary-color); box-shadow:0 0 0 3px rgba(45,212,191,0.15); }
+        .btn-filter {
+            background:linear-gradient(135deg,var(--secondary-color),#0d9488); color:#0f172a;
+            border:none; padding:12px 28px; border-radius:12px; font-weight:800;
+            cursor:pointer; height:48px; display:flex; align-items:center; gap:8px; font-family:inherit; transition:0.3s;
+        }
+        .btn-filter:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(45,212,191,0.4); }
+
+        /* Hotel Card */
+        .hotel-type-badge {
+            position:absolute; top:15px; right:15px;
+            background:rgba(15,23,42,0.88); color:var(--secondary-color);
+            padding:5px 12px; border-radius:20px; font-size:0.82rem; font-weight:bold;
+            border:1px solid rgba(45,212,191,0.3);
+        }
+        .hotel-rating-badge {
+            position:absolute; top:15px; left:15px;
+            background:rgba(255,255,255,0.95); padding:5px 10px;
+            border-radius:10px; font-weight:bold; color:#f59e0b;
+            display:flex; align-items:center; gap:4px; font-size:0.85rem;
+            box-shadow:0 5px 15px rgba(0,0,0,0.15);
+        }
+        .amenities-row { display:flex; flex-wrap:wrap; gap:6px; margin:10px 0; }
+        .amenity-tag {
+            background:rgba(45,212,191,0.1); color:var(--secondary-color);
+            border:1px solid rgba(45,212,191,0.2); padding:3px 10px;
+            border-radius:20px; font-size:0.75rem; display:flex; align-items:center; gap:4px;
+        }
+        .price-night { font-size:0.75rem; color:var(--text-sec); font-weight:normal; }
+        .points-hint { font-size:0.78rem; color:#f59e0b; display:flex; align-items:center; gap:5px; margin-top:4px; }
+        .empty-state { text-align:center; padding:80px 20px; grid-column:1/-1; color:var(--text-sec); }
+
+        /* Modal */
+        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(6px); z-index:2000; display:none; align-items:center; justify-content:center; }
+        .modal-overlay.active { display:flex; animation:fadeIn 0.3s; }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        .modal-container { background:var(--card-bg); width:92%; max-width:860px; max-height:90vh; border-radius:28px; overflow:hidden; display:grid; grid-template-columns:40% 60%; border:1px solid var(--border-color); box-shadow:0 30px 80px rgba(0,0,0,0.6); }
+        .modal-img-col { position:relative; background:#000; overflow:hidden; }
+        .modal-img-col img { width:100%; height:100%; object-fit:cover; opacity:0.9; }
+        .modal-img-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,0.75),transparent); display:flex; flex-direction:column; justify-content:flex-end; padding:25px; }
+        .modal-img-overlay h2 { color:white; font-size:1.4rem; font-weight:800; }
+        .modal-img-overlay p { color:#cbd5e1; font-size:0.88rem; margin-top:5px; }
+        .modal-close-btn { position:absolute; top:15px; right:15px; width:38px; height:38px; background:rgba(0,0,0,0.6); border:none; border-radius:50%; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.3s; }
+        .modal-close-btn:hover { background:#ef4444; }
+        .modal-form-col { padding:30px; overflow-y:auto; }
+        .modal-price-row { display:flex; justify-content:space-between; align-items:center; margin:15px 0; padding:15px; background:rgba(245,158,11,0.08); border-radius:12px; border:1px solid rgba(245,158,11,0.25); }
+        .modal-price-big { font-size:1.8rem; font-weight:800; color:#f59e0b; }
+        .amenities-modal { display:flex; flex-wrap:wrap; gap:8px; margin:15px 0; }
+        .booking-form input, .booking-form select { width:100%; margin-bottom:14px; }
+        .user-hint { background:rgba(45,212,191,0.1); color:var(--secondary-color); padding:10px 15px; border-radius:10px; margin-bottom:15px; display:none; font-size:0.88rem; }
+        .btn-confirm { width:100%; padding:15px; background:linear-gradient(135deg,var(--secondary-color),#0d9488); color:#0f172a; border:none; border-radius:14px; font-weight:800; font-size:1.05rem; cursor:pointer; margin-top:10px; font-family:inherit; transition:0.3s; }
+        .btn-confirm:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(45,212,191,0.5); }
+        .success-modal-content { max-width:400px; text-align:center; padding:50px 30px; border-radius:30px; background:var(--card-bg); border:1px solid var(--border-color); }
+        @media(max-width:768px){ .modal-container { grid-template-columns:1fr; } .modal-img-col { height:200px; } }
+
+        .site-footer { background:#020617; padding:60px 20px 30px; border-top:1px solid rgba(255,255,255,0.05); }
+        .footer-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:40px; }
+        .footer-bottom { text-align:center; margin-top:40px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.05); color:var(--text-sec); font-size:0.85rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <nav>
+            <a href="index.html" >الرئيسية</a>
+            <a href="programs.html">البرامج</a>
+            <a href="ai-programmes.html"> المستشار السياحي</a>
+            <a href="ai-hotels.html">المستشار الفندقي</a>
+            <a href="hotels.html" class="active">الفنادق</a>
+            <a href="souvenirs.html">التذكارات</a>
+            <a href="bookings.html">حجوزاتي</a>
+            <a href="contact.html">اتصل بنا</a>
+        </nav>
+        <div class="header-actions">
+            <button class="theme-toggle" onclick="toggleTheme()"><i id="themeIcon" class="fas fa-moon"></i></button>
+            <div id="authLinks"></div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="hotels-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content" data-aos="fade-up">
+            <h2><i class="fas fa-bed" style="color:#f59e0b"></i> إقامات فاخرة</h2>
+            <p>من الفنادق العصرية إلى دور الضيافة التقليدية — لكل ميزانية خيارها المثالي</p>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <div class="filter-container" data-aos="fade-up">
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label><i class="fas fa-search"></i> بحث</label>
+                <input type="text" id="searchInput" class="filter-input" placeholder="اسم الفندق أو الموقع...">
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-building"></i> نوع الإقامة</label>
+                <select id="typeSelect" class="filter-input">
+                    <option value="all">الكل</option>
+                    <option value="فندق">فندق</option>
+                    <option value="منتجع">منتجع</option>
+                    <option value="نزل">نزل تقليدي</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-star"></i> التصنيف</label>
+                <select id="starsSelect" class="filter-input">
+                    <option value="all">الكل</option>
+                    <option value="5">5 نجوم</option>
+                    <option value="4">4 نجوم فأكثر</option>
+                    <option value="3">3 نجوم فأكثر</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-coins"></i> السعر / الليلة</label>
+                <select id="priceSelect" class="filter-input">
+                    <option value="all">كل الأسعار</option>
+                    <option value="5000">أقل من 5,000 دج</option>
+                    <option value="10000">أقل من 10,000 دج</option>
+                    <option value="15000">أقل من 15,000 دج</option>
+                </select>
+            </div>
+            <button class="btn-filter" onclick="applyFilters()">
+                <i class="fas fa-sliders-h"></i> تصفية
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <span id="resultsCount" style="color:var(--text-sec); font-size:0.9rem;"></span>
+            <a href="ai-hotels.html" style="color:#f59e0b; font-size:0.9rem; font-weight:bold;">
+                <i class="fas fa-robot"></i> اقترح لي فندق بالـ AI
+            </a>
+        </div>
+        <div class="grid-container" id="hotelsGrid">
+            <div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--text-sec);">
+                <i class="fas fa-circle-notch fa-spin fa-3x" style="color:#f59e0b"></i>
+                <p style="margin-top:20px;">جاري البحث عن أفضل الإقامات...</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div>
+            <h3 style="color:var(--primary-color); margin-bottom:15px;"><i class="fas fa-map-marked-alt"></i> حوس بيا</h3>
+            <p style="color:var(--text-sec); font-size:0.9rem;">نضمن لك إقامة مريحة وتجربة لا تُنسى.</p>
+            <div style="display:flex; gap:12px; margin-top:15px; font-size:1.2rem; color:var(--text-sec);">
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+            </div>
+        </div>
+        <div>
+            <h4 style="color:white; margin-bottom:15px;">خدماتنا</h4>
+            <ul style="color:var(--text-sec); line-height:2.2; font-size:0.9rem;">
+                <li><a href="ai-hotels.html" style="color:var(--text-sec);">اقتراح فندق بالـ AI</a></li>
+                <li><a href="bookings.html" style="color:var(--text-sec);">حجوزاتي</a></li>
+                <li><a href="contact.html" style="color:var(--text-sec);">الدعم والمساعدة</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 style="color:white; margin-bottom:15px;">انضم كشريك</h4>
+            <p style="color:var(--text-sec); font-size:0.88rem; line-height:1.7;">هل تمتلك فندقاً أو نزلاً؟ انضم إلى شبكتنا وصل لآلاف السياح.</p>
+            <a href="contact.html" style="display:inline-block; margin-top:10px; color:var(--secondary-color); font-weight:bold; font-size:0.9rem;">التواصل معنا ←</a>
+        </div>
+    </div>
+    <div class="footer-bottom">&copy; 2025 حوس بيا — جميع الحقوق محفوظة</div>
+</footer>
+
+<!-- Booking Modal -->
+<div class="modal-overlay" id="bookingModal">
+    <div class="modal-container">
+        <div class="modal-img-col">
+            <img id="modalImg" src="" alt="">
+            <button class="modal-close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-img-overlay">
+                <h2 id="modalImgTitle"></h2>
+                <p id="modalImgSub"></p>
+            </div>
+        </div>
+        <div class="modal-form-col">
+            <h3><i class="fas fa-calendar-check" style="color:var(--secondary-color)"></i> حجز الإقامة</h3>
+            <div class="modal-price-row">
+                <div>
+                    <div style="color:var(--text-sec); font-size:0.85rem;">السعر لكل ليلة</div>
+                    <div class="modal-price-big" id="modalPrice"></div>
+                    <div class="points-hint"><i class="fas fa-star"></i> +<span id="modalPoints">0</span> نقطة ولاء</div>
+                </div>
+                <div style="text-align:center; background:rgba(16,185,129,0.1); padding:12px 18px; border-radius:12px; border:1px solid rgba(16,185,129,0.2);">
+                    <i class="fas fa-shield-alt" style="color:#10b981; font-size:1.5rem;"></i>
+                    <div style="color:#10b981; font-size:0.8rem; font-weight:bold; margin-top:5px;">حجز آمن</div>
+                </div>
+            </div>
+            <div id="modalAmenities" class="amenities-modal"></div>
+            <div class="user-hint" id="userHint"><i class="fas fa-user-check"></i> الحجز باسم: <strong id="autoName"></strong></div>
+            <div class="booking-form">
+                <input type="hidden" id="serviceId"><input type="hidden" id="serviceName">
+                <input type="hidden" id="servicePrice"><input type="hidden" id="serviceImg">
+                <label style="display:block;color:var(--text-sec);font-size:0.88rem;margin-bottom:6px;">الاسم الكامل</label>
+                <input type="text" id="bkName" placeholder="اسمك الكريم">
+                <label style="display:block;color:var(--text-sec);font-size:0.88rem;margin-bottom:6px;">رقم الهاتف</label>
+                <input type="tel" id="bkPhone" placeholder="0X XX XX XX XX">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div>
+                        <label style="display:block;color:var(--text-sec);font-size:0.88rem;margin-bottom:6px;">تاريخ الوصول</label>
+                        <input type="date" id="bkCheckIn">
+                    </div>
+                    <div>
+                        <label style="display:block;color:var(--text-sec);font-size:0.88rem;margin-bottom:6px;">تاريخ المغادرة</label>
+                        <input type="date" id="bkCheckOut">
+                    </div>
+                </div>
+                <label style="display:block;color:var(--text-sec);font-size:0.88rem;margin-bottom:6px;">عدد الأشخاص</label>
+                <select id="bkPax">
+                    <option value="1">1 شخص</option>
+                    <option value="2">2 أشخاص</option>
+                    <option value="3">3 أشخاص</option>
+                    <option value="4">4 أشخاص</option>
+                </select>
+                <button class="btn-confirm" id="confirmBtn" onclick="confirmBooking()">
+                    <i class="fas fa-check-circle"></i> تأكيد الحجز
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-overlay" id="successModal">
+    <div class="success-modal-content">
+        <div style="font-size:4rem; margin-bottom:20px;">🏨</div>
+        <h3 style="color:var(--text-main); margin-bottom:10px;">تم الحجز بنجاح!</h3>
+        <p style="color:var(--text-sec); margin-bottom:25px;">تم تسجيل حجزك. سيتواصل معك الفندق للتأكيد.</p>
+        <a href="bookings.html" class="btn-confirm" style="text-decoration:none; display:block; color:#0f172a;">
+            متابعة حجوزاتي
+        </a>
+    </div>
+</div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="chat-widget.js"></script>
+<script>
+'use strict';
+AOS.init({ duration:800, once:true });
+
+const themeIcon = document.getElementById('themeIcon');
+if(localStorage.getItem('theme')==='light'){ document.body.classList.add('light-mode'); themeIcon.classList.replace('fa-moon','fa-sun'); }
+window.toggleTheme = function(){
+    document.body.classList.toggle('light-mode');
+    const isLight = document.body.classList.contains('light-mode');
+    localStorage.setItem('theme', isLight?'light':'dark');
+    themeIcon.classList.toggle('fa-moon',!isLight); themeIcon.classList.toggle('fa-sun',isLight);
+};
+
+function initAuth() {
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+    const area = document.getElementById('authArea') || document.getElementById('authLinks');
+    if (!area) return;
+    if (user) {
+        const name = user.name || user.originalName || user.username || 'مستخدم';
+        const initial = name.trim().charAt(0).toUpperCase();
+        area.innerHTML = `
+            <a href="profile.html" class="btn-auth-user">
+                <span class="auth-avatar"></span>
+                <span class="auth-name"></span>
+            </a>
+            <button class="btn-nav-logout" onclick="logout()" title="تسجيل الخروج" type="button"><i class="fas fa-sign-out-alt"></i></button>`;
+        area.querySelector('.auth-avatar').textContent = initial;
+        area.querySelector('.auth-name').textContent = name;
+    } else {
+        area.innerHTML = `<a href="login.html" class="btn-auth-login"><i class="fas fa-sign-in-alt"></i> دخول</a>`;
+    }
+}
+window.logout = function () {
+    if (confirm('تسجيل الخروج؟')) { localStorage.removeItem('hawsbiyaUser'); location.reload(); }
+};
+initAuth();
+
+let allHotels = [];
+
+const amenityIcons = { 'مسبح':'fa-swimming-pool', 'سبا':'fa-spa', 'واي فاي':'fa-wifi', 'مطعم':'fa-utensils', 'موقف سيارات':'fa-parking', 'قاعة مؤتمرات':'fa-projector-screen', 'إفطار':'fa-coffee', 'مكيف':'fa-snowflake', 'تلفاز ذكي':'fa-tv', 'حديقة':'fa-tree', 'جولات سياحية':'fa-map-signs', 'مطبخ مشترك':'fa-blender', 'شاي مجاني':'fa-mug-hot', 'فناء داخلي':'fa-archway', '5G':'fa-signal', 'أولمبي':'fa-swimming-pool', 'خارجي':'fa-sun' };
+function getAmenityIcon(a){ for(const [k,v] of Object.entries(amenityIcons)){ if(a.includes(k)) return v; } return 'fa-check'; }
+
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function starsHtml(rating){
+    let s=''; const r=Math.round(rating||4);
+    for(let i=0;i<5;i++) s+=`<i class="fa${i<r?'s':'r'} fa-star" style="color:#f59e0b;font-size:0.8rem;"></i>`;
+    return s;
+}
+
+async function loadHotels(){
+    try { const res=await fetch('/api/hotels'); allHotels=await res.json(); }
+    catch(e){
+        allHotels=[
+            { id:1, name:"فندق الأغواط الكبير", location:"وسط المدينة", price:18000, rating:5, type:"فندق", desc:"أيقونة الفخامة في المدينة، تصميم عصري وخدمات راقية.", image:"https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80", amenities:["مسبح أولمبي","سبا","قاعة مؤتمرات","واي فاي 5G"] },
+            { id:2, name:"منتجع واحة النخيل", location:"منطقة الواحات", price:12500, rating:4.8, type:"منتجع", desc:"استمتع بالهدوء وسط الطبيعة الخلابة وأشجار النخيل.", image:"https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&q=80", amenities:["حديقة واسعة","إفطار تقليدي","مسبح خارجي","جولات سياحية"] },
+            { id:3, name:"فندق البستان", location:"حي المعمورة", price:5000, rating:4.2, type:"فندق", desc:"خيار اقتصادي ممتاز قريب من المرافق الحيوية.", image:"https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&q=80", amenities:["واي فاي","موقف سيارات","تلفاز ذكي"] },
+            { id:4, name:"دار الضيافة التقليدية", location:"القصبة القديمة", price:6500, rating:4.6, type:"نزل", desc:"عش تجربة السكن التقليدي في منزل عتيق تم ترميمه بعناية.", image:"https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80", amenities:["فناء داخلي","مطبخ مشترك","شاي مجاني"] }
+        ];
+    }
+    renderHotels(allHotels);
+}
+
+function renderHotels(hotels){
+    const g=document.getElementById('hotelsGrid');
+    const cnt=document.getElementById('resultsCount');
+    g.innerHTML='';
+    cnt.textContent=`${hotels.length} إقامة متاحة`;
+    if(!hotels.length){
+        g.innerHTML=`<div class="empty-state"><i class="fas fa-hotel" style="display:block;font-size:3rem;opacity:0.3;margin-bottom:20px;"></i><h3>لا توجد إقامات مطابقة</h3><button onclick="resetFilters()" class="btn-filter" style="margin:15px auto;">عرض الكل</button></div>`;
+        return;
+    }
+    hotels.forEach((h,i)=>{
+        const pts=Math.round(Number(h.price)*0.005);
+        const amenHtml=(h.amenities||[]).slice(0,3).map(a=>`<span class="amenity-tag"><i class="fas ${getAmenityIcon(a)}"></i> ${escHtml(a)}</span>`).join('');
+        g.innerHTML+=`
+        <div class="card" data-aos="fade-up" data-aos-delay="${i*60}">
+            <img src="${escHtml(h.image)}" class="card-image" alt="${escHtml(h.name)}">
+            <div class="hotel-type-badge">${escHtml(h.type||'فندق')}</div>
+            <div class="hotel-rating-badge">${starsHtml(h.rating)} <span style="color:#374151;font-size:0.8rem;">${h.rating}</span></div>
+            <div class="card-content">
+                <h3>${escHtml(h.name)}</h3>
+                <p style="color:var(--text-sec);font-size:0.88rem;line-height:1.5;margin-bottom:8px;">${escHtml(h.desc||'إقامة مريحة')}</p>
+                <div class="card-meta" style="margin-bottom:8px;">
+                    <span><i class="fas fa-map-marker-alt"></i> ${escHtml(h.location||'الجزائر')}</span>
+                </div>
+                <div class="amenities-row">${amenHtml}</div>
+                <div style="margin-top:auto; display:flex; justify-content:space-between; align-items:flex-end;">
+                    <div>
+                        <div class="price">${Number(h.price).toLocaleString('ar')} دج <span class="price-night">/ ليلة</span></div>
+                        <div class="points-hint"><i class="fas fa-star"></i> +${pts} نقطة ولاء</div>
+                    </div>
+                    <button onclick='openBooking(${JSON.stringify(h).replace(/'/g,"&#39;")})' class="btn-book">
+                        احجز <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    });
+}
+
+window.applyFilters=function(){
+    const q=document.getElementById('searchInput').value.toLowerCase();
+    const type=document.getElementById('typeSelect').value;
+    const stars=document.getElementById('starsSelect').value;
+    const maxP=document.getElementById('priceSelect').value;
+    const f=allHotels.filter(h=>{
+        const mQ=!q||h.name.toLowerCase().includes(q)||(h.location&&h.location.toLowerCase().includes(q));
+        const mT=type==='all'||(h.type&&h.type.includes(type));
+        const mS=stars==='all'||Math.round(h.rating)>=parseInt(stars);
+        const mP=maxP==='all'||Number(h.price)<=parseInt(maxP);
+        return mQ&&mT&&mS&&mP;
+    });
+    renderHotels(f);
+};
+window.resetFilters=function(){
+    ['searchInput','typeSelect','starsSelect','priceSelect'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el.tagName==='SELECT') el.selectedIndex=0; else el.value='';
+    });
+    renderHotels(allHotels);
+};
+
+window.openBooking=function(h){
+    if(!user.username){alert('يجب تسجيل الدخول أولاً');window.location.href='login.html';return;}
+    document.getElementById('serviceId').value=h.id;
+    document.getElementById('serviceName').value=h.name;
+    document.getElementById('servicePrice').value=h.price;
+    document.getElementById('serviceImg').value=h.image;
+    document.getElementById('modalImg').src=h.image;
+    document.getElementById('modalImgTitle').textContent=h.name;
+    document.getElementById('modalImgSub').textContent=(h.location||'الجزائر')+' • '+starsHtml(h.rating).replace(/<[^>]+>/g,'★').trim();
+    document.getElementById('modalPrice').textContent=Number(h.price).toLocaleString('ar')+' دج';
+    document.getElementById('modalPoints').textContent=Math.round(Number(h.price)*0.005);
+    document.getElementById('modalAmenities').innerHTML=(h.amenities||[]).map(a=>`<span class="amenity-tag"><i class="fas ${getAmenityIcon(a)}"></i> ${escHtml(a)}</span>`).join('');
+    document.getElementById('bkName').value=user.originalName||user.username;
+    document.getElementById('bkPhone').value=user.phone||'';
+    document.getElementById('userHint').style.display='block';
+    document.getElementById('autoName').textContent=user.originalName||user.username;
+    const today=new Date().toISOString().split('T')[0];
+    document.getElementById('bkCheckIn').min=today; document.getElementById('bkCheckIn').value=today;
+    document.getElementById('bkCheckOut').min=today;
+    document.getElementById('bookingModal').classList.add('active');
+};
+window.closeModal=function(){ document.getElementById('bookingModal').classList.remove('active'); };
+
+window.confirmBooking=async function(){
+    const cin=document.getElementById('bkCheckIn').value;
+    const cout=document.getElementById('bkCheckOut').value;
+    const name=document.getElementById('bkName').value.trim();
+    if(!cin||!name){alert('يرجى تعبئة جميع الحقول');return;}
+    if(cout&&cout<cin){alert('تاريخ المغادرة يجب أن يكون بعد تاريخ الوصول');return;}
+    const btn=document.getElementById('confirmBtn');
+    btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري الحجز...'; btn.disabled=true;
+    const data={
+        serviceId:document.getElementById('serviceId').value,
+        serviceName:document.getElementById('serviceName').value,
+        price:parseInt(document.getElementById('servicePrice').value),
+        customerName:name, phone:document.getElementById('bkPhone').value,
+        date:cin, checkOut:cout, pax:document.getElementById('bkPax').value,
+        user:user.username, status:'pending', type:'فندق',
+        loyaltyPoints:Math.round(parseInt(document.getElementById('servicePrice').value)*0.005)
+    };
+    try {
+        const res=await fetch('/api/bookings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+        if(res.ok){closeModal();document.getElementById('successModal').classList.add('active');}
+        else{alert('حدث خطأ أثناء الحجز');}
+    } catch(e){alert('تعذر الاتصال بالسيرفر');}
+    finally{btn.innerHTML='<i class="fas fa-check-circle"></i> تأكيد الحجز';btn.disabled=false;}
+};
+document.getElementById('successModal').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('active');});
+document.getElementById('bookingModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+
+loadHotels();
+</script>
+</body>
+</html>

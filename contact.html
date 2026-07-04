@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حوس بيا - اتصل بنا</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CONTACT PAGE ===== */
+
+        .contact-hero {
+            height: 50vh;
+            background: url('https://loremflickr.com/800/500/oasis,palm') center/cover no-repeat fixed;
+            position: relative;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            border-radius: 0 0 50px 50px; overflow: hidden; margin-bottom: 60px;
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(15,23,42,0.75), var(--main-bg));
+        }
+        .hero-content { position: relative; z-index: 2; color: white; padding: 20px; }
+        .hero-content h1 { font-size: 3.2rem; font-weight: 900; margin-bottom: 12px; }
+        .hero-content p { font-size: 1.1rem; color: #cbd5e1; max-width: 500px; margin: 0 auto; }
+
+        /* Info Cards */
+        .contact-wrapper {
+            max-width: 1200px; margin: 0 auto 60px; padding: 0 20px;
+            display: grid; grid-template-columns: 1fr 1.6fr; gap: 40px;
+        }
+
+        .info-section { display: flex; flex-direction: column; gap: 20px; }
+
+        .info-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 18px; padding: 22px;
+            display: flex; align-items: center; gap: 18px; transition: 0.3s;
+        }
+        .info-card:hover { border-color: var(--primary-color); transform: translateX(-5px); }
+        .info-icon {
+            width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+        }
+        .info-card-text h4 { color: white; font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+        .info-card-text p { color: var(--text-sec); font-size: 0.88rem; }
+        .info-card-text a { color: var(--secondary-color); text-decoration: none; }
+        .info-card-text a:hover { text-decoration: underline; }
+
+        /* Social Buttons */
+        .social-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 5px; }
+        .social-btn {
+            display: flex; align-items: center; gap: 8px; padding: 10px 18px;
+            border-radius: 12px; font-size: 0.88rem; font-weight: 700;
+            text-decoration: none; transition: 0.3s; border: 1px solid transparent;
+        }
+        .social-btn:hover { transform: translateY(-2px); }
+        .btn-whatsapp { background: rgba(37,211,102,0.12); color: #25d366; border-color: rgba(37,211,102,0.3); }
+        .btn-instagram { background: rgba(225,48,108,0.12); color: #e1306c; border-color: rgba(225,48,108,0.3); }
+        .btn-tiktok { background: rgba(139,92,246,0.12); color: var(--primary-color); border-color: rgba(139,92,246,0.3); }
+        .btn-facebook { background: rgba(24,119,242,0.12); color: #1877f2; border-color: rgba(24,119,242,0.3); }
+
+        /* Contact Form */
+        .contact-form-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 25px; padding: 35px; position: relative; overflow: hidden;
+        }
+        .contact-form-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        .form-title { font-size: 1.4rem; font-weight: 800; color: white; margin-bottom: 5px; }
+        .form-subtitle { color: var(--text-sec); font-size: 0.9rem; margin-bottom: 25px; }
+
+        .form-tabs { display: flex; gap: 8px; margin-bottom: 25px; }
+        .form-tab {
+            padding: 8px 18px; border-radius: 25px; border: 1px solid var(--border-color);
+            color: var(--text-sec); cursor: pointer; transition: 0.3s; font-family: 'Changa', sans-serif;
+            font-size: 0.88rem; font-weight: 700; background: transparent;
+        }
+        .form-tab.active {
+            background: var(--primary-color); border-color: var(--primary-color); color: white;
+        }
+        .form-panel { display: none; }
+        .form-panel.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; color: var(--text-sec); font-size: 0.9rem; font-weight: 600; margin-bottom: 7px; }
+        .form-group label span { color: #ef4444; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 13px 15px;
+            background: var(--main-bg); border: 1px solid var(--border-color);
+            border-radius: 12px; color: white; font-family: 'Changa', sans-serif; font-size: 0.95rem;
+            transition: 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
+        }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn-send {
+            width: 100%; background: linear-gradient(135deg, var(--primary-color), #6d28d9);
+            color: white; border: none; padding: 15px; border-radius: 12px;
+            font-size: 1.05rem; font-weight: 800; cursor: pointer; font-family: 'Changa', sans-serif;
+            transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-send:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(139,92,246,0.5); }
+        .btn-send.loading { opacity: 0.7; pointer-events: none; }
+
+        /* B2B Partner Form */
+        .b2b-header {
+            background: linear-gradient(135deg, rgba(45,212,191,0.1), rgba(139,92,246,0.1));
+            border: 1px solid rgba(45,212,191,0.2); border-radius: 14px;
+            padding: 15px 18px; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .b2b-icon { font-size: 1.8rem; }
+        .b2b-header h4 { color: white; font-size: 1rem; font-weight: 700; margin-bottom: 3px; }
+        .b2b-header p { color: var(--text-sec); font-size: 0.82rem; }
+
+        /* Map */
+        .map-section { max-width: 1200px; margin: 0 auto 60px; padding: 0 20px; }
+        .map-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; overflow: hidden;
+        }
+        .map-header { padding: 20px 25px; display: flex; align-items: center; justify-content: space-between; }
+        .map-header h3 { font-size: 1.15rem; font-weight: 800; color: white; }
+        .map-card iframe { width: 100%; height: 350px; border: none; display: block; }
+
+        /* FAQ */
+        .faq-section { max-width: 900px; margin: 0 auto 60px; padding: 0 20px; }
+        .faq-title {
+            text-align: center; font-size: 2rem; font-weight: 900; color: white;
+            margin-bottom: 10px;
+        }
+        .faq-subtitle { text-align: center; color: var(--text-sec); margin-bottom: 40px; }
+        .faq-item {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 16px; margin-bottom: 12px; overflow: hidden; transition: 0.3s;
+        }
+        .faq-item.open { border-color: rgba(139,92,246,0.4); }
+        .faq-question {
+            padding: 20px 22px; display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; color: white; font-weight: 700; font-size: 1rem;
+            user-select: none; transition: 0.2s;
+        }
+        .faq-question:hover { color: var(--primary-color); }
+        .faq-arrow { color: var(--primary-color); transition: 0.3s; font-size: 0.9rem; }
+        .faq-item.open .faq-arrow { transform: rotate(180deg); }
+        .faq-answer {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+            padding: 0 22px; color: var(--text-sec); font-size: 0.92rem; line-height: 1.7;
+        }
+        .faq-item.open .faq-answer { max-height: 300px; padding: 0 22px 20px; }
+
+        /* Success toast */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #10b981; color: white; padding: 15px 30px; border-radius: 15px;
+            font-weight: 700; font-size: 1rem; z-index: 9999; transition: 0.4s;
+            display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            animation: none;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        @media (max-width: 900px) {
+            .contact-wrapper { grid-template-columns: 1fr; }
+            .hero-content h1 { font-size: 2.2rem; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="header-inner">
+        <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <nav>
+            <a href="index.html" >الرئيسية</a>
+            <a href="programs.html">البرامج</a>
+            <a href="ai-programmes.html"> المستشار السياحي</a>
+            <a href="ai-hotels.html">المستشار الفندقي</a>
+            <a href="hotels.html" >الفنادق</a>
+            <a href="souvenirs.html">التذكارات</a>
+            <a href="bookings.html">حجوزاتي</a>
+            <a href="contact.html" class="active">اتصل بنا</a>
+        </nav>
+        <div class="header-actions">
+            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+            <div id="authArea"></div>
+        </div>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="contact-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(45,212,191,0.15);border:1px solid rgba(45,212,191,0.4);color:var(--secondary-color);padding:8px 18px;border-radius:30px;font-size:0.9rem;font-weight:700;margin-bottom:18px;">
+            <i class="fas fa-headset"></i> نحن هنا لمساعدتك
+        </div>
+        <h1>تواصل معنا</h1>
+        <p>فريقنا متاح 7 أيام في الأسبوع للإجابة على استفساراتك</p>
+    </div>
+</section>
+
+<!-- MAIN GRID -->
+<div class="contact-wrapper">
+
+    <!-- Info Column -->
+    <div class="info-section" data-aos="fade-right">
+
+        <div class="info-card">
+            <div class="info-icon" style="background:rgba(139,92,246,0.15);color:var(--primary-color);">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="info-card-text">
+                <h4>العنوان</h4>
+                <p>حي السلام، الأغواط<br>ولاية الأغواط، الجزائر</p>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="info-icon" style="background:rgba(45,212,191,0.12);color:var(--secondary-color);">
+                <i class="fas fa-phone-alt"></i>
+            </div>
+            <div class="info-card-text">
+                <h4>الهاتف</h4>
+                <p><a href="tel:+213555000000">+213 555 000 000</a></p>
+                <p style="margin-top:4px;"><a href="tel:+213555000001">+213 555 000 001</a></p>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="info-icon" style="background:rgba(245,158,11,0.12);color:#f59e0b;">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="info-card-text">
+                <h4>البريد الإلكتروني</h4>
+                <p><a href="mailto:contact@hawsbiya.dz">contact@hawsbiya.dz</a></p>
+                <p style="margin-top:4px;"><a href="mailto:partenariat@hawsbiya.dz">partenariat@hawsbiya.dz</a></p>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="info-icon" style="background:rgba(16,185,129,0.1);color:#10b981;">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="info-card-text">
+                <h4>ساعات العمل</h4>
+                <p>الأحد — الخميس: 8ص — 5م</p>
+                <p style="margin-top:3px;">الجمعة — السبت: 9ص — 1م</p>
+            </div>
+        </div>
+
+        <!-- Social -->
+        <div style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:18px;padding:22px;">
+            <h4 style="color:white;font-weight:700;margin-bottom:14px;"><i class="fas fa-share-alt" style="color:var(--primary-color);margin-left:8px;"></i> تابعنا على</h4>
+            <div class="social-btns">
+                <a href="#" class="social-btn btn-whatsapp"><i class="fab fa-whatsapp"></i> واتساب</a>
+                <a href="#" class="social-btn btn-instagram"><i class="fab fa-instagram"></i> انستغرام</a>
+                <a href="#" class="social-btn btn-tiktok"><i class="fab fa-tiktok"></i> تيكتوك</a>
+                <a href="#" class="social-btn btn-facebook"><i class="fab fa-facebook"></i> فيسبوك</a>
+            </div>
+        </div>
+
+        <!-- Response time -->
+        <div style="background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(45,212,191,0.08));border:1px solid rgba(139,92,246,0.2);border-radius:16px;padding:20px;display:flex;align-items:center;gap:15px;">
+            <i class="fas fa-bolt" style="font-size:2rem;color:#f59e0b;"></i>
+            <div>
+                <div style="color:white;font-weight:800;">متوسط وقت الرد: <span style="color:var(--secondary-color);">أقل من ساعتين</span></div>
+                <div style="color:var(--text-sec);font-size:0.85rem;margin-top:4px;">نضمن لك رداً سريعاً على كل استفساراتك</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Form Column -->
+    <div class="contact-form-card" data-aos="fade-left">
+        <h2 class="form-title">أرسل لنا رسالة</h2>
+        <p class="form-subtitle">اختر نوع طلبك وسنتواصل معك في أقرب وقت</p>
+
+        <!-- Tabs -->
+        <div class="form-tabs">
+            <button class="form-tab active" onclick="switchTab('general', this)"><i class="fas fa-comment"></i> استفسار عام</button>
+            <button class="form-tab" onclick="switchTab('b2b', this)"><i class="fas fa-handshake"></i> شراكة تجارية</button>
+            <button class="form-tab" onclick="switchTab('complaint', this)"><i class="fas fa-exclamation-circle"></i> شكوى</button>
+        </div>
+
+        <!-- General Tab -->
+        <div class="form-panel active" id="panel-general">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>الاسم الكامل <span>*</span></label>
+                    <input type="text" id="gName" placeholder="اسمك الكامل">
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف <span>*</span></label>
+                    <input type="tel" id="gPhone" placeholder="0xxx xxx xxx">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="gEmail" placeholder="example@email.com">
+            </div>
+            <div class="form-group">
+                <label>موضوع الرسالة <span>*</span></label>
+                <select id="gSubject">
+                    <option value="">-- اختر الموضوع --</option>
+                    <option>استفسار عن برنامج سياحي</option>
+                    <option>استفسار عن فندق</option>
+                    <option>معلومات عن الأغواط</option>
+                    <option>دعم تقني</option>
+                    <option>اقتراح</option>
+                    <option>أخرى</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>الرسالة <span>*</span></label>
+                <textarea id="gMessage" placeholder="اكتب استفسارك هنا بالتفصيل..."></textarea>
+            </div>
+            <button class="btn-send" onclick="sendForm('general')">
+                <i class="fas fa-paper-plane"></i> إرسال الرسالة
+            </button>
+        </div>
+
+        <!-- B2B Tab -->
+        <div class="form-panel" id="panel-b2b">
+            <div class="b2b-header">
+                <div class="b2b-icon">🤝</div>
+                <div>
+                    <h4>انضم كشريك في حوس بيا</h4>
+                    <p>فنادق، وكالات سفر، مرشدون، حرفيون — نحن نفتح أبوابنا لكل الشركاء</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>الاسم الكامل <span>*</span></label>
+                    <input type="text" id="bName" placeholder="اسمك">
+                </div>
+                <div class="form-group">
+                    <label>الهاتف <span>*</span></label>
+                    <input type="tel" id="bPhone" placeholder="0xxx xxx xxx">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>اسم المؤسسة <span>*</span></label>
+                    <input type="text" id="bCompany" placeholder="اسم الشركة أو المؤسسة">
+                </div>
+                <div class="form-group">
+                    <label>نوع النشاط <span>*</span></label>
+                    <select id="bType">
+                        <option value="">-- اختر --</option>
+                        <option>فندق / نزل</option>
+                        <option>وكالة سياحية</option>
+                        <option>مرشد سياحي</option>
+                        <option>ناقل / مواصلات</option>
+                        <option>حرفي / صانع تقليدي</option>
+                        <option>مطعم / كافيه</option>
+                        <option>أخرى</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>المدينة / الولاية <span>*</span></label>
+                <input type="text" id="bCity" placeholder="مثال: الأغواط">
+            </div>
+            <div class="form-group">
+                <label>كيف يمكننا مساعدتك؟</label>
+                <textarea id="bMessage" placeholder="اشرح نشاطك وما تتوقعه من الشراكة..."></textarea>
+            </div>
+            <div style="background:rgba(45,212,191,0.07);border:1px solid rgba(45,212,191,0.2);border-radius:10px;padding:12px 15px;margin-bottom:18px;font-size:0.85rem;color:var(--secondary-color);display:flex;align-items:center;gap:10px;">
+                <i class="fas fa-info-circle"></i>
+                التسجيل مجاني — عمولة 5% فقط على الحجوزات الناجحة
+            </div>
+            <button class="btn-send" style="background:linear-gradient(135deg,var(--secondary-color),#0284c7)" onclick="sendForm('b2b')">
+                <i class="fas fa-handshake"></i> أرسل طلب الشراكة
+            </button>
+        </div>
+
+        <!-- Complaint Tab -->
+        <div class="form-panel" id="panel-complaint">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>الاسم <span>*</span></label>
+                    <input type="text" id="cName" placeholder="اسمك">
+                </div>
+                <div class="form-group">
+                    <label>الهاتف <span>*</span></label>
+                    <input type="tel" id="cPhone" placeholder="0xxx xxx xxx">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>رقم الحجز (إن وجد)</label>
+                <input type="text" id="cBookingId" placeholder="مثال: BK-2025-001">
+            </div>
+            <div class="form-group">
+                <label>نوع الشكوى <span>*</span></label>
+                <select id="cType">
+                    <option value="">-- اختر --</option>
+                    <option>مشكلة في الحجز</option>
+                    <option>خدمة سيئة</option>
+                    <option>خطأ في المعلومات</option>
+                    <option>مشكلة في الدفع</option>
+                    <option>تأخر في الرد</option>
+                    <option>أخرى</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>تفاصيل الشكوى <span>*</span></label>
+                <textarea id="cMessage" placeholder="اشرح مشكلتك بالتفصيل لنتمكن من مساعدتك أسرع..."></textarea>
+            </div>
+            <button class="btn-send" style="background:linear-gradient(135deg,#ef4444,#dc2626)" onclick="sendForm('complaint')">
+                <i class="fas fa-exclamation-circle"></i> إرسال الشكوى
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MAP -->
+<div class="map-section" data-aos="fade-up">
+    <div class="map-card">
+        <div class="map-header">
+            <h3><i class="fas fa-map-marker-alt" style="color:var(--primary-color);margin-left:8px;"></i> موقعنا — الأغواط، الجزائر</h3>
+            <a href="https://maps.google.com/?q=Laghouat+Algeria" target="_blank"
+               style="color:var(--secondary-color);font-size:0.88rem;font-weight:700;">
+                <i class="fas fa-external-link-alt"></i> افتح في خرائط جوجل
+            </a>
+        </div>
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d50000!2d2.8639!3d33.8003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128c70c5b3f41c4d%3A0x9d4e42d4c3a3c8a7!2sLaghouat%2C%20Algeria!5e0!3m2!1sar!2sdz!4v1700000000000"
+            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+    <h2 class="faq-title" data-aos="fade-up">الأسئلة الشائعة</h2>
+    <p class="faq-subtitle" data-aos="fade-up">إجابات على أكثر الأسئلة التي يطرحها زوارنا</p>
+
+    <div id="faqContainer"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">تم الإرسال بنجاح</span></div>
+
+<script src="chat-widget.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 600, once: true });
+
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+
+function toggleTheme(){
+    const t=localStorage.getItem('theme')==='dark'?'light':'dark';
+    localStorage.setItem('theme',t);
+    document.body.classList.toggle('light-mode',t==='light');
+    document.getElementById('themeIcon').className=t==='dark'?'fas fa-moon':'fas fa-sun';
+}
+(function(){ if(localStorage.getItem('theme')==='light'){ document.body.classList.add('light-mode'); document.getElementById('themeIcon').className='fas fa-sun'; }})();
+
+function initAuth(){
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+    const area = document.getElementById('authArea') || document.getElementById('authLinks');
+    if (!area) return;
+    if (user) {
+        const name = user.name || user.originalName || user.username || 'مستخدم';
+        const initial = name.trim().charAt(0).toUpperCase();
+        area.innerHTML = `
+            <a href="profile.html" class="btn-auth-user">
+                <span class="auth-avatar"></span>
+                <span class="auth-name"></span>
+            </a>
+            <button class="btn-nav-logout" onclick="logout()" title="تسجيل الخروج" type="button"><i class="fas fa-sign-out-alt"></i></button>`;
+        area.querySelector('.auth-avatar').textContent = initial;
+        area.querySelector('.auth-name').textContent = name;
+    } else {
+        area.innerHTML = `<a href="login.html" class="btn-auth-login"><i class="fas fa-sign-in-alt"></i> دخول</a>`;
+    }
+}
+window.logout = function () {
+    if (confirm('تسجيل الخروج؟')) { localStorage.removeItem('hawsbiyaUser'); location.reload(); }
+};
+initAuth();
+
+// Form Tabs
+function switchTab(name, btn) {
+    document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.form-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    btn.classList.add('active');
+}
+
+// Send
+async function sendForm(type) {
+    let payload = {};
+    let valid = true;
+
+    if (type === 'general') {
+        const name = document.getElementById('gName').value.trim();
+        const phone = document.getElementById('gPhone').value.trim();
+        const subject = document.getElementById('gSubject').value;
+        const message = document.getElementById('gMessage').value.trim();
+        if (!name || !phone || !subject || !message) { valid = false; }
+        payload = { name, phone, subject, message, type: 'general' };
+    } else if (type === 'b2b') {
+        const name = document.getElementById('bName').value.trim();
+        const phone = document.getElementById('bPhone').value.trim();
+        const company = document.getElementById('bCompany').value.trim();
+        const bType = document.getElementById('bType').value;
+        const city = document.getElementById('bCity').value.trim();
+        if (!name || !phone || !company || !bType || !city) { valid = false; }
+        payload = { name, phone, company, businessType: bType, city, message: document.getElementById('bMessage').value, type: 'b2b' };
+    } else {
+        const name = document.getElementById('cName').value.trim();
+        const phone = document.getElementById('cPhone').value.trim();
+        const cType = document.getElementById('cType').value;
+        const message = document.getElementById('cMessage').value.trim();
+        if (!name || !phone || !cType || !message) { valid = false; }
+        payload = { name, phone, complaintType: cType, bookingId: document.getElementById('cBookingId').value, message, type: 'complaint' };
+    }
+
+    if (!valid) { alert('يرجى ملء جميع الحقول الإلزامية'); return; }
+
+    const btn = event.currentTarget;
+    btn.classList.add('loading');
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري الإرسال...';
+
+    try {
+        await fetch('/api/messages', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ ...payload, createdAt: new Date().toISOString() })
+        });
+    } catch {}
+
+    await new Promise(r => setTimeout(r, 1000));
+    btn.classList.remove('loading');
+    btn.innerHTML = `<i class="fas fa-paper-plane"></i> ${type === 'b2b' ? 'أرسل طلب الشراكة' : type === 'complaint' ? 'إرسال الشكوى' : 'إرسال الرسالة'}`;
+
+    const msgs = { general: 'تم إرسال رسالتك! سنتواصل معك قريباً 📩', b2b: 'تم استلام طلب الشراكة! سنتواصل معك خلال 24 ساعة 🤝', complaint: 'تم استلام شكواك وسنعالجها فوراً 🙏' };
+    showToast(msgs[type]);
+}
+
+function showToast(msg) {
+    document.getElementById('toastMsg').textContent = msg;
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+// FAQ
+const faqs = [
+    { q: 'كيف يمكنني حجز برنامج سياحي؟', a: 'يمكنك تصفح البرامج السياحية من صفحة "البرامج"، ثم النقر على "احجز الآن" واملأ بياناتك. سيتصل بك فريقنا لتأكيد الحجز خلال ساعتين.' },
+    { q: 'هل الدفع يتم أونلاين؟', a: 'حالياً ندعم الدفع عند الاستلام وكذلك الدفع عبر CIB للحجوزات المؤكدة. سيتم توسيع خيارات الدفع قريباً.' },
+    { q: 'ما هو نظام نقاط الولاء؟', a: 'مع كل حجز تربح نقاط ولاء: 1% من قيمة البرامج و0.5% من قيمة الفنادق. يمكنك استخدام نقاطك للحصول على خصومات على حجوزاتك القادمة.' },
+    { q: 'هل يمكنني إلغاء حجزي؟', a: 'نعم، يمكنك إلغاء أي حجز قبل 48 ساعة من الموعد المحدد بدون رسوم. الإلغاء بعد 48 ساعة يخضع لسياسة الاسترداد الخاصة بمزود الخدمة.' },
+    { q: 'هل المنصة مخصصة للأغواط فقط؟', a: 'بدأنا بالأغواط كمنطقة أساسية، لكننا نغطي برامج في مختلف ولايات الجزائر كغرداية، تمنراست، قسنطينة، وهران وغيرها. نوسع تغطيتنا باستمرار.' },
+    { q: 'كيف يعمل المستشار الذكي؟', a: 'المستشار الذكي يحلل تفضيلاتك (الاهتمامات، المرافقين، المدة، الميزانية) ويقيّم كل برنامج بنقاط توافق مئوية ليقترح عليك الأنسب. كل تحليل مجاني ومخصص لك.' },
+    { q: 'كيف أسجل كشريك تجاري (فندق، وكالة)؟', a: 'اضغط على تبويب "شراكة تجارية" في نموذج الاتصال، أو راسلنا على partenariat@hawsbiya.dz. التسجيل مجاني ونأخذ عمولة 5% فقط على الحجوزات الناجحة.' }
+];
+
+document.getElementById('faqContainer').innerHTML = faqs.map((f, i) => `
+    <div class="faq-item" id="faq${i}" data-aos="fade-up" data-aos-delay="${i * 60}">
+        <div class="faq-question" onclick="toggleFaq(${i})">
+            <span><i class="fas fa-question-circle" style="color:var(--primary-color);margin-left:10px;"></i>${escHtml(f.q)}</span>
+            <i class="fas fa-chevron-down faq-arrow"></i>
+        </div>
+        <div class="faq-answer">${escHtml(f.a)}</div>
+    </div>
+`).join('');
+
+function toggleFaq(idx) {
+    const item = document.getElementById('faq' + idx);
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>

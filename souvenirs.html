@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حوس بيا - المنتجات التقليدية</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== SOUVENIRS PAGE ===== */
+
+        /* Hero */
+        .souvenirs-hero {
+            background: url('https://ar.pngtree.com/so/%D8%AE%D8%A8%D8%B2-%D8%AA%D9%82%D9%84%D9%8A%D8%AF%D9%8A') center/cover no-repeat fixed;
+            position: relative; height: 55vh;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            border-radius: 0 0 50px 50px; overflow: hidden; margin-bottom: 40px;
+        }
+        .souvenirs-hero::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(15,23,42,0.7), rgba(15,23,42,0.95));
+        }
+        .hero-content { position: relative; z-index: 1; color: white; padding: 20px; }
+        .hero-content h1 { font-size: 3rem; font-weight: 900; margin-bottom: 15px; }
+        .hero-content p { font-size: 1.1rem; color: #cbd5e1; max-width: 500px; margin: 0 auto; }
+
+        /* Stats strip */
+        .stats-strip {
+            display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+            max-width: 900px; margin: 0 auto 40px; padding: 0 20px;
+        }
+        .stat-chip {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 30px; padding: 10px 22px; font-size: 0.9rem; font-weight: 700;
+            color: var(--text-sec); display: flex; align-items: center; gap: 8px;
+        }
+        .stat-chip span { color: white; font-size: 1.1rem; }
+
+        /* Category pills */
+        .cat-pills {
+            display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;
+        }
+        .cat-pill {
+            padding: 8px 18px; border-radius: 30px; border: 1px solid var(--border-color);
+            background: var(--card-bg); color: var(--text-sec); cursor: pointer;
+            transition: 0.3s; font-size: 0.88rem; font-weight: 700; font-family: 'Changa', sans-serif;
+        }
+        .cat-pill:hover, .cat-pill.active {
+            border-color: var(--primary-color); background: rgba(139,92,246,0.12); color: var(--primary-color);
+        }
+
+        /* Filters */
+        .filters-section {
+            max-width: 1200px; margin: 0 auto 30px; padding: 0 20px;
+            display: flex; gap: 15px; flex-wrap: wrap; align-items: center;
+        }
+        .search-wrap { position: relative; flex: 1; min-width: 250px; }
+        .search-wrap i { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); color: var(--text-sec); }
+        .filter-input {
+            width: 100%; padding: 12px 42px 12px 15px;
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 12px; color: white; font-family: 'Changa', sans-serif; font-size: 0.95rem;
+        }
+        .filter-input:focus { outline: none; border-color: var(--primary-color); }
+        .filter-select {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 12px; color: white; padding: 12px 15px;
+            font-family: 'Changa', sans-serif; font-size: 0.9rem;
+        }
+
+        /* Grid */
+        .souvenirs-container { max-width: 1200px; margin: 0 auto; padding: 0 20px 80px; }
+        .souvenirs-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; overflow: hidden; transition: 0.35s;
+            position: relative; cursor: pointer;
+        }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); border-color: rgba(139,92,246,0.3); }
+
+        .product-img {
+            height: 220px; background-size: cover; background-position: center;
+            position: relative; overflow: hidden;
+        }
+        .product-img::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 50%;
+            background: linear-gradient(transparent, rgba(15,23,42,0.7));
+        }
+
+        .artisan-badge {
+            position: absolute; top: 12px; right: 12px; z-index: 2;
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+            color: white; padding: 5px 12px; border-radius: 20px;
+            font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; gap: 5px;
+        }
+
+        .stock-badge {
+            position: absolute; top: 12px; left: 12px; z-index: 2;
+            padding: 4px 10px; border-radius: 15px; font-size: 0.75rem; font-weight: 700;
+        }
+        .in-stock { background: rgba(16,185,129,0.85); color: white; }
+        .low-stock { background: rgba(245,158,11,0.85); color: white; }
+        .out-stock { background: rgba(239,68,68,0.85); color: white; }
+
+        .wishlist-btn {
+            position: absolute; bottom: 12px; left: 12px; z-index: 2;
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2); color: white;
+            cursor: pointer; font-size: 0.95rem; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .wishlist-btn:hover, .wishlist-btn.liked { background: rgba(239,68,68,0.8); border-color: transparent; }
+
+        .product-body { padding: 18px; }
+        .product-category {
+            font-size: 0.78rem; color: var(--primary-color); font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;
+        }
+        .product-name { font-size: 1.05rem; font-weight: 800; color: white; margin-bottom: 6px; }
+        .product-origin {
+            display: flex; align-items: center; gap: 5px;
+            color: var(--text-sec); font-size: 0.82rem; margin-bottom: 10px;
+        }
+        .product-origin i { color: var(--secondary-color); }
+        .product-desc { color: var(--text-sec); font-size: 0.85rem; line-height: 1.6; margin-bottom: 14px; }
+
+        .product-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; }
+        .stars { color: #f59e0b; font-size: 0.85rem; }
+        .rating-count { color: var(--text-sec); font-size: 0.8rem; }
+
+        .product-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid var(--border-color); padding-top: 14px;
+        }
+        .product-price { font-size: 1.2rem; font-weight: 900; color: white; }
+        .product-price small { font-size: 0.75rem; color: var(--text-sec); font-weight: 400; }
+        .loyalty-tag {
+            background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
+            color: #f59e0b; padding: 3px 10px; border-radius: 15px; font-size: 0.78rem; font-weight: 700;
+        }
+        .btn-buy {
+            background: linear-gradient(135deg, var(--primary-color), #6d28d9);
+            color: white; border: none; padding: 10px 18px; border-radius: 10px;
+            font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: 0.3s;
+            font-family: 'Changa', sans-serif;
+        }
+        .btn-buy:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(139,92,246,0.5); }
+        .btn-buy:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        /* Artisan Banner */
+        .artisan-banner {
+            max-width: 1200px; margin: 0 auto 40px; padding: 0 20px;
+        }
+        .artisan-card {
+            background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(139,92,246,0.1));
+            border: 1px solid rgba(245,158,11,0.3); border-radius: 20px;
+            padding: 30px; display: flex; align-items: center; gap: 25px; flex-wrap: wrap;
+        }
+        .artisan-icon { font-size: 3.5rem; }
+        .artisan-text h3 { color: white; font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
+        .artisan-text p { color: var(--text-sec); font-size: 0.9rem; }
+        .btn-join-artisan {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+            color: white; border: none; padding: 12px 25px; border-radius: 12px;
+            font-weight: 700; cursor: pointer; font-family: 'Changa', sans-serif;
+            white-space: nowrap; margin-right: auto;
+        }
+
+        /* Buy Modal */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+            z-index: 1000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 25px; width: 95%; max-width: 520px; overflow: hidden;
+        }
+        .modal-img-section { height: 180px; background-size: cover; background-position: center; position: relative; }
+        .modal-img-overlay { position: absolute; inset: 0; background: linear-gradient(transparent, rgba(15,23,42,0.9)); }
+        .modal-img-text { position: absolute; bottom: 15px; right: 20px; color: white; }
+        .modal-img-text h3 { font-size: 1.2rem; font-weight: 800; }
+        .modal-close { position: absolute; top: 12px; left: 12px; width: 34px; height: 34px; border-radius: 50%;
+            background: rgba(0,0,0,0.5); border: none; color: white; cursor: pointer; font-size: 0.95rem;
+            display: flex; align-items: center; justify-content: center; }
+        .modal-body { padding: 25px; }
+        .modal-price-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2);
+            border-radius: 12px; padding: 12px 18px; margin-bottom: 20px;
+        }
+        .modal-price { font-size: 1.3rem; font-weight: 900; color: white; }
+        .modal-pts { color: #f59e0b; font-weight: 700; font-size: 0.9rem; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; color: var(--text-sec); font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 12px 15px; background: var(--main-bg);
+            border: 1px solid var(--border-color); border-radius: 10px;
+            color: white; font-family: 'Changa', sans-serif; font-size: 0.9rem;
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .qty-wrap { display: flex; align-items: center; gap: 10px; }
+        .qty-btn {
+            width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border-color);
+            background: var(--main-bg); color: white; cursor: pointer; font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .qty-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
+        .qty-display {
+            width: 50px; text-align: center; background: var(--main-bg);
+            border: 1px solid var(--border-color); border-radius: 8px; padding: 8px;
+            color: white; font-weight: 700; font-size: 1rem;
+        }
+        .btn-confirm {
+            width: 100%; background: linear-gradient(135deg, var(--primary-color), #6d28d9);
+            color: white; border: none; padding: 15px; border-radius: 12px;
+            font-size: 1.05rem; font-weight: 800; cursor: pointer; font-family: 'Changa', sans-serif;
+            margin-top: 5px; transition: 0.3s;
+        }
+        .btn-confirm:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(139,92,246,0.5); }
+
+        /* Success */
+        .success-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            z-index: 1001; align-items: center; justify-content: center;
+        }
+        .success-overlay.active { display: flex; }
+        .success-box {
+            background: var(--card-bg); border: 1px solid rgba(16,185,129,0.4);
+            border-radius: 25px; padding: 45px; text-align: center; max-width: 400px;
+        }
+        .success-icon { width: 80px; height: 80px; border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.2rem; color: white; margin: 0 auto 20px; }
+        .success-pts { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 12px; padding: 12px; margin: 15px 0; color: #f59e0b; font-weight: 700; }
+
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.2rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .artisan-card { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="header-inner">
+        <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <nav>
+            <a href="index.html" >الرئيسية</a>
+            <a href="programs.html">البرامج</a>
+            <a href="ai-programmes.html"> المستشار السياحي</a>
+            <a href="ai-hotels.html">المستشار الفندقي</a>
+            <a href="hotels.html" >الفنادق</a>
+            <a href="souvenirs.html" class="active">التذكارات</a>
+            <a href="bookings.html">حجوزاتي</a>
+            <a href="contact.html">اتصل بنا</a>
+        </nav>
+        <div class="header-actions">
+            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+            <div id="authArea"></div>
+        </div>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="souvenirs-hero">
+    <div class="hero-content">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);color:#f59e0b;padding:8px 18px;border-radius:30px;font-size:0.9rem;font-weight:700;margin-bottom:20px;">
+            🧿 أصيل وحرفي
+        </div>
+        <h1>المنتجات التقليدية</h1>
+        <p>اكتشف جمال الحرف اليدوية الجزائرية الأصيلة من الأغواط وسائر المناطق</p>
+    </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+    <div class="stat-chip"><i class="fas fa-store" style="color:var(--primary-color)"></i> <span id="prodCount">0</span> منتج</div>
+    <div class="stat-chip"><i class="fas fa-hands" style="color:#f59e0b"></i> حرف يدوية أصيلة</div>
+    <div class="stat-chip"><i class="fas fa-shipping-fast" style="color:var(--secondary-color)"></i> توصيل لكل ولايات الجزائر</div>
+    <div class="stat-chip"><i class="fas fa-shield-alt" style="color:#10b981"></i> مضمون 100%</div>
+</div>
+
+<!-- ARTISAN JOIN BANNER -->
+<div class="artisan-banner" data-aos="fade-up">
+    <div class="artisan-card">
+        <div class="artisan-icon">🧑‍🎨</div>
+        <div class="artisan-text">
+            <h3>أنت حرفي أو صانع تقليدي؟</h3>
+            <p>انضم لمنصة حوس بيا وعرض منتجاتك لآلاف السياح. تسجيل مجاني، عمولة منخفضة.</p>
+        </div>
+        <button class="btn-join-artisan" onclick="window.location.href='contact.html'">
+            <i class="fas fa-plus-circle"></i> انضم الآن
+        </button>
+    </div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters-section">
+    <div class="search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" class="filter-input" id="searchInput" placeholder="ابحث عن منتج..." oninput="renderProducts()">
+    </div>
+    <select class="filter-select" id="sortSelect" onchange="renderProducts()">
+        <option value="default">الترتيب الافتراضي</option>
+        <option value="price-low">السعر: الأقل أولاً</option>
+        <option value="price-high">السعر: الأعلى أولاً</option>
+        <option value="rating">الأعلى تقييماً</option>
+    </select>
+    <select class="filter-select" id="stockFilter" onchange="renderProducts()">
+        <option value="all">كل المخزون</option>
+        <option value="available">متاح فقط</option>
+    </select>
+</div>
+
+<div class="souvenirs-container">
+    <!-- Category Pills -->
+    <div class="cat-pills" id="catPills"></div>
+    <!-- Grid -->
+    <div class="souvenirs-grid" id="productsGrid"></div>
+</div>
+
+<!-- BUY MODAL -->
+<div class="modal-overlay" id="buyModal">
+    <div class="modal-box">
+        <div class="modal-img-section" id="mImg">
+            <div class="modal-img-overlay"></div>
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-img-text">
+                <h3 id="mTitle"></h3>
+                <p id="mOrigin" style="color:#e2e8f0;font-size:0.85rem;"></p>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="modal-price-row">
+                <div>
+                    <div style="color:var(--text-sec);font-size:0.82rem;margin-bottom:3px;">السعر للقطعة</div>
+                    <div class="modal-price"><span id="mPrice"></span> دج</div>
+                </div>
+                <div class="modal-pts"><i class="fas fa-star"></i> +<span id="mPoints"></span> نقطة</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> الاسم</label>
+                    <input type="text" id="bName" placeholder="اسمك الكامل">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> الهاتف</label>
+                    <input type="tel" id="bPhone" placeholder="0xxx xxx xxx">
+                </div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-map-marker-alt"></i> عنوان التوصيل</label>
+                <input type="text" id="bAddress" placeholder="الولاية، البلدية، الحي">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-boxes"></i> الكمية</label>
+                <div class="qty-wrap">
+                    <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                    <input type="text" class="qty-display" id="qtyDisplay" value="1" readonly>
+                    <button class="qty-btn" onclick="changeQty(1)">+</button>
+                    <span style="color:var(--text-sec);font-size:0.85rem;margin-right:10px;">الإجمالي: <strong id="totalDisplay" style="color:white;"></strong> دج</span>
+                </div>
+            </div>
+            <div style="background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:10px 15px;margin-bottom:15px;display:flex;align-items:center;gap:8px;color:#10b981;font-size:0.85rem;font-weight:600;">
+                <i class="fas fa-shield-alt"></i> دفع عند الاستلام — بدون بطاقة بنكية
+            </div>
+            <button class="btn-confirm" onclick="confirmPurchase()">
+                <i class="fas fa-shopping-bag"></i> اطلب الآن
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-overlay" id="successModal">
+    <div class="success-box">
+        <div class="success-icon"><i class="fas fa-check"></i></div>
+        <h3 style="font-size:1.5rem;font-weight:800;color:white;margin-bottom:8px;">تم الطلب! 🎉</h3>
+        <p style="color:var(--text-sec);margin-bottom:5px;">سيتم التواصل معك لتأكيد الطلب والتوصيل</p>
+        <div class="success-pts"><i class="fas fa-star"></i> ربحت <span id="sPoints">0</span> نقطة ولاء!</div>
+        <button onclick="closeSuccess()" style="background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;padding:12px 35px;border-radius:12px;font-weight:700;cursor:pointer;font-family:'Changa',sans-serif;font-size:1rem;">رائع!</button>
+    </div>
+</div>
+
+<script src="chat-widget.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 600, once: true });
+
+function escHtml(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+// Theme
+function toggleTheme() {
+    const t = localStorage.getItem('theme') === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', t);
+    document.body.classList.toggle('light-mode', t === 'light');
+    document.getElementById('themeIcon').className = t === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+}
+(function(){ if(localStorage.getItem('theme')==='light'){ document.body.classList.add('light-mode'); document.getElementById('themeIcon').className='fas fa-sun'; }})();
+
+// Auth
+function initAuth() {
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+    const area = document.getElementById('authArea') || document.getElementById('authLinks');
+    if (!area) return;
+    if (user) {
+        const name = user.name || user.originalName || user.username || 'مستخدم';
+        const initial = name.trim().charAt(0).toUpperCase();
+        area.innerHTML = `
+            <a href="profile.html" class="btn-auth-user">
+                <span class="auth-avatar"></span>
+                <span class="auth-name"></span>
+            </a>
+            <button class="btn-nav-logout" onclick="logout()" title="تسجيل الخروج" type="button"><i class="fas fa-sign-out-alt"></i></button>`;
+        area.querySelector('.auth-avatar').textContent = initial;
+        area.querySelector('.auth-name').textContent = name;
+    } else {
+        area.innerHTML = `<a href="login.html" class="btn-auth-login"><i class="fas fa-sign-in-alt"></i> دخول</a>`;
+    }
+}
+window.logout = function () {
+    if (confirm('تسجيل الخروج؟')) { localStorage.removeItem('hawsbiyaUser'); location.reload(); }
+};
+initAuth();
+
+let allProducts = [];
+let activeCategory = 'all';
+let currentProduct = null;
+let currentQty = 1;
+
+const wishlist = JSON.parse(localStorage.getItem('hawsbiya_wishlist_sv') || '[]');
+
+async function loadProducts() {
+    try {
+        const r = await fetch('/api/souvenirs');
+        if (r.ok) allProducts = await r.json();
+        else throw 0;
+    } catch {
+        allProducts = getFallback();
+    }
+    document.getElementById('prodCount').textContent = allProducts.length;
+    buildCategoryPills();
+    renderProducts();
+}
+
+function buildCategoryPills() {
+    const cats = ['all', ...new Set(allProducts.map(p => p.category).filter(Boolean))];
+    const catLabels = { all: 'الكل' };
+    const container = document.getElementById('catPills');
+    container.innerHTML = cats.map(c => `
+        <button class="cat-pill ${c === activeCategory ? 'active' : ''}"
+            onclick="setCategory('${escHtml(c)}', this)">${escHtml(catLabels[c] || c)}</button>
+    `).join('');
+}
+
+function setCategory(cat, el) {
+    activeCategory = cat;
+    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    renderProducts();
+}
+
+function renderProducts() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const sort = document.getElementById('sortSelect').value;
+    const stockF = document.getElementById('stockFilter').value;
+
+    let list = allProducts.filter(p => {
+        if (activeCategory !== 'all' && p.category !== activeCategory) return false;
+        if (search && !(p.name||'').toLowerCase().includes(search) && !(p.description||'').toLowerCase().includes(search)) return false;
+        if (stockF === 'available' && p.stock === 0) return false;
+        return true;
+    });
+
+    list = [...list].sort((a, b) => {
+        if (sort === 'price-low') return (a.price||0) - (b.price||0);
+        if (sort === 'price-high') return (b.price||0) - (a.price||0);
+        if (sort === 'rating') return (b.rating||0) - (a.rating||0);
+        return 0;
+    });
+
+    const grid = document.getElementById('productsGrid');
+    if (!list.length) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;">
+            <i class="fas fa-box-open" style="font-size:3.5rem;color:var(--text-sec);display:block;margin-bottom:15px;"></i>
+            <h3 style="color:white;font-size:1.3rem;">لا توجد منتجات</h3>
+            <p style="color:var(--text-sec);">جرب تغيير الفلتر أو البحث بكلمة مختلفة</p>
+        </div>`;
+        return;
+    }
+
+    grid.innerHTML = list.map((p, i) => {
+        const stars = '★'.repeat(Math.round(p.rating||4)) + '☆'.repeat(5 - Math.round(p.rating||4));
+        const pts = Math.round((p.price||0) * 0.008);
+        const liked = wishlist.includes(p.id);
+        const stockClass = !p.stock || p.stock === 0 ? 'out-stock' : p.stock < 5 ? 'low-stock' : 'in-stock';
+        const stockLabel = !p.stock || p.stock === 0 ? 'نفد المخزون' : p.stock < 5 ? `آخر ${p.stock} قطع` : 'متاح';
+        const img = p.image || `https://loremflickr.com/400/300/handcraft,traditional`;
+
+        return `
+        <div class="product-card" data-aos="fade-up" data-aos-delay="${i * 60}">
+            <div class="product-img" style="background-image:url('${img}')">
+                ${p.artisan ? `<div class="artisan-badge"><i class="fas fa-hands"></i> ${escHtml(p.artisan)}</div>` : `<div class="artisan-badge"><i class="fas fa-award"></i> حرفي أصيل</div>`}
+                <div class="stock-badge ${stockClass}">${stockLabel}</div>
+                <button class="wishlist-btn ${liked ? 'liked' : ''}" onclick="toggleWish(event, ${p.id||i})" title="المفضلة">
+                    <i class="${liked ? 'fas' : 'far'} fa-heart"></i>
+                </button>
+            </div>
+            <div class="product-body">
+                <div class="product-category">${escHtml(p.category||'حرف يدوية')}</div>
+                <div class="product-name">${escHtml(p.name||'منتج تقليدي')}</div>
+                <div class="product-origin"><i class="fas fa-map-marker-alt"></i> ${escHtml(p.origin||'الأغواط')}</div>
+                <div class="product-desc">${escHtml((p.description||'').substring(0,90))}...</div>
+                <div class="product-rating">
+                    <span class="stars">${stars}</span>
+                    <span class="rating-count">(${p.reviews||0} تقييم)</span>
+                </div>
+                <div class="product-footer">
+                    <div>
+                        <div class="product-price">${(p.price||0).toLocaleString('ar-DZ')} <small>دج</small></div>
+                        <div class="loyalty-tag" style="margin-top:4px;"><i class="fas fa-star"></i> +${pts} نقطة</div>
+                    </div>
+                    <button class="btn-buy" ${p.stock === 0 ? 'disabled' : ''} onclick="openBuyModal(${i})">
+                        ${p.stock === 0 ? 'نفد' : '<i class="fas fa-shopping-bag"></i> اشتر'}
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+    AOS.refresh();
+}
+
+function toggleWish(e, id) {
+    e.stopPropagation();
+    const btn = e.currentTarget;
+    btn.classList.toggle('liked');
+    btn.querySelector('i').className = btn.classList.contains('liked') ? 'fas fa-heart' : 'far fa-heart';
+    const idx = wishlist.indexOf(id);
+    if (idx === -1) wishlist.push(id); else wishlist.splice(idx, 1);
+    localStorage.setItem('hawsbiya_wishlist_sv', JSON.stringify(wishlist));
+}
+
+function openBuyModal(idx) {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const sort = document.getElementById('sortSelect').value;
+    let list = allProducts.filter(p => activeCategory === 'all' || p.category === activeCategory);
+    const p = list[idx] || allProducts[idx];
+    if (!p) return;
+    currentProduct = p;
+    currentQty = 1;
+
+    document.getElementById('mTitle').textContent = p.name || 'منتج';
+    document.getElementById('mOrigin').textContent = '📍 ' + (p.origin || 'الجزائر');
+    document.getElementById('mImg').style.backgroundImage = `url('${p.image || ''}')`;
+    document.getElementById('mPrice').textContent = (p.price||0).toLocaleString('ar-DZ');
+    document.getElementById('mPoints').textContent = Math.round((p.price||0) * 0.008);
+    document.getElementById('qtyDisplay').value = 1;
+    document.getElementById('totalDisplay').textContent = (p.price||0).toLocaleString('ar-DZ');
+
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+    if (user) {
+        document.getElementById('bName').value = user.name || user.username || '';
+        document.getElementById('bPhone').value = user.phone || '';
+    }
+
+    document.getElementById('buyModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function changeQty(delta) {
+    const max = currentProduct?.stock || 10;
+    currentQty = Math.max(1, Math.min(max || 99, currentQty + delta));
+    document.getElementById('qtyDisplay').value = currentQty;
+    document.getElementById('totalDisplay').textContent = ((currentProduct?.price||0) * currentQty).toLocaleString('ar-DZ');
+}
+
+function closeModal() {
+    document.getElementById('buyModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+async function confirmPurchase() {
+    const name = document.getElementById('bName').value.trim();
+    const phone = document.getElementById('bPhone').value.trim();
+    const addr = document.getElementById('bAddress').value.trim();
+    if (!name || !phone || !addr) { alert('يرجى ملء جميع الحقول'); return; }
+
+    const pts = Math.round((currentProduct.price||0) * 0.008) * currentQty;
+    const booking = {
+        type: 'souvenir',
+        name: currentProduct.name,
+        price: (currentProduct.price||0) * currentQty,
+        quantity: currentQty,
+        address: addr,
+        phone, date: new Date().toISOString(), status: 'pending',
+        createdAt: new Date().toISOString()
+    };
+    try { await fetch('/api/bookings', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(booking) }); } catch {}
+
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+    if (user) { user.loyaltyPoints = (user.loyaltyPoints||0) + pts; localStorage.setItem('hawsbiyaUser', JSON.stringify(user)); }
+
+    closeModal();
+    document.getElementById('sPoints').textContent = pts;
+    document.getElementById('successModal').classList.add('active');
+}
+
+function closeSuccess() {
+    document.getElementById('successModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function getFallback() {
+    return [
+        { id:1, name:'سجادة أمازيغية يدوية', category:'نسيج', origin:'غرداية', price:5500, stock:8, rating:4.9, reviews:42, artisan:'رشيدة ح.', description:'سجادة مصنوعة يدوياً من صوف طبيعي بزخارف أمازيغية أصيلة متوارثة جيلاً بعد جيل', image:'https://loremflickr.com/400/300/carpet,rug' },
+        { id:2, name:'فخار لاغواطي مزخرف', category:'فخار', origin:'الأغواط', price:1800, stock:15, rating:4.7, reviews:28, artisan:'محمد ب.', description:'إناء فخاري تقليدي مصنوع ومزخرف يدوياً بأشكال هندسية موروثة عن الحضارة الصحراوية', image:'https://loremflickr.com/400/300/pottery,ceramic' },
+        { id:3, name:'جلباب جزائري رجالي', category:'لباس', origin:'تلمسان', price:8900, stock:4, rating:4.8, reviews:19, artisan:'حوماني ن.', description:'جلباب رجالي فاخر مطرز يدوياً بإبرة الحرير بتقنيات مشغولات تلمسان الشهيرة', image:'https://loremflickr.com/400/300/djellaba,morocco' },
+        { id:4, name:'حلي فضية أمازيغية', category:'مجوهرات', origin:'تمنراست', price:12000, stock:3, rating:5.0, reviews:11, artisan:'مباركي ف.', description:'مجموعة من الحلي الفضية الأمازيغية الأصيلة محفورة يدوياً بنقوش تراثية من الجنوب الجزائري', image:'https://loremflickr.com/400/300/silver,jewelry' },
+        { id:5, name:'عطر مسك الأغواط', category:'عطور', origin:'الأغواط', price:2500, stock:20, rating:4.6, reviews:55, artisan:'عطار الواحة', description:'عطر مسك طبيعي نقي مستخلص من أجود المكونات الطبيعية من الصحراء الجزائرية', image:'https://loremflickr.com/400/300/perfume,bottle' },        { id:7, name:'قفة تقليدية من الحلفاء', category:'سلال', origin:'الأغواط', price:900, stock:12, rating:4.5, reviews:33, artisan:'نسوة الحي', description:'قفة مصنوعة يدوياً من نبات الحلفاء المجدول بأسلوب تقليدي جميل ومتين', image:'https://loremflickr.com/400/300/straw,basket' },
+        { id:8, name:'قهوة قصور بالنكهات', category:'مأكولات', origin:'غرداية', price:1200, stock:0, rating:4.7, reviews:91, artisan:'مقهى الأجداد', description:'مزيج قهوة قصور فريد محمص بالأعشاب الجبلية وماء الزهر وفق وصفة جدية سرية', image:'https://loremflickr.com/400/300/coffee,spice' }
+    ];
+}
+
+document.getElementById('buyModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+document.getElementById('successModal').addEventListener('click', function(e){ if(e.target===this) closeSuccess(); });
+
+loadProducts();
+</script>
+</body>
+</html>

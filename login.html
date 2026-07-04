@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حوس بيا - الدخول والتسجيل</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== LOGIN PAGE ===== */
+        body {
+            background: url('https://loremflickr.com/1600/900/algeria,architecture') center/cover no-repeat fixed;
+            min-height: 100vh; display: flex; flex-direction: column;
+        }
+        .page-overlay {
+            position: fixed; inset: 0;
+            background: linear-gradient(135deg, rgba(15,23,42,0.92) 0%, rgba(30,27,75,0.92) 100%);
+            z-index: 0;
+        }
+        header { position: relative; z-index: 10; }
+
+        .login-wrapper {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 40px 20px 60px; position: relative; z-index: 1;
+        }
+
+        .login-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+            max-width: 900px; width: 100%;
+            border-radius: 28px; overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+        }
+
+        /* Left panel - branding */
+        .login-brand {
+            background: linear-gradient(135deg, var(--primary-color), #6d28d9, var(--secondary-color));
+            padding: 50px 40px; display: flex; flex-direction: column;
+            justify-content: center; align-items: flex-start;
+            position: relative; overflow: hidden;
+        }
+        .login-brand::before {
+            content: ''; position: absolute; top: -50%; right: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+        }
+        .brand-logo { font-size: 1.8rem; font-weight: 900; color: white; margin-bottom: 30px; position: relative; z-index: 1; }
+        .brand-logo i { margin-left: 10px; }
+        .brand-tagline { font-size: 1.8rem; font-weight: 900; color: white; line-height: 1.4; margin-bottom: 20px; position: relative; z-index: 1; }
+        .brand-sub { color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.7; margin-bottom: 30px; position: relative; z-index: 1; }
+
+        .brand-perks { position: relative; z-index: 1; }
+        .perk-item {
+            display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.9);
+            font-size: 0.9rem; margin-bottom: 12px;
+        }
+        .perk-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .brand-decoration {
+            position: absolute; bottom: -20px; left: -20px;
+            font-size: 8rem; opacity: 0.1; color: white;
+        }
+
+        /* Right panel - form */
+        .login-form-panel {
+            background: var(--card-bg); padding: 45px 40px;
+        }
+        .tabs-switch {
+            display: flex; gap: 0; margin-bottom: 30px;
+            background: var(--main-bg); border-radius: 12px; padding: 5px;
+        }
+        .tab-switch-btn {
+            flex: 1; padding: 11px; border-radius: 9px; border: none;
+            background: transparent; color: var(--text-sec); font-family: 'Changa', sans-serif;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+        .tab-switch-btn.active {
+            background: var(--primary-color); color: white;
+            box-shadow: 0 4px 12px rgba(139,92,246,0.4);
+        }
+
+        .auth-panel { display: none; }
+        .auth-panel.active { display: block; animation: fadeSlide 0.3s ease; }
+        @keyframes fadeSlide { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+        .panel-title { font-size: 1.4rem; font-weight: 800; color: white; margin-bottom: 5px; }
+        .panel-sub { color: var(--text-sec); font-size: 0.88rem; margin-bottom: 25px; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; color: var(--text-sec); font-size: 0.88rem; font-weight: 600; margin-bottom: 7px; }
+        .input-wrap { position: relative; }
+        .input-wrap i { position: absolute; top: 50%; right: 14px; transform: translateY(-50%); color: var(--text-sec); font-size: 0.9rem; pointer-events: none; }
+        .input-wrap input {
+            width: 100%; padding: 13px 42px 13px 15px;
+            background: var(--main-bg); border: 1px solid var(--border-color);
+            border-radius: 12px; color: white; font-family: 'Changa', sans-serif; font-size: 0.95rem; transition: 0.3s;
+        }
+        .input-wrap input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(139,92,246,0.15); }
+        .input-wrap input::placeholder { color: var(--text-sec); opacity: 0.7; }
+        .eye-btn { position: absolute; top: 50%; left: 12px; transform: translateY(-50%); background: none; border: none; color: var(--text-sec); cursor: pointer; padding: 4px; }
+        .eye-btn:hover { color: white; }
+
+        .forgot-row { display: flex; justify-content: flex-start; margin-top: 6px; }
+        .forgot-link { color: var(--primary-color); font-size: 0.82rem; font-weight: 600; text-decoration: none; }
+        .forgot-link:hover { text-decoration: underline; }
+
+        .btn-submit {
+            width: 100%; background: linear-gradient(135deg, var(--primary-color), #6d28d9);
+            color: white; border: none; padding: 15px; border-radius: 12px;
+            font-size: 1.05rem; font-weight: 800; cursor: pointer; font-family: 'Changa', sans-serif;
+            transition: 0.3s; margin-top: 5px;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(139,92,246,0.5); }
+        .btn-submit:disabled { opacity: 0.6; pointer-events: none; }
+
+        .divider { display: flex; align-items: center; gap: 15px; margin: 20px 0; }
+        .divider::before, .divider::after { content:''; flex:1; height:1px; background:var(--border-color); }
+        .divider span { color: var(--text-sec); font-size: 0.82rem; white-space: nowrap; }
+
+        .social-login { display: flex; gap: 10px; }
+        .btn-social {
+            flex: 1; padding: 11px; border-radius: 10px; border: 1px solid var(--border-color);
+            background: var(--main-bg); color: white; font-family: 'Changa', sans-serif;
+            font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-social:hover { border-color: var(--primary-color); background: rgba(139,92,246,0.08); }
+
+        .error-msg {
+            background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 10px; padding: 12px 15px; color: #ef4444; font-size: 0.88rem;
+            margin-bottom: 15px; display: none; align-items: center; gap: 8px;
+        }
+        .error-msg.show { display: flex; }
+
+        .terms-note { color: var(--text-sec); font-size: 0.8rem; text-align: center; margin-top: 15px; }
+        .terms-note a { color: var(--primary-color); }
+
+        /* Strength indicator */
+        .strength-bar { height: 4px; border-radius: 4px; margin-top: 6px; overflow: hidden; background: var(--border-color); }
+        .strength-fill { height: 100%; border-radius: 4px; transition: 0.3s; width: 0; }
+        .strength-text { font-size: 0.78rem; margin-top: 4px; }
+
+        @media (max-width: 700px) {
+            .login-container { grid-template-columns: 1fr; }
+            .login-brand { padding: 35px 25px; }
+            .login-form-panel { padding: 30px 25px; }
+        }
+    </style>
+</head>
+<body>
+<div class="page-overlay"></div>
+
+<header style="background:rgba(15,23,42,0.5);backdrop-filter:blur(20px);">
+    <div class="header-inner">
+        <a href="index.html" class="logo"><i class="fas fa-compass"></i> حوس بيا</a>
+        <nav>
+            <a href="index.html" >الرئيسية</a>
+            <a href="programs.html">البرامج</a>
+            <a href="ai-programmes.html"> المستشار السياحي</a>
+            <a href="ai-hotels.html">المستشار الفندقي</a>
+            <a href="hotels.html" >الفنادق</a>
+            <a href="souvenirs.html">التذكارات</a>
+            <a href="bookings.html">حجوزاتي</a>
+            <a href="contact.html">اتصل بنا</a>
+        </nav>
+        <div class="header-actions">
+            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+        </div>
+    </div>
+</header>
+
+<div class="login-wrapper">
+    <div class="login-container">
+
+        <!-- Brand Panel -->
+        <div class="login-brand">
+            <div class="brand-logo"><i class="fas fa-compass"></i> حوس بيا</div>
+            <div class="brand-tagline">رحلتك الجزائرية تبدأ من هنا</div>
+            <div class="brand-sub">انضم لآلاف المسافرين واكتشف جمال الجزائر مع مستشارنا الذكي وأفضل العروض.</div>
+            <div class="brand-perks">
+                <div class="perk-item">
+                    <div class="perk-icon"><i class="fas fa-brain"></i></div>
+                    تخطيط رحلات ذكي مخصص لك
+                </div>
+                <div class="perk-item">
+                    <div class="perk-icon"><i class="fas fa-star"></i></div>
+                    نقاط ولاء مع كل حجز
+                </div>
+                <div class="perk-item">
+                    <div class="perk-icon"><i class="fas fa-shield-alt"></i></div>
+                    حجز آمن ومضمون 100%
+                </div>
+                <div class="perk-item">
+                    <div class="perk-icon"><i class="fas fa-headset"></i></div>
+                    دعم 7 أيام في الأسبوع
+                </div>
+            </div>
+            <div class="brand-decoration"><i class="fas fa-compass"></i></div>
+        </div>
+
+        <!-- Form Panel -->
+        <div class="login-form-panel">
+            <div class="tabs-switch">
+                <button class="tab-switch-btn active" id="loginTab" onclick="switchAuth('login')">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                </button>
+                <button class="tab-switch-btn" id="registerTab" onclick="switchAuth('register')">
+                    <i class="fas fa-user-plus"></i> حساب جديد
+                </button>
+            </div>
+
+            <!-- Login Panel -->
+            <div class="auth-panel active" id="loginPanel">
+                <h2 class="panel-title">أهلاً بعودتك 👋</h2>
+                <p class="panel-sub">سجل دخولك لمتابعة حجوزاتك ورحلاتك</p>
+
+                <div class="error-msg" id="loginError"><i class="fas fa-exclamation-circle"></i> <span id="loginErrMsg">خطأ في البيانات</span></div>
+
+                <div class="form-group">
+                    <label>اسم المستخدم أو البريد الإلكتروني</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="lUsername" placeholder="username أو email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="lPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+                        <button class="eye-btn" type="button" onclick="togglePass('lPassword', this)"><i class="far fa-eye"></i></button>
+                    </div>
+                    <div class="forgot-row">
+                        <a href="contact.html" class="forgot-link">نسيت كلمة المرور؟</a>
+                    </div>
+                </div>
+
+                <button class="btn-submit" id="loginBtn" onclick="doLogin()">
+                    <i class="fas fa-sign-in-alt"></i> دخول
+                </button>
+
+                <div class="divider"><span>أو سجل الدخول بـ</span></div>
+                <div class="social-login">
+                    <button class="btn-social" onclick="alert('قريباً!')"><i class="fab fa-google" style="color:#ea4335"></i> Google</button>
+                    <button class="btn-social" onclick="alert('قريباً!')"><i class="fab fa-facebook" style="color:#1877f2"></i> Facebook</button>
+                </div>
+
+                <p class="terms-note" style="margin-top:20px;">ليس لديك حساب؟ <a href="#" onclick="switchAuth('register')">سجل الآن مجاناً</a></p>
+            </div>
+
+            <!-- Register Panel -->
+            <div class="auth-panel" id="registerPanel">
+                <h2 class="panel-title">إنشاء حساب جديد ✨</h2>
+                <p class="panel-sub">سجل مجاناً وابدأ رحلتك الجزائرية</p>
+
+                <div class="error-msg" id="registerError"><i class="fas fa-exclamation-circle"></i> <span id="registerErrMsg"></span></div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div class="form-group">
+                        <label>الاسم</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="rName" placeholder="اسمك الكامل">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>اسم المستخدم</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-at"></i>
+                            <input type="text" id="rUsername" placeholder="username">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="rEmail" placeholder="example@email.com">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="rPhone" placeholder="0xxx xxx xxx">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="rPassword" placeholder="8 أحرف على الأقل" oninput="checkStrength(this.value)">
+                        <button class="eye-btn" type="button" onclick="togglePass('rPassword', this)"><i class="far fa-eye"></i></button>
+                    </div>
+                    <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+                    <div class="strength-text" id="strengthText"></div>
+                </div>
+
+                <button class="btn-submit" id="registerBtn" onclick="doRegister()" style="background:linear-gradient(135deg,var(--secondary-color),#0284c7);">
+                    <i class="fas fa-user-plus"></i> إنشاء الحساب
+                </button>
+
+                <p class="terms-note">بالتسجيل أنت توافق على <a href="#">شروط الاستخدام</a> و<a href="#">سياسة الخصوصية</a></p>
+                <p class="terms-note" style="margin-top:10px;">لديك حساب؟ <a href="#" onclick="switchAuth('login')">سجل الدخول</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+
+function toggleTheme(){
+    const t=localStorage.getItem('theme')==='dark'?'light':'dark';
+    localStorage.setItem('theme',t);
+    document.body.classList.toggle('light-mode',t==='light');
+    document.getElementById('themeIcon').className=t==='dark'?'fas fa-moon':'fas fa-sun';
+}
+(function(){ if(localStorage.getItem('theme')==='light'){ document.body.classList.add('light-mode'); document.getElementById('themeIcon').className='fas fa-sun'; }})();
+
+// Redirect if already logged in
+if (localStorage.getItem('hawsbiyaUser')) {
+    window.location.href = 'index.html';
+}
+
+function switchAuth(tab) {
+    document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-switch-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tab + 'Panel').classList.add('active');
+    document.getElementById(tab + 'Tab').classList.add('active');
+    // Clear errors
+    document.getElementById('loginError').classList.remove('show');
+    document.getElementById('registerError').classList.remove('show');
+}
+
+function togglePass(inputId, btn) {
+    const inp = document.getElementById(inputId);
+    const isText = inp.type === 'text';
+    inp.type = isText ? 'password' : 'text';
+    btn.querySelector('i').className = isText ? 'far fa-eye' : 'far fa-eye-slash';
+}
+
+function checkStrength(val) {
+    const fill = document.getElementById('strengthFill');
+    const text = document.getElementById('strengthText');
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+    const levels = [
+        { w: '0%', color: '', label: '' },
+        { w: '25%', color: '#ef4444', label: 'ضعيفة' },
+        { w: '50%', color: '#f59e0b', label: 'متوسطة' },
+        { w: '75%', color: '#8b5cf6', label: 'جيدة' },
+        { w: '100%', color: '#10b981', label: 'قوية جداً' }
+    ];
+    const lvl = levels[score];
+    fill.style.width = lvl.w;
+    fill.style.background = lvl.color;
+    text.textContent = lvl.label;
+    text.style.color = lvl.color;
+}
+
+function showError(panel, msg) {
+    document.getElementById(panel + 'Error').classList.add('show');
+    document.getElementById(panel + 'ErrMsg').textContent = msg;
+}
+
+async function doLogin() {
+    const username = document.getElementById('lUsername').value.trim();
+    const password = document.getElementById('lPassword').value;
+    if (!username || !password) { showError('login', 'يرجى إدخال اسم المستخدم وكلمة المرور'); return; }
+
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري التحقق...';
+
+    try {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ username, password })
+        });
+        if (res.ok) {
+            const user = await res.json();
+            localStorage.setItem('hawsbiyaUser', JSON.stringify(user));
+            const redirect = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
+            window.location.href = redirect;
+            return;
+        }
+        const data = await res.json().catch(() => ({}));
+        showError('login', data.message || 'اسم المستخدم أو كلمة المرور غير صحيحة');
+    } catch {
+        // Fallback demo login
+        const demoUser = { id: 1, name: 'مستخدم تجريبي', username, email: username + '@demo.dz', loyaltyPoints: 350 };
+        localStorage.setItem('hawsbiyaUser', JSON.stringify(demoUser));
+        window.location.href = 'index.html';
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> دخول';
+    }
+}
+
+async function doRegister() {
+    const name = document.getElementById('rName').value.trim();
+    const username = document.getElementById('rUsername').value.trim();
+    const email = document.getElementById('rEmail').value.trim();
+    const phone = document.getElementById('rPhone').value.trim();
+    const password = document.getElementById('rPassword').value;
+
+    if (!name || !username || !email || !password) { showError('register', 'يرجى ملء جميع الحقول الإلزامية'); return; }
+    if (password.length < 8) { showError('register', 'كلمة المرور يجب أن تكون 8 أحرف على الأقل'); return; }
+    if (!/\S+@\S+\.\S+/.test(email)) { showError('register', 'يرجى إدخال بريد إلكتروني صحيح'); return; }
+
+    const btn = document.getElementById('registerBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري التسجيل...';
+
+    const payload = { name, username, email, phone, password, role: 'user', loyaltyPoints: 50, createdAt: new Date().toISOString() };
+
+    try {
+        const res = await fetch('/api/users', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            const user = await res.json();
+            localStorage.setItem('hawsbiyaUser', JSON.stringify(user));
+            window.location.href = 'index.html';
+            return;
+        }
+        showError('register', 'حدث خطأ أثناء التسجيل، حاول مرة أخرى');
+    } catch {
+        const user = { ...payload, id: Date.now() };
+        delete user.password;
+        localStorage.setItem('hawsbiyaUser', JSON.stringify(user));
+        window.location.href = 'index.html';
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-user-plus"></i> إنشاء الحساب';
+    }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حوس بيا - المستشار الذكي للبرامج</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ===== AI ADVISOR PAGE STYLES ===== */
+        :root {
+            --ai-glow: 0 0 30px rgba(20,184,166, 0.4);
+            --step-active: var(--primary-color);
+            --step-done: var(--secondary-color);
+        }
+
+        /* Hero */
+        .ai-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1c1007 50%, #0f172a 100%);
+            padding: 80px 20px 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .ai-hero::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at 50% 0%, rgba(20,184,166,0.3) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .ai-brain-icon {
+            width: 100px; height: 100px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 30px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; color: white;
+            margin: 0 auto 30px;
+            box-shadow: var(--ai-glow);
+            animation: pulse-glow 2s infinite;
+            position: relative; z-index: 1;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(20,184,166,0.4); }
+            50% { box-shadow: 0 0 50px rgba(20,184,166,0.8), 0 0 80px rgba(14,165,233,0.3); }
+        }
+        .ai-hero h1 {
+            font-size: 3rem; font-weight: 900; color: white;
+            position: relative; z-index: 1; margin-bottom: 15px;
+        }
+        .ai-hero h1 span { color: var(--secondary-color); }
+        .ai-hero p {
+            color: #94a3b8; font-size: 1.15rem; max-width: 600px;
+            margin: 0 auto 40px; position: relative; z-index: 1;
+        }
+        .ai-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(20,184,166,0.15); border: 1px solid rgba(20,184,166,0.4);
+            color: var(--primary-color); padding: 8px 20px; border-radius: 30px;
+            font-size: 0.9rem; font-weight: 700;
+            position: relative; z-index: 1; margin-bottom: 30px;
+        }
+
+        /* Step Progress Bar */
+        .steps-wrapper {
+            max-width: 700px; margin: -30px auto 0; position: relative; z-index: 10; padding: 0 20px;
+        }
+        .steps-bar {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 20px 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .step-item {
+            display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1;
+        }
+        .step-circle {
+            width: 44px; height: 44px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; font-weight: 800; transition: 0.4s;
+            border: 2px solid var(--border-color); color: var(--text-sec);
+            background: var(--main-bg);
+        }
+        .step-circle.active {
+            background: var(--primary-color); border-color: var(--primary-color);
+            color: white; box-shadow: 0 0 20px rgba(20,184,166,0.5);
+        }
+        .step-circle.done {
+            background: var(--secondary-color); border-color: var(--secondary-color); color: white;
+        }
+        .step-label { font-size: 0.8rem; color: var(--text-sec); text-align: center; font-weight: 600; }
+        .step-label.active { color: var(--primary-color); }
+        .step-label.done { color: var(--secondary-color); }
+        .step-line {
+            flex: 1; height: 2px; background: var(--border-color); margin: 0 10px;
+            margin-bottom: 22px; transition: 0.4s;
+        }
+        .step-line.done { background: var(--secondary-color); }
+
+        /* Wizard Panels */
+        .wizard-wrapper { max-width: 900px; margin: 40px auto; padding: 0 20px 80px; }
+        .wizard-panel { display: none; }
+        .wizard-panel.active { display: block; animation: fadeSlide 0.4s ease; }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .panel-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 25px; padding: 40px;
+        }
+        .panel-title {
+            font-size: 1.6rem; font-weight: 800; color: white; margin-bottom: 8px;
+        }
+        .panel-subtitle { color: var(--text-sec); margin-bottom: 35px; font-size: 1rem; }
+
+        /* Interest Cards Grid */
+        .interests-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;
+        }
+        .interest-card {
+            background: var(--main-bg); border: 2px solid var(--border-color);
+            border-radius: 16px; padding: 20px 12px; text-align: center;
+            cursor: pointer; transition: 0.3s; user-select: none;
+        }
+        .interest-card:hover { border-color: var(--primary-color); transform: translateY(-3px); }
+        .interest-card.selected {
+            border-color: var(--primary-color);
+            background: rgba(20,184,166,0.12);
+            box-shadow: 0 0 20px rgba(20,184,166,0.3);
+        }
+        .interest-card.selected .interest-icon { transform: scale(1.15); }
+        .interest-icon {
+            font-size: 2rem; margin-bottom: 10px; display: block; transition: 0.3s;
+        }
+        .interest-label { font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
+        .interest-check {
+            width: 22px; height: 22px; border-radius: 50%;
+            background: var(--primary-color); color: white;
+            font-size: 0.7rem; display: none;
+            align-items: center; justify-content: center;
+            margin: 8px auto 0;
+        }
+        .interest-card.selected .interest-check { display: flex; }
+
+        /* Companion Selector */
+        .companions-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;
+        }
+        .companion-card {
+            background: var(--main-bg); border: 2px solid var(--border-color);
+            border-radius: 16px; padding: 20px 12px; text-align: center;
+            cursor: pointer; transition: 0.3s;
+        }
+        .companion-card:hover { border-color: var(--secondary-color); transform: translateY(-3px); }
+        .companion-card.selected {
+            border-color: var(--secondary-color);
+            background: rgba(14,165,233,0.1);
+            box-shadow: 0 0 20px rgba(14,165,233,0.3);
+        }
+        .companion-icon { font-size: 2.2rem; display: block; margin-bottom: 10px; }
+        .companion-label { font-size: 0.9rem; font-weight: 700; color: var(--text-main); }
+        .companion-desc { font-size: 0.75rem; color: var(--text-sec); margin-top: 5px; }
+
+        /* Duration Pills */
+        .duration-pills {
+            display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px;
+        }
+        .duration-pill {
+            padding: 10px 22px; border-radius: 30px;
+            border: 2px solid var(--border-color); color: var(--text-sec);
+            cursor: pointer; transition: 0.3s; font-weight: 700; font-size: 0.9rem;
+            background: var(--main-bg);
+        }
+        .duration-pill:hover { border-color: var(--primary-color); color: var(--primary-color); }
+        .duration-pill.selected {
+            border-color: var(--primary-color); background: rgba(20,184,166,0.15);
+            color: var(--primary-color);
+        }
+
+        /* Budget Slider */
+        .budget-slider-wrap { margin-bottom: 30px; }
+        .budget-labels {
+            display: flex; justify-content: space-between; margin-bottom: 12px;
+            font-size: 0.85rem; color: var(--text-sec);
+        }
+        .budget-value {
+            font-size: 2rem; font-weight: 900; color: var(--secondary-color);
+            text-align: center; margin-bottom: 15px; direction: ltr;
+        }
+        input[type="range"] {
+            width: 100%; height: 6px;
+            -webkit-appearance: none; appearance: none;
+            border-radius: 5px; outline: none;
+            background: linear-gradient(to left,
+                var(--primary-color) 0%, var(--primary-color) var(--range-pct, 50%),
+                var(--border-color) var(--range-pct, 50%), var(--border-color) 100%);
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 22px; height: 22px;
+            background: var(--primary-color); border-radius: 50%;
+            cursor: pointer; box-shadow: 0 0 10px rgba(20,184,166,0.6);
+        }
+
+        /* Season Selector */
+        .season-pills {
+            display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 30px;
+        }
+        .season-pill {
+            padding: 10px 22px; border-radius: 30px;
+            border: 2px solid var(--border-color); color: var(--text-sec);
+            cursor: pointer; transition: 0.3s; font-weight: 700; font-size: 0.9rem;
+            background: var(--main-bg);
+        }
+        .season-pill:hover, .season-pill.selected {
+            border-color: var(--secondary-color); background: rgba(14,165,233,0.1);
+            color: var(--secondary-color);
+        }
+
+        /* Navigation Buttons */
+        .wizard-nav {
+            display: flex; justify-content: space-between; align-items: center; margin-top: 30px;
+        }
+        .btn-prev {
+            background: transparent; border: 2px solid var(--border-color);
+            color: var(--text-sec); padding: 14px 30px; border-radius: 12px;
+            font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.3s;
+            font-family: 'Changa', sans-serif;
+        }
+        .btn-prev:hover { border-color: var(--text-sec); color: white; }
+        .btn-next, .btn-analyze {
+            background: linear-gradient(135deg, var(--primary-color), #0f766e);
+            color: white; border: none; padding: 14px 35px; border-radius: 12px;
+            font-size: 1.05rem; font-weight: 800; cursor: pointer; transition: 0.3s;
+            font-family: 'Changa', sans-serif; display: flex; align-items: center; gap: 10px;
+        }
+        .btn-next:hover, .btn-analyze:hover {
+            transform: translateY(-2px); box-shadow: 0 10px 30px rgba(20,184,166,0.5);
+        }
+        .selection-counter {
+            font-size: 0.9rem; color: var(--text-sec);
+        }
+        .selection-counter span { color: var(--primary-color); font-weight: 700; }
+
+        /* AI Loading */
+        .ai-loading {
+            display: none; text-align: center; padding: 60px 20px;
+        }
+        .ai-loading.active { display: block; }
+        .loading-brain {
+            width: 120px; height: 120px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 30px; margin: 0 auto 30px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 4rem; color: white;
+            animation: analyzing 1.5s ease-in-out infinite;
+        }
+        @keyframes analyzing {
+            0% { transform: scale(1) rotate(0deg); box-shadow: 0 0 20px rgba(20,184,166,0.4); }
+            25% { transform: scale(1.05) rotate(-3deg); box-shadow: 0 0 50px rgba(20,184,166,0.8); }
+            50% { transform: scale(1) rotate(0deg); box-shadow: 0 0 20px rgba(14,165,233,0.4); }
+            75% { transform: scale(1.05) rotate(3deg); box-shadow: 0 0 50px rgba(14,165,233,0.8); }
+            100% { transform: scale(1) rotate(0deg); box-shadow: 0 0 20px rgba(20,184,166,0.4); }
+        }
+        .loading-status { font-size: 1.2rem; color: white; font-weight: 700; margin-bottom: 10px; }
+        .loading-sub { color: var(--text-sec); margin-bottom: 30px; }
+        .loading-bar-wrap {
+            max-width: 400px; margin: 0 auto 20px; background: var(--border-color);
+            border-radius: 10px; height: 8px; overflow: hidden;
+        }
+        .loading-bar-fill {
+            height: 100%; border-radius: 10px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            animation: loadFill 2.5s ease-out forwards;
+        }
+        @keyframes loadFill { from { width: 0%; } to { width: 100%; } }
+        .loading-steps {
+            display: flex; flex-direction: column; gap: 8px; max-width: 350px; margin: 0 auto;
+        }
+        .loading-step {
+            display: flex; align-items: center; gap: 10px;
+            color: var(--text-sec); font-size: 0.9rem;
+        }
+        .loading-step.done { color: var(--secondary-color); }
+        .loading-step i { width: 20px; text-align: center; }
+
+        /* Results */
+        .results-header {
+            background: linear-gradient(135deg, rgba(20,184,166,0.1), rgba(14,165,233,0.1));
+            border: 1px solid rgba(20,184,166,0.2); border-radius: 20px;
+            padding: 25px 30px; margin-bottom: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .results-title { font-size: 1.4rem; font-weight: 800; color: white; }
+        .results-subtitle { color: var(--text-sec); margin-top: 5px; font-size: 0.95rem; }
+        .results-count {
+            background: rgba(20,184,166,0.15); border: 1px solid rgba(20,184,166,0.3);
+            color: var(--primary-color); padding: 10px 20px; border-radius: 12px;
+            font-size: 1.3rem; font-weight: 900;
+        }
+        .results-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px;
+        }
+        .result-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; overflow: hidden; transition: 0.3s;
+            position: relative;
+        }
+        .result-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+        .result-card-image {
+            height: 200px; background-size: cover; background-position: center;
+            position: relative; overflow: hidden;
+        }
+        .result-card-image::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
+            background: linear-gradient(transparent, rgba(15,23,42,0.9));
+        }
+        .match-badge {
+            position: absolute; top: 15px; right: 15px; z-index: 2;
+            padding: 6px 14px; border-radius: 30px;
+            font-size: 0.85rem; font-weight: 800; color: white;
+        }
+        .match-badge.high { background: linear-gradient(135deg, #10b981, #059669); }
+        .match-badge.medium { background: linear-gradient(135deg, var(--primary-color), #0f766e); }
+        .type-badge-result {
+            position: absolute; top: 15px; left: 15px; z-index: 2;
+            padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;
+        }
+        .wishlist-btn-result {
+            position: absolute; bottom: 15px; left: 15px; z-index: 2;
+            width: 38px; height: 38px; border-radius: 50%;
+            background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2); color: white;
+            cursor: pointer; font-size: 1rem; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .wishlist-btn-result:hover, .wishlist-btn-result.liked { background: rgba(239,68,68,0.8); border-color: transparent; }
+        .result-card-body { padding: 20px; }
+        .result-card-name { font-size: 1.15rem; font-weight: 800; color: white; margin-bottom: 6px; }
+        .result-card-desc { color: var(--text-sec); font-size: 0.88rem; line-height: 1.6; margin-bottom: 15px; }
+        .result-card-meta {
+            display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px;
+        }
+        .meta-tag {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);
+            padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; color: var(--text-sec);
+            display: flex; align-items: center; gap: 5px;
+        }
+        .meta-tag i { color: var(--primary-color); }
+        .result-card-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid var(--border-color); padding-top: 15px;
+        }
+        .result-price { font-size: 1.2rem; font-weight: 900; color: white; }
+        .result-price span { font-size: 0.8rem; color: var(--text-sec); font-weight: 400; }
+        .loyalty-hint {
+            background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
+            color: #f59e0b; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem;
+            display: flex; align-items: center; gap: 4px; font-weight: 700;
+        }
+        .btn-book-result {
+            background: linear-gradient(135deg, var(--primary-color), #0f766e);
+            color: white; border: none; padding: 10px 20px; border-radius: 10px;
+            font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: 0.3s;
+            font-family: 'Changa', sans-serif;
+        }
+        .btn-book-result:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(20,184,166,0.5); }
+
+        /* Match explanation */
+        .match-reasons {
+            background: rgba(14,165,233,0.05); border: 1px solid rgba(14,165,233,0.15);
+            border-radius: 12px; padding: 12px 15px; margin-bottom: 15px;
+        }
+        .match-reasons-title { font-size: 0.8rem; color: var(--secondary-color); font-weight: 700; margin-bottom: 8px; }
+        .match-reason { font-size: 0.8rem; color: #94a3b8; display: flex; align-items: center; gap: 6px; }
+        .match-reason i { color: var(--secondary-color); font-size: 0.7rem; }
+
+        /* No results */
+        .no-results {
+            text-align: center; padding: 60px 20px; display: none;
+        }
+        .no-results i { font-size: 4rem; color: var(--text-sec); margin-bottom: 20px; display: block; }
+        .no-results h3 { color: white; font-size: 1.4rem; margin-bottom: 10px; }
+        .no-results p { color: var(--text-sec); }
+
+        /* Redo Button */
+        .redo-section {
+            text-align: center; margin-top: 40px; padding: 30px;
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px;
+        }
+        .btn-redo {
+            background: transparent; border: 2px solid var(--primary-color);
+            color: var(--primary-color); padding: 14px 35px; border-radius: 12px;
+            font-size: 1rem; font-weight: 800; cursor: pointer; transition: 0.3s;
+            font-family: 'Changa', sans-serif;
+        }
+        .btn-redo:hover { background: var(--primary-color); color: white; }
+
+        /* Booking Modal */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+            z-index: 1000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 25px; width: 95%; max-width: 560px;
+            max-height: 90vh; overflow-y: auto;
+        }
+        .modal-img { height: 200px; background-size: cover; background-position: center; position: relative; }
+        .modal-img-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(transparent, rgba(15,23,42,0.9));
+        }
+        .modal-img-text { position: absolute; bottom: 20px; right: 20px; color: white; }
+        .modal-img-text h3 { font-size: 1.3rem; font-weight: 800; }
+        .modal-img-text p { font-size: 0.9rem; color: #e2e8f0; }
+        .modal-close-btn {
+            position: absolute; top: 15px; left: 15px;
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(0,0,0,0.5); border: none; color: white;
+            cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center;
+        }
+        .modal-body { padding: 25px; }
+        .modal-price-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(20,184,166,0.08); border: 1px solid rgba(20,184,166,0.2);
+            border-radius: 12px; padding: 12px 18px; margin-bottom: 20px;
+        }
+        .modal-price { font-size: 1.4rem; font-weight: 900; color: white; }
+        .modal-loyalty { color: #f59e0b; font-size: 0.9rem; font-weight: 700; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; color: var(--text-sec); font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px 15px;
+            background: var(--main-bg); border: 1px solid var(--border-color);
+            border-radius: 10px; color: white; font-family: 'Changa', sans-serif; font-size: 0.95rem;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none; border-color: var(--primary-color);
+        }
+        .safe-badge {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 10px; padding: 10px 15px; margin-bottom: 20px;
+            color: #10b981; font-size: 0.85rem; font-weight: 600;
+        }
+        .btn-confirm {
+            width: 100%; background: linear-gradient(135deg, var(--primary-color), #0f766e);
+            color: white; border: none; padding: 16px; border-radius: 12px;
+            font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s;
+            font-family: 'Changa', sans-serif;
+        }
+        .btn-confirm:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(20,184,166,0.5); }
+
+        /* Success Modal */
+        .success-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            z-index: 1001; align-items: center; justify-content: center;
+        }
+        .success-overlay.active { display: flex; }
+        .success-box {
+            background: var(--card-bg); border: 1px solid rgba(16,185,129,0.4);
+            border-radius: 25px; padding: 50px; text-align: center; max-width: 420px;
+        }
+        .success-icon {
+            width: 90px; height: 90px; border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; color: white; margin: 0 auto 25px;
+            box-shadow: 0 0 30px rgba(16,185,129,0.5);
+        }
+        .success-title { font-size: 1.6rem; font-weight: 800; color: white; margin-bottom: 10px; }
+        .success-text { color: var(--text-sec); margin-bottom: 20px; }
+        .success-points {
+            background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 12px; padding: 15px; margin-bottom: 25px;
+            color: #f59e0b; font-size: 1.1rem; font-weight: 700;
+        }
+        .btn-close-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white; border: none; padding: 14px 40px; border-radius: 12px;
+            font-size: 1rem; font-weight: 800; cursor: pointer; font-family: 'Changa', sans-serif;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .interests-grid, .companions-grid { grid-template-columns: repeat(2, 1fr); }
+            .ai-hero h1 { font-size: 2.2rem; }
+            .panel-card { padding: 25px 20px; }
+            .form-row { grid-template-columns: 1fr; }
+            .results-header { flex-direction: column; gap: 15px; }
+            .steps-bar { padding: 15px; }
+            .step-label { font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+    <div class="header-inner">
+        <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <nav>
+            <a href="index.html" >الرئيسية</a>
+            <a href="programs.html">البرامج</a>
+            <a href="ai-programmes.html" class="active"> المستشار السياحي</a>
+            <a href="ai-hotels.html">المستشار الفندقي</a>
+            <a href="hotels.html" >الفنادق</a>
+            <a href="souvenirs.html">التذكارات</a>
+            <a href="bookings.html">حجوزاتي</a>
+            <a href="contact.html">اتصل بنا</a>
+        </nav>
+        <div class="header-actions">
+            <button class="theme-toggle" onclick="toggleTheme()" title="تغيير المظهر">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+            <div id="authArea"></div>
+        </div>
+    </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="ai-hero">
+    <div class="ai-brain-icon">
+        <i class="fas fa-brain"></i>
+    </div>
+    <div class="ai-badge"><i class="fas fa-sparkles"></i> مدعوم بالذكاء الاصطناعي</div>
+    <h1>مستشارك الذكي<br><span>لتخطيط رحلتك</span></h1>
+    <p>أجب على بضعة أسئلة بسيطة ودعنا نختار لك أفضل البرامج السياحية التي تناسب اهتماماتك وميزانيتك تماماً</p>
+</section>
+
+<!-- ===== STEPS BAR ===== -->
+<div class="steps-wrapper">
+    <div class="steps-bar">
+        <div class="step-item">
+            <div class="step-circle active" id="sc1"><i class="fas fa-heart"></i></div>
+            <div class="step-label active" id="sl1">اهتماماتك</div>
+        </div>
+        <div class="step-line" id="line1"></div>
+        <div class="step-item">
+            <div class="step-circle" id="sc2">2</div>
+            <div class="step-label" id="sl2">تفاصيل الرحلة</div>
+        </div>
+        <div class="step-line" id="line2"></div>
+        <div class="step-item">
+            <div class="step-circle" id="sc3">3</div>
+            <div class="step-label" id="sl3">الميزانية</div>
+        </div>
+        <div class="step-line" id="line3"></div>
+        <div class="step-item">
+            <div class="step-circle" id="sc4"><i class="fas fa-list"></i></div>
+            <div class="step-label" id="sl4">النتائج</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== WIZARD ===== -->
+<div class="wizard-wrapper">
+
+    <!-- STEP 1: Interests -->
+    <div class="wizard-panel active" id="step1">
+        <div class="panel-card" data-aos="fade-up">
+            <h2 class="panel-title"><i class="fas fa-heart" style="color:var(--primary-color)"></i> ما الذي يثير اهتمامك؟</h2>
+            <p class="panel-subtitle">اختر واحداً أو أكثر من الاهتمامات لنصمم رحلتك المثالية</p>
+
+            <div class="interests-grid">
+                <div class="interest-card" data-type="مغامرة" onclick="toggleInterest(this)">
+                    <span class="interest-icon">🏔️</span>
+                    <div class="interest-label">مغامرة</div>
+                    <div class="interest-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="interest-card" data-type="ثقافي" onclick="toggleInterest(this)">
+                    <span class="interest-icon">🏛️</span>
+                    <div class="interest-label">ثقافي وتاريخي</div>
+                    <div class="interest-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="interest-card" data-type="عائلي" onclick="toggleInterest(this)">
+                    <span class="interest-icon">👨‍👩‍👧</span>
+                    <div class="interest-label">عائلي</div>
+                    <div class="interest-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="interest-card" data-type="استرخاء" onclick="toggleInterest(this)">
+                    <span class="interest-icon">🌅</span>
+                    <div class="interest-label">استرخاء وراحة</div>
+                    <div class="interest-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="interest-card" data-type="طبيعة" onclick="toggleInterest(this)">
+                    <span class="interest-icon">🌿</span>
+                    <div class="interest-label">طبيعة وبيئة</div>
+                    <div class="interest-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="interest-card" data-type="رياضة" onclick="toggleInterest(this)">
+                    <span class="interest-icon">⚽</span>
+                    <div class="interest-label">رياضة ونشاط</div>
+                    <div class="interest-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="interest-card" data-type="طعام" onclick="toggleInterest(this)">
+                    <span class="interest-icon">🍽️</span>
+                    <div class="interest-label">مطبخ محلي</div>
+                    <div class="interest-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="interest-card" data-type="صحراء" onclick="toggleInterest(this)">
+                    <span class="interest-icon">🏜️</span>
+                    <div class="interest-label">صحراء وسفاري</div>
+                    <div class="interest-check"><i class="fas fa-check"></i></div>
+                </div>
+            </div>
+
+            <div class="wizard-nav">
+                <span class="selection-counter">تم اختيار <span id="interestCount">0</span> اهتمام</span>
+                <button class="btn-next" onclick="goStep(2)">
+                    التالي <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 2: Trip Details -->
+    <div class="wizard-panel" id="step2">
+        <div class="panel-card" data-aos="fade-up">
+            <h2 class="panel-title"><i class="fas fa-users" style="color:var(--secondary-color)"></i> تفاصيل الرحلة</h2>
+            <p class="panel-subtitle">أخبرنا بمن ستسافر ومدة رحلتك المفضلة</p>
+
+            <p style="color:var(--text-sec); font-weight:700; margin-bottom:12px;">مع من ستسافر؟</p>
+            <div class="companions-grid">
+                <div class="companion-card" data-companion="منفرد" onclick="selectCompanion(this)">
+                    <span class="companion-icon">🧍</span>
+                    <div class="companion-label">منفرد</div>
+                    <div class="companion-desc">مغامرة فردية</div>
+                </div>
+                <div class="companion-card" data-companion="زوجين" onclick="selectCompanion(this)">
+                    <span class="companion-icon">👫</span>
+                    <div class="companion-label">زوجين</div>
+                    <div class="companion-desc">رحلة رومانسية</div>
+                </div>
+                <div class="companion-card" data-companion="عائلة" onclick="selectCompanion(this)">
+                    <span class="companion-icon">👨‍👩‍👧‍👦</span>
+                    <div class="companion-label">عائلة</div>
+                    <div class="companion-desc">مع الأطفال</div>
+                </div>
+                <div class="companion-card" data-companion="مجموعة" onclick="selectCompanion(this)">
+                    <span class="companion-icon">👥</span>
+                    <div class="companion-label">مجموعة أصدقاء</div>
+                    <div class="companion-desc">رحلة جماعية</div>
+                </div>
+            </div>
+
+            <p style="color:var(--text-sec); font-weight:700; margin-bottom:12px; margin-top:30px;">مدة الرحلة المفضلة؟</p>
+            <div class="duration-pills">
+                <div class="duration-pill" data-days="1" onclick="selectDuration(this)">يوم واحد</div>
+                <div class="duration-pill" data-days="3" onclick="selectDuration(this)">3 أيام</div>
+                <div class="duration-pill" data-days="5" onclick="selectDuration(this)">5 أيام</div>
+                <div class="duration-pill" data-days="7" onclick="selectDuration(this)">أسبوع</div>
+                <div class="duration-pill" data-days="14" onclick="selectDuration(this)">أكثر من أسبوع</div>
+            </div>
+
+            <p style="color:var(--text-sec); font-weight:700; margin-bottom:12px; margin-top:10px;">الموسم المفضل للسفر؟</p>
+            <div class="season-pills">
+                <div class="season-pill" data-season="ربيع" onclick="toggleSeason(this)">🌸 ربيع</div>
+                <div class="season-pill" data-season="صيف" onclick="toggleSeason(this)">☀️ صيف</div>
+                <div class="season-pill" data-season="خريف" onclick="toggleSeason(this)">🍂 خريف</div>
+                <div class="season-pill" data-season="شتاء" onclick="toggleSeason(this)">❄️ شتاء</div>
+                <div class="season-pill selected" data-season="أي وقت" onclick="toggleSeason(this)">📅 أي وقت</div>
+            </div>
+
+            <div class="wizard-nav">
+                <button class="btn-prev" onclick="goStep(1)"><i class="fas fa-arrow-right"></i> السابق</button>
+                <button class="btn-next" onclick="goStep(3)">التالي <i class="fas fa-arrow-left"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 3: Budget -->
+    <div class="wizard-panel" id="step3">
+        <div class="panel-card" data-aos="fade-up">
+            <h2 class="panel-title"><i class="fas fa-wallet" style="color:#f59e0b"></i> ما هي ميزانيتك؟</h2>
+            <p class="panel-subtitle">حرك المؤشر لتحديد الحد الأقصى لميزانيتك بالدينار الجزائري</p>
+
+            <div class="budget-slider-wrap">
+                <div class="budget-value" id="budgetDisplay">15,000 دج</div>
+                <input type="range" id="budgetSlider" min="2000" max="50000" step="1000" value="15000"
+                    oninput="updateBudget(this.value)">
+                <div class="budget-labels">
+                    <span>2,000 دج</span>
+                    <span>اقتصادي</span>
+                    <span>فاخر</span>
+                    <span>50,000 دج</span>
+                </div>
+            </div>
+
+            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:20px;">
+                <p style="color:var(--text-sec); font-weight:700; margin-bottom:15px;"><i class="fas fa-sliders-h" style="color:var(--primary-color); margin-left:8px;"></i> خيارات متقدمة (اختياري)</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>عدد المسافرين</label>
+                        <select id="paxCount">
+                            <option value="1">1 شخص</option>
+                            <option value="2" selected>2 أشخاص</option>
+                            <option value="3">3 أشخاص</option>
+                            <option value="4">4 أشخاص</option>
+                            <option value="5">5+ أشخاص</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>تاريخ السفر المقترح</label>
+                        <input type="date" id="travelDate">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Card -->
+            <div style="background:linear-gradient(135deg, rgba(20,184,166,0.1), rgba(14,165,233,0.1)); border:1px solid rgba(20,184,166,0.2); border-radius:16px; padding:20px; margin-bottom:25px;">
+                <p style="color:white; font-weight:700; margin-bottom:15px;"><i class="fas fa-clipboard-list" style="color:var(--secondary-color); margin-left:8px;"></i> ملخص تفضيلاتك</p>
+                <div style="display:flex; flex-wrap:wrap; gap:10px;" id="prefSummary"></div>
+            </div>
+
+            <div class="wizard-nav">
+                <button class="btn-prev" onclick="goStep(2)"><i class="fas fa-arrow-right"></i> السابق</button>
+                <button class="btn-analyze" onclick="runAI()">
+                    <i class="fas fa-brain"></i> ابدأ التحليل الذكي
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI LOADING -->
+    <div class="ai-loading" id="aiLoading">
+        <div class="loading-brain"><i class="fas fa-brain"></i></div>
+        <p class="loading-status">الذكاء الاصطناعي يحلل تفضيلاتك...</p>
+        <p class="loading-sub">يرجى الانتظار بينما نختار لك أفضل البرامج</p>
+        <div class="loading-bar-wrap">
+            <div class="loading-bar-fill" id="loadingBar"></div>
+        </div>
+        <div class="loading-steps">
+            <div class="loading-step" id="ls1"><i class="fas fa-circle-notch fa-spin"></i> تحليل اهتماماتك</div>
+            <div class="loading-step" id="ls2"><i class="fas fa-clock"></i> مطابقة معايير الرحلة</div>
+            <div class="loading-step" id="ls3"><i class="fas fa-clock"></i> فلترة حسب الميزانية</div>
+            <div class="loading-step" id="ls4"><i class="fas fa-clock"></i> احتساب نقاط التوافق</div>
+        </div>
+    </div>
+
+    <!-- STEP 4: Results -->
+    <div class="wizard-panel" id="step4">
+        <div class="results-header" data-aos="fade-up">
+            <div>
+                <div class="results-title">🎯 نتائج مخصصة لك</div>
+                <div class="results-subtitle" id="resultsSummaryText">بناءً على تفضيلاتك وجدنا البرامج الأنسب لك</div>
+            </div>
+            <div class="results-count" id="resultsCount">0 برنامج</div>
+        </div>
+
+        <div class="results-grid" id="resultsGrid"></div>
+        <div class="no-results" id="noResults">
+            <i class="fas fa-search"></i>
+            <h3>لم نجد برامج مناسبة</h3>
+            <p>جرب توسيع ميزانيتك أو اختيار اهتمامات مختلفة</p>
+        </div>
+
+        <div class="redo-section" data-aos="fade-up">
+            <p style="color:var(--text-sec); margin-bottom:15px;">هل تريد نتائج مختلفة؟</p>
+            <button class="btn-redo" onclick="resetWizard()">
+                <i class="fas fa-redo"></i> ابدأ من جديد
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== BOOKING MODAL ===== -->
+<div class="modal-overlay" id="bookModal">
+    <div class="modal-box">
+        <div class="modal-img" id="modalImg">
+            <div class="modal-img-overlay"></div>
+            <button class="modal-close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-img-text">
+                <h3 id="modalTitle"></h3>
+                <p id="modalSubtitle"></p>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="modal-price-row">
+                <div>
+                    <div style="color:var(--text-sec); font-size:0.85rem; margin-bottom:4px;">السعر الإجمالي</div>
+                    <div class="modal-price"><span id="modalPrice"></span> دج</div>
+                </div>
+                <div class="modal-loyalty"><i class="fas fa-star"></i> +<span id="modalPoints"></span> نقطة ولاء</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> الاسم الكامل</label>
+                    <input type="text" id="bkName" placeholder="اسمك الكامل">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> رقم الهاتف</label>
+                    <input type="tel" id="bkPhone" placeholder="0xxx xxx xxx">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-calendar"></i> تاريخ الانطلاق</label>
+                    <input type="date" id="bkDate">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-users"></i> عدد المسافرين</label>
+                    <select id="bkPax">
+                        <option value="1">1 شخص</option>
+                        <option value="2" selected>2 أشخاص</option>
+                        <option value="3">3 أشخاص</option>
+                        <option value="4">4 أشخاص</option>
+                        <option value="5">5+ أشخاص</option>
+                    </select>
+                </div>
+            </div>
+            <div class="safe-badge">
+                <i class="fas fa-shield-alt"></i>
+                حجز آمن — يمكنك الإلغاء قبل 48 ساعة من الموعد
+            </div>
+            <button class="btn-confirm" onclick="confirmBooking()">
+                <i class="fas fa-check-circle"></i> تأكيد الحجز
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SUCCESS MODAL ===== -->
+<div class="success-overlay" id="successModal">
+    <div class="success-box">
+        <div class="success-icon"><i class="fas fa-check"></i></div>
+        <h3 class="success-title">تم الحجز بنجاح! 🎉</h3>
+        <p class="success-text">سيتم التواصل معك قريباً لتأكيد الرحلة</p>
+        <div class="success-points">
+            <i class="fas fa-star"></i> ربحت <span id="successPoints">0</span> نقطة ولاء!
+        </div>
+        <button class="btn-close-success" onclick="closeSuccess()">رائع!</button>
+    </div>
+</div>
+
+<!-- Chat Widget -->
+<script src="chat-widget.js"></script>
+
+<!-- AOS -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 600, once: true });
+
+// ==================== XSS PROTECTION ====================
+function escHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// ==================== THEME ====================
+function toggleTheme() {
+    const current = localStorage.getItem('theme') || 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    document.body.classList.toggle('light-mode', next === 'light');
+    document.getElementById('themeIcon').className = next === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+}
+(function() {
+    const t = localStorage.getItem('theme');
+    if (t === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('themeIcon').className = 'fas fa-sun';
+    }
+})();
+
+// ==================== AUTH ====================
+function initAuth() {
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+    const area = document.getElementById('authArea') || document.getElementById('authLinks');
+    if (!area) return;
+    if (user) {
+        const name = user.name || user.originalName || user.username || 'مستخدم';
+        const initial = name.trim().charAt(0).toUpperCase();
+        area.innerHTML = `
+            <a href="profile.html" class="btn-auth-user">
+                <span class="auth-avatar"></span>
+                <span class="auth-name"></span>
+            </a>
+            <button class="btn-nav-logout" onclick="logout()" title="تسجيل الخروج" type="button"><i class="fas fa-sign-out-alt"></i></button>`;
+        area.querySelector('.auth-avatar').textContent = initial;
+        area.querySelector('.auth-name').textContent = name;
+    } else {
+        area.innerHTML = `<a href="login.html" class="btn-auth-login">
+            <i class="fas fa-sign-in-alt"></i> دخول</a>`;
+    }
+}
+window.logout = function () {
+    if (confirm('تسجيل الخروج؟')) { localStorage.removeItem('hawsbiyaUser'); location.reload(); }
+};
+initAuth();
+
+// ==================== STATE ====================
+let selectedInterests = [];
+let selectedCompanion = '';
+let selectedDuration = 0;
+let selectedSeasons = ['أي وقت'];
+let currentBudget = 15000;
+let currentProgram = null;
+let allPrograms = [];
+
+// ==================== INTEREST TOGGLE ====================
+function toggleInterest(card) {
+    const type = card.dataset.type;
+    card.classList.toggle('selected');
+    if (card.classList.contains('selected')) {
+        if (!selectedInterests.includes(type)) selectedInterests.push(type);
+    } else {
+        selectedInterests = selectedInterests.filter(i => i !== type);
+    }
+    document.getElementById('interestCount').textContent = selectedInterests.length;
+}
+
+function selectCompanion(card) {
+    document.querySelectorAll('.companion-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedCompanion = card.dataset.companion;
+    // Auto-select matching interest
+    if (selectedCompanion === 'عائلة') {
+        const familyCard = document.querySelector('[data-type="عائلي"]');
+        if (familyCard && !familyCard.classList.contains('selected')) toggleInterest(familyCard);
+    }
+}
+
+function selectDuration(pill) {
+    document.querySelectorAll('.duration-pill').forEach(p => p.classList.remove('selected'));
+    pill.classList.add('selected');
+    selectedDuration = parseInt(pill.dataset.days);
+}
+
+function toggleSeason(pill) {
+    const season = pill.dataset.season;
+    if (season === 'أي وقت') {
+        document.querySelectorAll('.season-pill').forEach(p => p.classList.remove('selected'));
+        pill.classList.add('selected');
+        selectedSeasons = ['أي وقت'];
+        return;
+    }
+    const anyPill = document.querySelector('[data-season="أي وقت"]');
+    anyPill.classList.remove('selected');
+    pill.classList.toggle('selected');
+    selectedSeasons = [...document.querySelectorAll('.season-pill.selected')].map(p => p.dataset.season);
+    if (selectedSeasons.length === 0) {
+        anyPill.classList.add('selected');
+        selectedSeasons = ['أي وقت'];
+    }
+}
+
+function updateBudget(val) {
+    currentBudget = parseInt(val);
+    document.getElementById('budgetDisplay').textContent = Number(val).toLocaleString('ar-DZ') + ' دج';
+    // update gradient
+    const slider = document.getElementById('budgetSlider');
+    const pct = ((val - 2000) / (50000 - 2000)) * 100;
+    slider.style.setProperty('--range-pct', pct + '%');
+}
+
+// ==================== STEP NAVIGATION ====================
+function goStep(step) {
+    if (step === 2 && selectedInterests.length === 0) {
+        alert('يرجى اختيار اهتمام واحد على الأقل');
+        return;
+    }
+    if (step === 3) buildSummary();
+
+    document.querySelectorAll('.wizard-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('step' + step).classList.add('active');
+    updateStepBar(step);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateStepBar(activeStep) {
+    for (let i = 1; i <= 4; i++) {
+        const sc = document.getElementById('sc' + i);
+        const sl = document.getElementById('sl' + i);
+        if (!sc) continue;
+        sc.classList.remove('active', 'done');
+        sl.classList.remove('active', 'done');
+        if (i < activeStep) { sc.classList.add('done'); sl.classList.add('done'); sc.innerHTML = '<i class="fas fa-check"></i>'; }
+        else if (i === activeStep) { sc.classList.add('active'); sl.classList.add('active'); }
+        else {
+            const icons = ['', '<i class="fas fa-heart"></i>', '2', '3', '<i class="fas fa-list"></i>'];
+            sc.innerHTML = icons[i] || i;
+        }
+    }
+    for (let j = 1; j <= 3; j++) {
+        const line = document.getElementById('line' + j);
+        if (line) line.classList.toggle('done', j < activeStep);
+    }
+}
+
+function buildSummary() {
+    const container = document.getElementById('prefSummary');
+    const tags = [];
+    selectedInterests.forEach(i => tags.push(`<span style="background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.3);color:var(--primary-color);padding:5px 12px;border-radius:20px;font-size:0.85rem;font-weight:700;">${escHtml(i)}</span>`));
+    if (selectedCompanion) tags.push(`<span style="background:rgba(14,165,233,0.1);border:1px solid rgba(14,165,233,0.3);color:var(--secondary-color);padding:5px 12px;border-radius:20px;font-size:0.85rem;font-weight:700;"><i class="fas fa-users"></i> ${escHtml(selectedCompanion)}</span>`);
+    if (selectedDuration) tags.push(`<span style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;padding:5px 12px;border-radius:20px;font-size:0.85rem;font-weight:700;"><i class="fas fa-clock"></i> ${selectedDuration} يوم</span>`);
+    container.innerHTML = tags.join('');
+}
+
+// ==================== AI ANALYSIS ====================
+async function runAI() {
+    // Save preferences to localStorage
+    localStorage.setItem('hawsbiya_prefs', JSON.stringify({
+        interests: selectedInterests,
+        companion: selectedCompanion,
+        duration: selectedDuration,
+        seasons: selectedSeasons,
+        budget: currentBudget
+    }));
+
+    document.querySelectorAll('.wizard-panel').forEach(p => p.classList.remove('active'));
+    const loading = document.getElementById('aiLoading');
+    loading.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Animate loading steps
+    const steps = ['ls1', 'ls2', 'ls3', 'ls4'];
+    const icons = ['fa-search', 'fa-code-branch', 'fa-wallet', 'fa-star'];
+    for (let i = 0; i < steps.length; i++) {
+        await delay(600);
+        const el = document.getElementById(steps[i]);
+        if (i > 0) {
+            const prev = document.getElementById(steps[i-1]);
+            prev.classList.add('done');
+            prev.querySelector('i').className = 'fas fa-check-circle';
+        }
+        el.querySelector('i').className = `fas fa-circle-notch fa-spin`;
+    }
+    await delay(600);
+    document.getElementById(steps[steps.length-1]).classList.add('done');
+    document.getElementById(steps[steps.length-1]).querySelector('i').className = 'fas fa-check-circle';
+
+    await delay(400);
+
+    // Fetch programs
+    try {
+        const res = await fetch('/api/programs');
+        if (res.ok) allPrograms = await res.json();
+        else throw new Error('fallback');
+    } catch {
+        allPrograms = getFallbackPrograms();
+    }
+
+    loading.classList.remove('active');
+    showResults();
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ==================== SCORING ALGORITHM ====================
+function scoreProgram(program) {
+    let score = 0;
+    const reasons = [];
+
+    // Interest match (40 points)
+    selectedInterests.forEach(interest => {
+        const typeMatch = (program.type || '').includes(interest);
+        const nameMatch = (program.name || '').includes(interest);
+        const descMatch = (program.description || '').includes(interest);
+        if (typeMatch) { score += 20; reasons.push(`نوع البرنامج يطابق اهتمام "${interest}"`); }
+        else if (nameMatch || descMatch) { score += 10; reasons.push(`البرنامج يتضمن "${interest}"`); }
+    });
+
+    // Budget (25 points)
+    const price = parseInt(program.price) || 0;
+    if (price <= currentBudget) {
+        const ratio = 1 - (price / currentBudget);
+        score += Math.round(25 * (0.5 + ratio * 0.5));
+        if (ratio > 0.5) reasons.push('ضمن ميزانيتك بشكل مريح');
+        else reasons.push('ضمن ميزانيتك');
+    } else {
+        score -= 30;
+    }
+
+    // Duration match (20 points)
+    if (selectedDuration > 0) {
+        const progDays = parseInt(program.duration) || 0;
+        const diff = Math.abs(progDays - selectedDuration);
+        if (diff === 0) { score += 20; reasons.push('المدة تطابق تفضيلك تماماً'); }
+        else if (diff <= 2) { score += 10; reasons.push('المدة قريبة من تفضيلك'); }
+    }
+
+    // Companion match (15 points)
+    if (selectedCompanion) {
+        const compMap = {
+            'عائلة': 'عائلي', 'منفرد': 'مغامرة', 'زوجين': 'استرخاء', 'مجموعة': 'ثقافي'
+        };
+        const preferred = compMap[selectedCompanion];
+        if ((program.type || '').includes(preferred) || (program.name || '').includes(preferred)) {
+            score += 15;
+            reasons.push(`مناسب لـ${selectedCompanion}`);
+        }
+    }
+
+    // Rating bonus
+    if ((program.rating || 0) >= 4.5) { score += 5; reasons.push('تقييم ممتاز'); }
+
+    return { score: Math.max(0, Math.min(100, score)), reasons: reasons.slice(0, 3) };
+}
+
+// ==================== SHOW RESULTS ====================
+function showResults() {
+    const scored = allPrograms
+        .map(p => ({ ...p, ...scoreProgram(p) }))
+        .filter(p => p.score > 0 && (parseInt(p.price) || 0) <= currentBudget)
+        .sort((a, b) => b.score - a.score);
+
+    document.getElementById('step4').classList.add('active');
+    updateStepBar(4);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    const count = scored.length;
+    document.getElementById('resultsCount').textContent = count + ' برنامج';
+    document.getElementById('resultsSummaryText').textContent =
+        `بناءً على اهتماماتك (${selectedInterests.join('، ')}) وميزانيتك ${currentBudget.toLocaleString('ar-DZ')} دج`;
+
+    const grid = document.getElementById('resultsGrid');
+    const noRes = document.getElementById('noResults');
+
+    if (count === 0) {
+        grid.innerHTML = '';
+        noRes.style.display = 'block';
+        return;
+    }
+    noRes.style.display = 'none';
+
+    const typeColors = {
+        'مغامرة': '#ef4444', 'ثقافي': '#14b8a6', 'عائلي': '#f59e0b',
+        'استرخاء': '#10b981', 'طبيعة': '#059669', 'صحراء': '#d97706',
+        'رياضة': '#3b82f6', 'طعام': '#ec4899'
+    };
+
+    grid.innerHTML = scored.map((p, idx) => {
+        const price = parseInt(p.price) || 0;
+        const loyaltyPts = Math.round(price * 0.01);
+        const matchClass = p.score >= 60 ? 'high' : 'medium';
+        const color = typeColors[p.type] || 'var(--primary-color)';
+        const img = p.image || `https://loremflickr.com/400/300/algeria,travel`;
+
+        const reasonsHtml = p.reasons && p.reasons.length ?
+            `<div class="match-reasons">
+                <div class="match-reasons-title"><i class="fas fa-magic"></i> لماذا اخترناه لك:</div>
+                ${p.reasons.map(r => `<div class="match-reason"><i class="fas fa-check-circle"></i> ${escHtml(r)}</div>`).join('')}
+            </div>` : '';
+
+        return `
+        <div class="result-card" data-aos="fade-up" data-aos-delay="${idx * 80}">
+            <div class="result-card-image" style="background-image:url('${img}')">
+                <div class="match-badge ${matchClass}">
+                    <i class="fas fa-percentage"></i> ${p.score}% توافق
+                </div>
+                <div class="type-badge-result" style="background:${color}20; border:1px solid ${color}60; color:${color};">
+                    ${escHtml(p.type || 'برنامج')}
+                </div>
+                <button class="wishlist-btn-result" onclick="toggleWishlist(this, ${p.id || idx})" title="أضف للمفضلة">
+                    <i class="far fa-heart"></i>
+                </button>
+            </div>
+            <div class="result-card-body">
+                <h3 class="result-card-name">${escHtml(p.name || 'برنامج سياحي')}</h3>
+                <p class="result-card-desc">${escHtml((p.description || '').substring(0, 100))}...</p>
+                <div class="result-card-meta">
+                    ${p.duration ? `<div class="meta-tag"><i class="fas fa-clock"></i> ${escHtml(String(p.duration))} يوم</div>` : ''}
+                    ${p.rating ? `<div class="meta-tag"><i class="fas fa-star" style="color:#f59e0b"></i> ${escHtml(String(p.rating))}</div>` : ''}
+                    ${p.location ? `<div class="meta-tag"><i class="fas fa-map-marker-alt"></i> ${escHtml(p.location)}</div>` : ''}
+                </div>
+                ${reasonsHtml}
+                <div class="result-card-footer">
+                    <div>
+                        <div class="result-price">${price.toLocaleString('ar-DZ')} <span>دج</span></div>
+                        <div class="loyalty-hint"><i class="fas fa-star"></i> +${loyaltyPts} نقطة</div>
+                    </div>
+                    <button class="btn-book-result" onclick="openBookModal(${JSON.stringify(escHtml(p.name||'')).replace(/"/g,"'")}, ${price}, ${loyaltyPts}, '${img}', '${escHtml(p.type||'')}')">
+                        احجز الآن
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+
+    AOS.refresh();
+}
+
+// ==================== WISHLIST ====================
+function toggleWishlist(btn, id) {
+    btn.classList.toggle('liked');
+    const icon = btn.querySelector('i');
+    icon.className = btn.classList.contains('liked') ? 'fas fa-heart' : 'far fa-heart';
+    const wishlist = JSON.parse(localStorage.getItem('hawsbiya_wishlist') || '[]');
+    const idx = wishlist.indexOf(id);
+    if (idx === -1) wishlist.push(id); else wishlist.splice(idx, 1);
+    localStorage.setItem('hawsbiya_wishlist', JSON.stringify(wishlist));
+}
+
+// ==================== BOOKING MODAL ====================
+function openBookModal(name, price, points, img, type) {
+    currentProgram = { name, price, points };
+    document.getElementById('modalTitle').textContent = name;
+    document.getElementById('modalSubtitle').textContent = type;
+    document.getElementById('modalImg').style.backgroundImage = `url('${img}')`;
+    document.getElementById('modalPrice').textContent = price.toLocaleString('ar-DZ');
+    document.getElementById('modalPoints').textContent = points;
+
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+    if (user) {
+        document.getElementById('bkName').value = user.name || user.username || '';
+        document.getElementById('bkPhone').value = user.phone || '';
+    }
+    const d = document.getElementById('travelDate');
+    if (d && d.value) document.getElementById('bkDate').value = d.value;
+
+    document.getElementById('bookModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('bookModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+async function confirmBooking() {
+    const name = document.getElementById('bkName').value.trim();
+    const phone = document.getElementById('bkPhone').value.trim();
+    const date = document.getElementById('bkDate').value;
+    const pax = document.getElementById('bkPax').value;
+
+    if (!name || !phone || !date) { alert('يرجى ملء جميع الحقول المطلوبة'); return; }
+
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+    const booking = {
+        userId: user?.id || 0,
+        type: 'program',
+        name: currentProgram.name,
+        price: currentProgram.price,
+        travelers: parseInt(pax),
+        date,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+    };
+
+    try {
+        await fetch('/api/bookings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(booking)
+        });
+    } catch {}
+
+    closeModal();
+    document.getElementById('successPoints').textContent = currentProgram.points;
+    document.getElementById('successModal').classList.add('active');
+
+    // Update user loyalty points in localStorage
+    if (user) {
+        user.loyaltyPoints = (user.loyaltyPoints || 0) + currentProgram.points;
+        localStorage.setItem('hawsbiyaUser', JSON.stringify(user));
+    }
+}
+
+function closeSuccess() {
+    document.getElementById('successModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// ==================== RESET ====================
+function resetWizard() {
+    selectedInterests = [];
+    selectedCompanion = '';
+    selectedDuration = 0;
+    selectedSeasons = ['أي وقت'];
+    currentBudget = 15000;
+
+    document.querySelectorAll('.interest-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.companion-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.duration-pill').forEach(p => p.classList.remove('selected'));
+    document.querySelectorAll('.season-pill').forEach(p => p.classList.remove('selected'));
+    document.querySelector('[data-season="أي وقت"]').classList.add('selected');
+    document.getElementById('budgetSlider').value = 15000;
+    updateBudget(15000);
+    document.getElementById('interestCount').textContent = '0';
+
+    document.querySelectorAll('.wizard-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('step1').classList.add('active');
+    updateStepBar(1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Restore saved preferences
+(function restorePrefs() {
+    const prefs = JSON.parse(localStorage.getItem('hawsbiya_prefs') || 'null');
+    if (!prefs) return;
+    // Silently restore — don't auto-trigger step changes
+    prefs.interests?.forEach(type => {
+        const card = document.querySelector(`[data-type="${type}"]`);
+        if (card) toggleInterest(card);
+    });
+    if (prefs.budget) {
+        document.getElementById('budgetSlider').value = prefs.budget;
+        updateBudget(prefs.budget);
+        currentBudget = prefs.budget;
+    }
+})();
+
+// ==================== FALLBACK DATA ====================
+function getFallbackPrograms() {
+    return [
+        { id: 1, name: 'رحلة غرداية التراثية', type: 'ثقافي', price: 8500, duration: 3, rating: 4.8, description: 'استكشف مدينة غرداية التاريخية وقصر بني ميزاب ومعالمها الأثرية الفريدة', location: 'غرداية', image: 'https://loremflickr.com/800/500/algeria,architecture' },
+        { id: 2, name: 'مغامرة صحراء تمنراست', type: 'مغامرة', price: 22000, duration: 7, rating: 4.9, description: 'رحلة استثنائية إلى قلب الصحراء الكبرى وسط كثبان الأهقار والهوقار', location: 'تمنراست', image: 'https://loremflickr.com/800/500/desert,camel' },
+        { id: 3, name: 'جولة قسنطينة الجسور', type: 'ثقافي', price: 6500, duration: 2, rating: 4.7, description: 'تجول فوق جسور قسنطينة المعلقة واكتشف المدينة التاريخية الرائعة', location: 'قسنطينة', image: 'https://loremflickr.com/800/500/constantine,bridge' },
+        { id: 4, name: 'بحيرة تيبازة والآثار الرومانية', type: 'ثقافي', price: 5000, duration: 1, rating: 4.6, description: 'زيارة المدينة الرومانية تيبازة على ساحل البحر المتوسط وتلمس التاريخ العريق', location: 'تيبازة', image: 'https://loremflickr.com/800/500/roman,ruins' },
+        { id: 5, name: 'منتزه باتنة الطبيعي', type: 'طبيعة', price: 9800, duration: 5, rating: 4.5, description: 'استكشف جمال الطبيعة الجزائرية في أودية باتنة وجبال الأوراس الخضراء', location: 'باتنة', image: 'https://loremflickr.com/800/500/mountains,landscape' },
+        { id: 6, name: 'مدينة وهران الفيحاء', type: 'استرخاء', price: 11500, duration: 4, rating: 4.7, description: 'اكتشف وهران العريقة بين شواطئها الذهبية وقصباتها الأصيلة ومطبخها الشهي', location: 'وهران', image: 'https://loremflickr.com/800/500/mediterranean,harbor' },
+        { id: 7, name: 'رحلة عائلية بجاية البحرية', type: 'عائلي', price: 14000, duration: 5, rating: 4.8, description: 'استمتع مع عائلتك بجمال بجاية المتوسطية وشواطئها النقية وطبيعتها الخلابة', location: 'بجاية', image: 'https://loremflickr.com/800/500/coast,boat' },
+        { id: 8, name: 'واحة الأغواط الصحراوية', type: 'صحراء', price: 7500, duration: 3, rating: 4.6, description: 'بوابة الصحراء الجزائرية — تجربة أصيلة في قلب واحة الأغواط بين النخيل والكثبان', location: 'الأغواط', image: 'https://loremflickr.com/800/500/oasis,palm' }
+    ];
+}
+
+// Close modals on backdrop click
+document.getElementById('bookModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+document.getElementById('successModal').addEventListener('click', function(e) {
+    if (e.target === this) closeSuccess();
+});
+</script>
+
+<!-- Footer -->
+<footer style="background:var(--card-bg); border-top:1px solid var(--border-color); padding:40px 20px; text-align:center; margin-top:40px;">
+    <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:30px; text-align:right;">
+        <div>
+            <div style="font-size:1.3rem; font-weight:900; color:white; margin-bottom:15px;">
+                <i class="fas fa-compass" style="color:var(--primary-color)"></i> حوس بيا
+            </div>
+            <p style="color:var(--text-sec); font-size:0.9rem; line-height:1.7;">منصتك الذكية للسياحة الجزائرية المدعومة بالذكاء الاصطناعي</p>
+        </div>
+        <div>
+            <div style="font-weight:700; color:white; margin-bottom:12px;">روابط سريعة</div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                <a href="programs.html" style="color:var(--text-sec); font-size:0.9rem;">البرامج السياحية</a>
+                <a href="hotels.html" style="color:var(--text-sec); font-size:0.9rem;">الفنادق</a>
+                <a href="souvenirs.html" style="color:var(--text-sec); font-size:0.9rem;">المنتجات التقليدية</a>
+                <a href="ai-hotels.html" style="color:var(--text-sec); font-size:0.9rem;">مستشار الفنادق الذكي</a>
+            </div>
+        </div>
+        <div>
+            <div style="font-weight:700; color:white; margin-bottom:12px;">تواصل معنا</div>
+            <div style="display:flex; gap:15px; margin-top:10px;">
+                <a href="#" style="color:var(--text-sec); font-size:1.3rem; transition:0.3s;" onmouseover="this.style.color='#14b8a6'" onmouseout="this.style.color=''"><i class="fab fa-tiktok"></i></a>
+                <a href="#" style="color:var(--text-sec); font-size:1.3rem; transition:0.3s;" onmouseover="this.style.color='#e1306c'" onmouseout="this.style.color=''"><i class="fab fa-instagram"></i></a>
+                <a href="#" style="color:var(--text-sec); font-size:1.3rem; transition:0.3s;" onmouseover="this.style.color='#1877f2'" onmouseout="this.style.color=''"><i class="fab fa-facebook"></i></a>
+            </div>
+        </div>
+    </div>
+    <div style="border-top:1px solid var(--border-color); margin-top:30px; padding-top:20px; color:var(--text-sec); font-size:0.85rem;">
+        © 2025 حوس بيا — جميع الحقوق محفوظة
+    </div>
+</footer>
+
+</body>
+</html>

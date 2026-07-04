@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حوس بيا - حجوزاتي</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ===== BOOKINGS PAGE ===== */
+
+        /* Hero */
+        .bookings-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #0f172a 100%);
+            padding: 60px 20px;
+            text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .bookings-hero::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at 30% 50%, rgba(45,212,191,0.15) 0%, transparent 60%);
+        }
+        .hero-stats {
+            display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 30px;
+            position: relative; z-index: 1;
+        }
+        .hero-stat {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px; padding: 18px 28px; text-align: center; min-width: 130px;
+        }
+        .hero-stat-num { font-size: 1.8rem; font-weight: 900; color: white; }
+        .hero-stat-label { font-size: 0.85rem; color: #94a3b8; margin-top: 4px; }
+
+        /* Loyalty Banner */
+        .loyalty-banner {
+            max-width: 1100px; margin: 30px auto 0; padding: 0 20px;
+        }
+        .loyalty-card {
+            background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(139,92,246,0.12));
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 20px; padding: 25px 30px;
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;
+        }
+        .loyalty-left { display: flex; align-items: center; gap: 20px; }
+        .loyalty-icon-box {
+            width: 60px; height: 60px; border-radius: 16px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; color: white; flex-shrink: 0;
+        }
+        .loyalty-points-num { font-size: 2rem; font-weight: 900; color: #f59e0b; }
+        .loyalty-points-label { color: #94a3b8; font-size: 0.9rem; }
+        .loyalty-progress-wrap { flex: 1; min-width: 200px; }
+        .loyalty-progress-bar {
+            height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 8px 0;
+        }
+        .loyalty-progress-fill {
+            height: 100%; border-radius: 10px;
+            background: linear-gradient(90deg, #f59e0b, #8b5cf6);
+            transition: width 1s ease;
+        }
+        .loyalty-progress-text { font-size: 0.8rem; color: #94a3b8; }
+        .loyalty-tier {
+            background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.4);
+            color: #f59e0b; padding: 8px 20px; border-radius: 20px; font-size: 0.9rem; font-weight: 700;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* Main content */
+        .bookings-main { max-width: 1100px; margin: 40px auto; padding: 0 20px 80px; }
+
+        /* Tabs */
+        .tabs-bar {
+            display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px;
+            margin-bottom: 30px; scrollbar-width: none;
+        }
+        .tabs-bar::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            padding: 12px 22px; border-radius: 12px; border: 1px solid var(--border-color);
+            background: var(--card-bg); color: var(--text-sec); font-family: 'Changa', sans-serif;
+            font-size: 0.9rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.3s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .tab-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
+        .tab-btn.active {
+            background: var(--primary-color); border-color: var(--primary-color); color: white;
+        }
+        .tab-count {
+            background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px; font-size: 0.8rem;
+        }
+        .tab-btn.active .tab-count { background: rgba(255,255,255,0.25); }
+
+        /* Filters row */
+        .filters-row {
+            display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 25px; align-items: center;
+        }
+        .filter-input {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            color: white; padding: 10px 15px; border-radius: 10px;
+            font-family: 'Changa', sans-serif; font-size: 0.9rem; flex: 1; min-width: 200px;
+        }
+        .filter-input:focus { outline: none; border-color: var(--primary-color); }
+        .filter-select {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            color: white; padding: 10px 15px; border-radius: 10px;
+            font-family: 'Changa', sans-serif; font-size: 0.9rem;
+        }
+
+        /* Booking Cards */
+        .bookings-grid { display: flex; flex-direction: column; gap: 18px; }
+
+        .booking-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; overflow: hidden; transition: 0.3s;
+        }
+        .booking-card:hover { border-color: rgba(139,92,246,0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .booking-card.deleted { opacity: 0.5; border-style: dashed; }
+
+        .booking-card-inner {
+            display: grid; grid-template-columns: 140px 1fr auto; gap: 0;
+        }
+        .booking-img {
+            height: 160px; background-size: cover; background-position: center;
+            background-color: var(--main-bg); flex-shrink: 0;
+        }
+        .booking-body { padding: 20px; }
+        .booking-type-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .type-program { background: rgba(139,92,246,0.15); color: var(--primary-color); border: 1px solid rgba(139,92,246,0.3); }
+        .type-hotel { background: rgba(45,212,191,0.12); color: var(--secondary-color); border: 1px solid rgba(45,212,191,0.3); }
+        .type-souvenir { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+
+        .booking-name { font-size: 1.15rem; font-weight: 800; color: white; margin-bottom: 5px; }
+        .booking-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+        .booking-meta-item {
+            display: flex; align-items: center; gap: 6px;
+            color: var(--text-sec); font-size: 0.85rem;
+        }
+        .booking-meta-item i { color: var(--primary-color); width: 14px; }
+
+        /* Status Timeline */
+        .status-timeline {
+            display: flex; align-items: center; gap: 0; margin-top: 12px;
+        }
+        .timeline-step {
+            display: flex; flex-direction: column; align-items: center; flex: 1;
+        }
+        .timeline-dot {
+            width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; z-index: 1; flex-shrink: 0;
+        }
+        .timeline-dot.done { background: var(--secondary-color); color: white; }
+        .timeline-dot.active { background: var(--primary-color); color: white; box-shadow: 0 0 12px rgba(139,92,246,0.5); }
+        .timeline-dot.pending { background: var(--border-color); color: var(--text-sec); }
+        .timeline-step-label { font-size: 0.7rem; color: var(--text-sec); margin-top: 5px; text-align: center; }
+        .timeline-step-label.done { color: var(--secondary-color); }
+        .timeline-step-label.active { color: var(--primary-color); font-weight: 700; }
+        .timeline-line {
+            flex: 1; height: 2px; background: var(--border-color); margin-bottom: 22px;
+        }
+        .timeline-line.done { background: var(--secondary-color); }
+
+        /* Actions */
+        .booking-actions {
+            padding: 15px 20px 15px 0; display: flex; flex-direction: column;
+            justify-content: center; gap: 10px; flex-shrink: 0;
+        }
+        .btn-action {
+            padding: 10px 18px; border-radius: 10px; font-size: 0.85rem; font-weight: 700;
+            cursor: pointer; font-family: 'Changa', sans-serif; transition: 0.3s; white-space: nowrap;
+            border: none;
+        }
+        .btn-rate {
+            background: rgba(245,158,11,0.15); color: #f59e0b;
+            border: 1px solid rgba(245,158,11,0.3);
+        }
+        .btn-rate:hover { background: #f59e0b; color: white; }
+        .btn-cancel {
+            background: rgba(239,68,68,0.1); color: #ef4444;
+            border: 1px solid rgba(239,68,68,0.3);
+        }
+        .btn-cancel:hover { background: #ef4444; color: white; }
+        .btn-restore {
+            background: rgba(16,185,129,0.1); color: #10b981;
+            border: 1px solid rgba(16,185,129,0.3);
+        }
+        .btn-restore:hover { background: #10b981; color: white; }
+        .btn-delete-perm {
+            background: rgba(239,68,68,0.1); color: #ef4444;
+            border: 1px solid rgba(239,68,68,0.3); font-size: 0.8rem;
+        }
+
+        /* Price + Loyalty row */
+        .booking-price-row {
+            display: flex; align-items: center; gap: 12px; margin-top: 8px;
+        }
+        .booking-price { font-size: 1.1rem; font-weight: 900; color: white; }
+        .booking-loyalty {
+            background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
+            color: #f59e0b; padding: 3px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: 700;
+        }
+
+        /* Rating Stars Modal */
+        .rating-stars { display: flex; gap: 8px; justify-content: center; margin: 20px 0; }
+        .rating-star {
+            font-size: 2.5rem; cursor: pointer; color: var(--border-color); transition: 0.2s;
+        }
+        .rating-star.active, .rating-star:hover { color: #f59e0b; transform: scale(1.2); }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center; padding: 80px 20px;
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px;
+        }
+        .empty-icon { font-size: 4rem; color: var(--text-sec); margin-bottom: 20px; display: block; }
+        .empty-title { font-size: 1.4rem; font-weight: 800; color: white; margin-bottom: 10px; }
+        .empty-text { color: var(--text-sec); margin-bottom: 25px; }
+        .btn-explore {
+            background: linear-gradient(135deg, var(--primary-color), #6d28d9);
+            color: white; border: none; padding: 14px 30px; border-radius: 12px;
+            font-size: 1rem; font-weight: 700; cursor: pointer; font-family: 'Changa', sans-serif;
+            text-decoration: none; display: inline-block;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+            z-index: 1000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 25px; padding: 40px; max-width: 480px; width: 95%;
+            text-align: center;
+        }
+        .modal-title { font-size: 1.4rem; font-weight: 800; color: white; margin-bottom: 10px; }
+        .modal-text { color: var(--text-sec); margin-bottom: 25px; }
+        .modal-btns { display: flex; gap: 15px; justify-content: center; }
+        .btn-modal-confirm {
+            background: linear-gradient(135deg, var(--primary-color), #6d28d9);
+            color: white; border: none; padding: 12px 28px; border-radius: 12px;
+            font-size: 1rem; font-weight: 700; cursor: pointer; font-family: 'Changa', sans-serif;
+        }
+        .btn-modal-cancel {
+            background: transparent; border: 1px solid var(--border-color);
+            color: var(--text-sec); padding: 12px 28px; border-radius: 12px;
+            font-size: 1rem; font-weight: 700; cursor: pointer; font-family: 'Changa', sans-serif;
+        }
+        .rating-submit-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white; border: none; padding: 14px 35px; border-radius: 12px;
+            font-size: 1rem; font-weight: 800; cursor: pointer; font-family: 'Changa', sans-serif;
+            margin-top: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .booking-card-inner { grid-template-columns: 1fr; }
+            .booking-img { height: 180px; }
+            .booking-actions { flex-direction: row; padding: 15px; flex-wrap: wrap; }
+            .hero-stat { min-width: 100px; padding: 12px 20px; }
+            .loyalty-card { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+    <div class="header-inner">
+        <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <nav>
+            <a href="index.html" >الرئيسية</a>
+            <a href="programs.html">البرامج</a>
+            <a href="ai-programmes.html"> المستشار السياحي</a>
+            <a href="ai-hotels.html">المستشار الفندقي</a>
+            <a href="hotels.html" >الفنادق</a>
+            <a href="souvenirs.html">التذكارات</a>
+            <a href="bookings.html" class="active">حجوزاتي</a>
+            <a href="contact.html">اتصل بنا</a>
+        </nav>
+        <div class="header-actions">
+            <button class="theme-toggle" onclick="toggleTheme()" title="تغيير المظهر">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+            <div id="authArea"></div>
+        </div>
+    </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="bookings-hero">
+    <div style="position:relative;z-index:1;">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);color:var(--primary-color);padding:8px 18px;border-radius:30px;font-size:0.9rem;font-weight:700;margin-bottom:20px;">
+            <i class="fas fa-bookmark"></i> سجل رحلاتي
+        </div>
+        <h1 style="font-size:2.5rem;font-weight:900;color:white;margin-bottom:10px;">حجوزاتي</h1>
+        <p style="color:#94a3b8;font-size:1rem;">تتبع رحلاتك وحجوزاتك في مكان واحد</p>
+    </div>
+    <div class="hero-stats">
+        <div class="hero-stat">
+            <div class="hero-stat-num" id="totalCount">0</div>
+            <div class="hero-stat-label">إجمالي الحجوزات</div>
+        </div>
+        <div class="hero-stat">
+            <div class="hero-stat-num" id="activeCount">0</div>
+            <div class="hero-stat-label">حجوزات نشطة</div>
+        </div>
+        <div class="hero-stat">
+            <div class="hero-stat-num" id="completedCount">0</div>
+            <div class="hero-stat-label">رحلات مكتملة</div>
+        </div>
+        <div class="hero-stat">
+            <div class="hero-stat-num" id="totalSpent">0</div>
+            <div class="hero-stat-label">دج أنفقت</div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== LOYALTY BANNER ===== -->
+<div class="loyalty-banner">
+    <div class="loyalty-card">
+        <div class="loyalty-left">
+            <div class="loyalty-icon-box"><i class="fas fa-star"></i></div>
+            <div>
+                <div class="loyalty-points-num" id="loyaltyPts">0</div>
+                <div class="loyalty-points-label">نقطة ولاء مكتسبة</div>
+            </div>
+        </div>
+        <div class="loyalty-progress-wrap">
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:#94a3b8;margin-bottom:5px;">
+                <span>المستوى الحالي: <strong id="currentTier" style="color:#f59e0b;">برونزي 🥉</strong></span>
+                <span id="nextTierLabel">500 نقطة للفضي</span>
+            </div>
+            <div class="loyalty-progress-bar">
+                <div class="loyalty-progress-fill" id="loyaltyFill" style="width:0%"></div>
+            </div>
+            <div class="loyalty-progress-text" id="loyaltyProgressText">0 / 500 نقطة</div>
+        </div>
+        <div class="loyalty-tier" id="tierBadge">
+            <i class="fas fa-medal"></i> عضو برونزي
+        </div>
+    </div>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="bookings-main">
+
+    <!-- Tabs -->
+    <div class="tabs-bar">
+        <button class="tab-btn active" data-tab="all" onclick="switchTab('all', this)">
+            <i class="fas fa-th-list"></i> الكل <span class="tab-count" id="tc-all">0</span>
+        </button>
+        <button class="tab-btn" data-tab="program" onclick="switchTab('program', this)">
+            <i class="fas fa-map-marked-alt"></i> البرامج <span class="tab-count" id="tc-program">0</span>
+        </button>
+        <button class="tab-btn" data-tab="hotel" onclick="switchTab('hotel', this)">
+            <i class="fas fa-hotel"></i> الفنادق <span class="tab-count" id="tc-hotel">0</span>
+        </button>
+        <button class="tab-btn" data-tab="souvenir" onclick="switchTab('souvenir', this)">
+            <i class="fas fa-shopping-bag"></i> المشتريات <span class="tab-count" id="tc-souvenir">0</span>
+        </button>
+        <button class="tab-btn" data-tab="completed" onclick="switchTab('completed', this)">
+            <i class="fas fa-check-circle"></i> المكتملة <span class="tab-count" id="tc-completed">0</span>
+        </button>
+        <button class="tab-btn" data-tab="trash" onclick="switchTab('trash', this)" style="margin-right:auto;border-color:rgba(239,68,68,0.3);color:#ef4444;">
+            <i class="fas fa-trash"></i> المحذوفة <span class="tab-count" id="tc-trash">0</span>
+        </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-row">
+        <input type="text" class="filter-input" id="searchFilter" placeholder="🔍  ابحث في حجوزاتك..." oninput="renderBookings()">
+        <select class="filter-select" id="statusFilter" onchange="renderBookings()">
+            <option value="all">كل الحالات</option>
+            <option value="pending">قيد الانتظار</option>
+            <option value="confirmed">مؤكد</option>
+            <option value="completed">مكتمل</option>
+            <option value="cancelled">ملغى</option>
+        </select>
+        <select class="filter-select" id="sortFilter" onchange="renderBookings()">
+            <option value="newest">الأحدث أولاً</option>
+            <option value="oldest">الأقدم أولاً</option>
+            <option value="price-high">الأعلى سعراً</option>
+            <option value="price-low">الأقل سعراً</option>
+        </select>
+    </div>
+
+    <!-- Grid -->
+    <div class="bookings-grid" id="bookingsGrid"></div>
+
+</div>
+
+<!-- ===== CANCEL CONFIRM MODAL ===== -->
+<div class="modal-overlay" id="cancelModal">
+    <div class="modal-box">
+        <div style="font-size:3rem;margin-bottom:15px;">⚠️</div>
+        <h3 class="modal-title">تأكيد الإلغاء</h3>
+        <p class="modal-text">هل أنت متأكد من إلغاء هذا الحجز؟ سيتم نقله إلى المحذوفات ويمكنك استعادته لاحقاً.</p>
+        <div class="modal-btns">
+            <button class="btn-modal-cancel" onclick="closeCancelModal()">لا، ارجع</button>
+            <button class="btn-modal-confirm" style="background:linear-gradient(135deg,#ef4444,#dc2626);" onclick="confirmCancel()">
+                <i class="fas fa-trash"></i> نعم، إلغاء
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== RATING MODAL ===== -->
+<div class="modal-overlay" id="ratingModal">
+    <div class="modal-box">
+        <div style="font-size:2.5rem;margin-bottom:10px;">⭐</div>
+        <h3 class="modal-title">قيّم تجربتك</h3>
+        <p class="modal-text" id="ratingModalName">كيف كانت رحلتك؟</p>
+        <div class="rating-stars" id="ratingStars">
+            <span class="rating-star" data-v="1" onclick="setRating(1)"><i class="far fa-star"></i></span>
+            <span class="rating-star" data-v="2" onclick="setRating(2)"><i class="far fa-star"></i></span>
+            <span class="rating-star" data-v="3" onclick="setRating(3)"><i class="far fa-star"></i></span>
+            <span class="rating-star" data-v="4" onclick="setRating(4)"><i class="far fa-star"></i></span>
+            <span class="rating-star" data-v="5" onclick="setRating(5)"><i class="far fa-star"></i></span>
+        </div>
+        <textarea id="ratingComment" rows="3"
+            style="width:100%;background:var(--main-bg);border:1px solid var(--border-color);border-radius:10px;padding:12px;color:white;font-family:'Changa',sans-serif;resize:none;margin-bottom:15px;"
+            placeholder="شارك تجربتك مع المسافرين الآخرين..."></textarea>
+        <button class="rating-submit-btn" onclick="submitRating()">
+            <i class="fas fa-paper-plane"></i> إرسال التقييم
+        </button>
+        <div style="margin-top:10px;">
+            <button class="btn-modal-cancel" onclick="closeRatingModal()">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<!-- Chat Widget -->
+<script src="chat-widget.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 600, once: true });
+
+// ===== XSS =====
+function escHtml(str) {
+    return String(str||'')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+// ===== THEME =====
+function toggleTheme() {
+    const t = localStorage.getItem('theme') === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', t);
+    document.body.classList.toggle('light-mode', t === 'light');
+    document.getElementById('themeIcon').className = t === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+}
+(function() {
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('themeIcon').className = 'fas fa-sun';
+    }
+})();
+
+// ===== AUTH =====
+function initAuth() {
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+    const area = document.getElementById('authArea') || document.getElementById('authLinks');
+    if (!area) return;
+    if (user) {
+        const name = user.name || user.originalName || user.username || 'مستخدم';
+        const initial = name.trim().charAt(0).toUpperCase();
+        area.innerHTML = `
+            <a href="profile.html" class="btn-auth-user">
+                <span class="auth-avatar"></span>
+                <span class="auth-name"></span>
+            </a>
+            <button class="btn-nav-logout" onclick="logout()" title="تسجيل الخروج" type="button"><i class="fas fa-sign-out-alt"></i></button>`;
+        area.querySelector('.auth-avatar').textContent = initial;
+        area.querySelector('.auth-name').textContent = name;
+    } else {
+        area.innerHTML = `<a href="login.html" class="btn-auth-login"><i class="fas fa-sign-in-alt"></i> دخول</a>`;
+    }
+}
+window.logout = function () {
+    if (confirm('تسجيل الخروج؟')) { localStorage.removeItem('hawsbiyaUser'); location.reload(); }
+};
+initAuth();
+
+// ===== STATE =====
+let allBookings = [];
+let currentTab = 'all';
+let cancelTargetId = null;
+let ratingTargetId = null;
+let currentRating = 0;
+
+// Status config
+const statusConfig = {
+    pending:   { label: 'قيد الانتظار', color: '#f59e0b', icon: 'fa-clock', step: 1 },
+    confirmed: { label: 'مؤكد',          color: '#8b5cf6', icon: 'fa-check-circle', step: 2 },
+    completed: { label: 'مكتمل',         color: '#10b981', icon: 'fa-flag-checkered', step: 3 },
+    cancelled: { label: 'ملغى',          color: '#ef4444', icon: 'fa-times-circle', step: 0 }
+};
+const typeConfig = {
+    program:  { label: 'برنامج سياحي', icon: 'fa-map-marked-alt', cls: 'type-program' },
+    hotel:    { label: 'فندق',          icon: 'fa-hotel',          cls: 'type-hotel' },
+    souvenir: { label: 'منتج تقليدي',  icon: 'fa-shopping-bag',   cls: 'type-souvenir' }
+};
+
+// ===== LOAD =====
+async function loadBookings() {
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+    if (!user) {
+        renderEmpty('يرجى تسجيل الدخول لعرض حجوزاتك', 'login.html', 'تسجيل الدخول');
+        return;
+    }
+
+    try {
+        const res = await fetch(`/api/bookings?userId=${user.id}`);
+        if (res.ok) {
+            const data = await res.json();
+            allBookings = Array.isArray(data) ? data : [];
+        } else throw new Error();
+    } catch {
+        allBookings = getFallbackBookings(user.id || 1);
+    }
+
+    updateStats();
+    updateLoyalty();
+    renderBookings();
+}
+
+function updateStats() {
+    const active = allBookings.filter(b => !b.deleted && b.status !== 'cancelled');
+    const completed = allBookings.filter(b => b.status === 'completed' && !b.deleted);
+    const spent = allBookings.filter(b => !b.deleted).reduce((s, b) => s + (parseInt(b.price) || 0), 0);
+
+    document.getElementById('totalCount').textContent = allBookings.filter(b => !b.deleted).length;
+    document.getElementById('activeCount').textContent = active.length;
+    document.getElementById('completedCount').textContent = completed.length;
+    document.getElementById('totalSpent').textContent = (spent / 1000).toFixed(0) + 'k';
+
+    // Tab counts
+    const visible = allBookings.filter(b => !b.deleted);
+    document.getElementById('tc-all').textContent = visible.length;
+    document.getElementById('tc-program').textContent = visible.filter(b => b.type === 'program').length;
+    document.getElementById('tc-hotel').textContent = visible.filter(b => b.type === 'hotel').length;
+    document.getElementById('tc-souvenir').textContent = visible.filter(b => b.type === 'souvenir').length;
+    document.getElementById('tc-completed').textContent = completed.length;
+    document.getElementById('tc-trash').textContent = allBookings.filter(b => b.deleted).length;
+}
+
+function updateLoyalty() {
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+    const pts = user?.loyaltyPoints || allBookings.filter(b => !b.deleted).reduce((s, b) => {
+        const p = parseInt(b.price) || 0;
+        return s + Math.round(b.type === 'hotel' ? p * 0.005 : p * 0.01);
+    }, 0);
+
+    document.getElementById('loyaltyPts').textContent = pts.toLocaleString('ar-DZ');
+
+    // Tiers
+    let tier, nextTier, nextPts;
+    if (pts < 500)       { tier = 'برونزي 🥉'; nextTier = 'الفضي'; nextPts = 500; }
+    else if (pts < 2000) { tier = 'فضي 🥈';    nextTier = 'الذهبي'; nextPts = 2000; }
+    else if (pts < 5000) { tier = 'ذهبي 🥇';   nextTier = 'الماسي'; nextPts = 5000; }
+    else                 { tier = 'ماسي 💎';    nextTier = 'الأعلى'; nextPts = pts; }
+
+    const tierMin = tier.includes('برونزي') ? 0 : tier.includes('فضي') ? 500 : tier.includes('ذهبي') ? 2000 : 5000;
+    const pct = Math.min(100, ((pts - tierMin) / (nextPts - tierMin)) * 100);
+
+    document.getElementById('currentTier').textContent = tier;
+    document.getElementById('nextTierLabel').textContent = nextPts > pts ? `${(nextPts - pts).toLocaleString()} نقطة للـ${nextTier}` : 'المستوى الأعلى!';
+    document.getElementById('loyaltyFill').style.width = pct + '%';
+    document.getElementById('loyaltyProgressText').textContent = `${pts.toLocaleString()} / ${nextPts.toLocaleString()} نقطة`;
+    document.getElementById('tierBadge').innerHTML = `<i class="fas fa-medal"></i> عضو ${tier}`;
+}
+
+// ===== TABS =====
+function switchTab(tab, btn) {
+    currentTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderBookings();
+}
+
+// ===== RENDER =====
+function renderBookings() {
+    const search = document.getElementById('searchFilter').value.toLowerCase();
+    const statusF = document.getElementById('statusFilter').value;
+    const sort = document.getElementById('sortFilter').value;
+
+    let list = allBookings.filter(b => {
+        if (currentTab === 'trash') return b.deleted;
+        if (b.deleted) return false;
+        if (currentTab === 'completed') return b.status === 'completed';
+        if (currentTab !== 'all') return b.type === currentTab;
+        return true;
+    });
+
+    if (search) list = list.filter(b => (b.name || '').toLowerCase().includes(search));
+    if (statusF !== 'all') list = list.filter(b => b.status === statusF);
+
+    list.sort((a, b) => {
+        if (sort === 'newest') return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+        if (sort === 'oldest') return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+        if (sort === 'price-high') return (parseInt(b.price) || 0) - (parseInt(a.price) || 0);
+        if (sort === 'price-low') return (parseInt(a.price) || 0) - (parseInt(b.price) || 0);
+        return 0;
+    });
+
+    const grid = document.getElementById('bookingsGrid');
+    if (list.length === 0) {
+        grid.innerHTML = `
+        <div class="empty-state">
+            <i class="fas fa-bookmark empty-icon"></i>
+            <h3 class="empty-title">${currentTab === 'trash' ? 'سلة المحذوفات فارغة' : 'لا توجد حجوزات'}</h3>
+            <p class="empty-text">${currentTab === 'trash' ? 'لم تقم بحذف أي حجز' : 'ابدأ رحلتك الأولى الآن!'}</p>
+            ${currentTab !== 'trash' ? `<a href="programs.html" class="btn-explore"><i class="fas fa-compass"></i> استكشف البرامج</a>` : ''}
+        </div>`;
+        return;
+    }
+
+    grid.innerHTML = list.map((b, i) => buildBookingCard(b, i)).join('');
+}
+
+function buildBookingCard(b, idx) {
+    const price = parseInt(b.price) || 0;
+    const loyaltyPts = Math.round(b.type === 'hotel' ? price * 0.005 : price * 0.01);
+    const status = statusConfig[b.status] || statusConfig.pending;
+    const type = typeConfig[b.type] || typeConfig.program;
+    const date = b.date ? new Date(b.date).toLocaleDateString('ar-DZ') : 'غير محدد';
+    const created = b.createdAt ? new Date(b.createdAt).toLocaleDateString('ar-DZ') : '';
+    const img = b.image || `https://loremflickr.com/300/200/algeria,travel`;
+
+    // Timeline steps
+    const steps = [
+        { label: 'تم الحجز', done: true },
+        { label: 'مؤكد', done: ['confirmed','completed'].includes(b.status), active: b.status === 'pending' },
+        { label: 'جارٍ', done: b.status === 'completed', active: b.status === 'confirmed' },
+        { label: 'مكتمل', done: b.status === 'completed', active: false }
+    ];
+
+    const timelineHtml = b.status === 'cancelled' ? `
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#ef4444;padding:6px 14px;border-radius:20px;font-size:0.85rem;font-weight:700;margin-top:10px;">
+            <i class="fas fa-times-circle"></i> تم إلغاء هذا الحجز
+        </div>` :
+        `<div class="status-timeline" style="margin-top:12px;">
+            ${steps.map((s, i) => `
+                <div class="timeline-step">
+                    <div class="timeline-dot ${s.done ? 'done' : s.active ? 'active' : 'pending'}">
+                        <i class="fas ${s.done ? 'fa-check' : s.active ? 'fa-circle-notch fa-spin' : 'fa-circle'}" style="font-size:0.7rem"></i>
+                    </div>
+                    <div class="timeline-step-label ${s.done ? 'done' : s.active ? 'active' : ''}">${s.label}</div>
+                </div>
+                ${i < steps.length - 1 ? `<div class="timeline-line ${s.done ? 'done' : ''}"></div>` : ''}
+            `).join('')}
+        </div>`;
+
+    const actionsBtns = b.deleted ? `
+        <button class="btn-action btn-restore" onclick="restoreBooking(${b.id})"><i class="fas fa-undo"></i> استعادة</button>
+        <button class="btn-action btn-delete-perm" onclick="deletePermanent(${b.id})"><i class="fas fa-trash"></i> حذف نهائي</button>
+    ` : `
+        ${b.status === 'completed' && !b.rated ? `<button class="btn-action btn-rate" onclick="openRating(${b.id}, '${escHtml(b.name||'')}')"><i class="fas fa-star"></i> قيّم</button>` : ''}
+        ${b.status === 'completed' && b.rated ? `<div style="color:#f59e0b;font-size:0.85rem;text-align:center;"><i class="fas fa-star"></i> ${b.userRating || 5}/5</div>` : ''}
+        ${['pending','confirmed'].includes(b.status) ? `<button class="btn-action btn-cancel" onclick="openCancel(${b.id})"><i class="fas fa-times"></i> إلغاء</button>` : ''}
+    `;
+
+    return `
+    <div class="booking-card ${b.deleted ? 'deleted' : ''}" data-aos="fade-up" data-aos-delay="${idx * 60}" id="bc-${b.id}">
+        <div class="booking-card-inner">
+            <div class="booking-img" style="background-image:url('${img}')"></div>
+            <div class="booking-body">
+                <div class="booking-type-badge ${type.cls}">
+                    <i class="fas ${type.icon}"></i> ${type.label}
+                </div>
+                <div class="booking-name">${escHtml(b.name || 'حجز')}</div>
+                <div class="booking-meta">
+                    <div class="booking-meta-item"><i class="fas fa-calendar-alt"></i> ${date}</div>
+                    ${b.travelers ? `<div class="booking-meta-item"><i class="fas fa-users"></i> ${b.travelers} أشخاص</div>` : ''}
+                    ${created ? `<div class="booking-meta-item"><i class="fas fa-clock"></i> حُجز: ${created}</div>` : ''}
+                    ${b.checkIn ? `<div class="booking-meta-item"><i class="fas fa-sign-in-alt"></i> دخول: ${new Date(b.checkIn).toLocaleDateString('ar-DZ')}</div>` : ''}
+                    ${b.checkOut ? `<div class="booking-meta-item"><i class="fas fa-sign-out-alt"></i> خروج: ${new Date(b.checkOut).toLocaleDateString('ar-DZ')}</div>` : ''}
+                </div>
+                <div class="booking-price-row">
+                    <div class="booking-price">${price.toLocaleString('ar-DZ')} دج</div>
+                    <div class="booking-loyalty"><i class="fas fa-star"></i> +${loyaltyPts} نقطة</div>
+                    <div style="background:rgba(${status.color.replace('#','').match(/.{2}/g).map(x=>parseInt(x,16)).join(',')},0.12);border:1px solid ${status.color}40;color:${status.color};padding:3px 10px;border-radius:15px;font-size:0.78rem;font-weight:700;display:inline-flex;align-items:center;gap:5px;">
+                        <i class="fas ${status.icon}"></i> ${status.label}
+                    </div>
+                </div>
+                ${timelineHtml}
+            </div>
+            <div class="booking-actions">${actionsBtns}</div>
+        </div>
+    </div>`;
+}
+
+function renderEmpty(msg, link, linkText) {
+    document.getElementById('bookingsGrid').innerHTML = `
+    <div class="empty-state">
+        <i class="fas fa-user-lock empty-icon"></i>
+        <h3 class="empty-title">${msg}</h3>
+        <a href="${link}" class="btn-explore">${linkText}</a>
+    </div>`;
+}
+
+// ===== CANCEL =====
+function openCancel(id) {
+    cancelTargetId = id;
+    document.getElementById('cancelModal').classList.add('active');
+}
+function closeCancelModal() {
+    cancelTargetId = null;
+    document.getElementById('cancelModal').classList.remove('active');
+}
+async function confirmCancel() {
+    const b = allBookings.find(x => x.id === cancelTargetId);
+    if (b) {
+        b.deleted = true;
+        b.status = 'cancelled';
+        try { await fetch(`/api/bookings/${cancelTargetId}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ deleted: true, status: 'cancelled' }) }); }
+        catch {}
+    }
+    closeCancelModal();
+    updateStats();
+    renderBookings();
+}
+
+// ===== RESTORE =====
+async function restoreBooking(id) {
+    const b = allBookings.find(x => x.id === id);
+    if (b) {
+        b.deleted = false;
+        b.status = 'pending';
+        try { await fetch(`/api/bookings/${id}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ deleted: false, status: 'pending' }) }); }
+        catch {}
+    }
+    updateStats();
+    renderBookings();
+}
+
+// ===== DELETE PERMANENT =====
+async function deletePermanent(id) {
+    if (!confirm('هل أنت متأكد من الحذف النهائي؟ لا يمكن التراجع.')) return;
+    allBookings = allBookings.filter(x => x.id !== id);
+    try { await fetch(`/api/bookings/${id}`, { method: 'DELETE' }); } catch {}
+    updateStats();
+    renderBookings();
+}
+
+// ===== RATING =====
+function openRating(id, name) {
+    ratingTargetId = id;
+    currentRating = 0;
+    document.getElementById('ratingModalName').textContent = `كيف كانت تجربتك مع: ${name}`;
+    document.querySelectorAll('.rating-star').forEach(s => {
+        s.classList.remove('active');
+        s.querySelector('i').className = 'far fa-star';
+    });
+    document.getElementById('ratingComment').value = '';
+    document.getElementById('ratingModal').classList.add('active');
+}
+function closeRatingModal() {
+    ratingTargetId = null;
+    document.getElementById('ratingModal').classList.remove('active');
+}
+function setRating(val) {
+    currentRating = val;
+    document.querySelectorAll('.rating-star').forEach(s => {
+        const v = parseInt(s.dataset.v);
+        s.classList.toggle('active', v <= val);
+        s.querySelector('i').className = v <= val ? 'fas fa-star' : 'far fa-star';
+    });
+}
+async function submitRating() {
+    if (!currentRating) { alert('يرجى اختيار عدد النجوم'); return; }
+    const comment = document.getElementById('ratingComment').value.trim();
+    const b = allBookings.find(x => x.id === ratingTargetId);
+    if (b) { b.rated = true; b.userRating = currentRating; }
+    try {
+        await fetch(`/api/bookings/${ratingTargetId}`, {
+            method: 'PATCH', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ rated: true, userRating: currentRating, userComment: comment })
+        });
+    } catch {}
+    closeRatingModal();
+    renderBookings();
+    alert('شكراً على تقييمك! تساعد تجاربك الآخرين في اختيار رحلاتهم 🌟');
+}
+
+// ===== FALLBACK DATA =====
+function getFallbackBookings(userId) {
+    return [
+        { id: 1, userId, type: 'program', name: 'رحلة غرداية التراثية', price: 8500, travelers: 2, date: '2025-07-15', status: 'confirmed', createdAt: '2025-06-20T10:00:00Z', image: 'https://loremflickr.com/400/300/algeria,architecture' },
+        { id: 2, userId, type: 'hotel', name: 'فندق الأغواط الكبير', price: 12000, travelers: 2, date: '2025-08-01', checkIn: '2025-08-01', checkOut: '2025-08-04', status: 'pending', createdAt: '2025-06-25T14:00:00Z' },
+        { id: 3, userId, type: 'program', name: 'مغامرة صحراء تمنراست', price: 22000, travelers: 3, date: '2025-06-01', status: 'completed', rated: false, createdAt: '2025-05-10T08:00:00Z', image: 'https://loremflickr.com/400/300/desert,camel' },
+        { id: 4, userId, type: 'souvenir', name: 'سجادة أمازيغية يدوية', price: 3500, travelers: 1, date: '2025-06-18', status: 'completed', rated: true, userRating: 5, createdAt: '2025-06-10T11:00:00Z' },
+        { id: 5, userId, type: 'program', name: 'جولة قسنطينة الجسور', price: 6500, travelers: 2, date: '2025-07-20', status: 'cancelled', deleted: true, createdAt: '2025-06-01T09:00:00Z' }
+    ];
+}
+
+// Close modals on backdrop
+['cancelModal','ratingModal'].forEach(id => {
+    document.getElementById(id).addEventListener('click', function(e) {
+        if (e.target === this) { closeCancelModal(); closeRatingModal(); }
+    });
+});
+
+// Init
+loadBookings();
+</script>
+
+</body>
+</html>
