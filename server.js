@@ -36,10 +36,18 @@ const DB_PATH = path.join(__dirname, 'db.json');
 // ─────────────────────────────────────────────
 app.use(cors());
 app.use(bodyParser.json());
-// Express's static middleware hides dotfiles/dot-folders by default, which would
-// otherwise 404 the Digital Asset Links file required to verify the Android TWA app.
+// Served inline (not from a .well-known/ file) because dot-folders get silently
+// dropped by some hosting build steps (and ignored by Express static by default).
+// Required so the packaged Android TWA app can verify it owns this domain.
 app.get('/.well-known/assetlinks.json', (req, res) => {
-  res.sendFile(path.join(__dirname, '.well-known', 'assetlinks.json'));
+  res.json([{
+    relation: ['delegate_permission/common.handle_all_urls'],
+    target: {
+      namespace: 'android_app',
+      package_name: 'com.hwasbiya.app',
+      sha256_cert_fingerprints: ['5E:B1:F2:34:65:7F:75:55:A1:63:80:2D:5F:D2:9A:2E:82:7E:C1:00:93:D1:85:D8:F7:F2:3F:C8:58:F3:D3:07']
+    }
+  }]);
 });
 app.use(express.static(__dirname));
 

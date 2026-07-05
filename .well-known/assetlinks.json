@@ -1,8 +1,0 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "com.hwasbiya.app",
-    "sha256_cert_fingerprints": ["5E:B1:F2:34:65:7F:75:55:A1:63:80:2D:5F:D2:9A:2E:82:7E:C1:00:93:D1:85:D8:F7:F2:3F:C8:58:F3:D3:07"]
-  }
-}]
