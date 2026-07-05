@@ -36,6 +36,11 @@ const DB_PATH = path.join(__dirname, 'db.json');
 // ─────────────────────────────────────────────
 app.use(cors());
 app.use(bodyParser.json());
+// Express's static middleware hides dotfiles/dot-folders by default, which would
+// otherwise 404 the Digital Asset Links file required to verify the Android TWA app.
+app.get('/.well-known/assetlinks.json', (req, res) => {
+  res.sendFile(path.join(__dirname, '.well-known', 'assetlinks.json'));
+});
 app.use(express.static(__dirname));
 
 // ─────────────────────────────────────────────
