@@ -9,7 +9,7 @@
     <style>
         /* ===== LOGIN PAGE ===== */
         body {
-            background: url('https://loremflickr.com/1600/900/algeria,architecture') center/cover no-repeat fixed;
+            background: url('https://images.unsplash.com/photo-1528543606781-2f6e6857f318?auto=format&fit=crop&q=80&w=1600') center/cover no-repeat fixed;
             min-height: 100vh; display: flex; flex-direction: column;
         }
         .page-overlay {
@@ -85,7 +85,7 @@
         .auth-panel.active { display: block; animation: fadeSlide 0.3s ease; }
         @keyframes fadeSlide { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 
-        .panel-title { font-size: 1.4rem; font-weight: 800; color: white; margin-bottom: 5px; }
+        .panel-title { font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
         .panel-sub { color: var(--text-sec); font-size: 0.88rem; margin-bottom: 25px; }
 
         .form-group { margin-bottom: 16px; }
@@ -95,7 +95,7 @@
         .input-wrap input {
             width: 100%; padding: 13px 42px 13px 15px;
             background: var(--main-bg); border: 1px solid var(--border-color);
-            border-radius: 12px; color: white; font-family: 'Changa', sans-serif; font-size: 0.95rem; transition: 0.3s;
+            border-radius: 12px; color: var(--text-main); font-family: 'Changa', sans-serif; font-size: 0.95rem; transition: 0.3s;
         }
         .input-wrap input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(139,92,246,0.15); }
         .input-wrap input::placeholder { color: var(--text-sec); opacity: 0.7; }
@@ -122,7 +122,7 @@
         .social-login { display: flex; gap: 10px; }
         .btn-social {
             flex: 1; padding: 11px; border-radius: 10px; border: 1px solid var(--border-color);
-            background: var(--main-bg); color: white; font-family: 'Changa', sans-serif;
+            background: var(--main-bg); color: var(--text-main); font-family: 'Changa', sans-serif;
             font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: 0.3s;
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
@@ -156,6 +156,8 @@
 <header style="background:rgba(15,23,42,0.5);backdrop-filter:blur(20px);">
     <div class="header-inner">
         <a href="index.html" class="logo"><i class="fas fa-compass"></i> حوس بيا</a>
+        <input type="checkbox" id="navToggle" class="nav-toggle-checkbox" hidden>
+        <label for="navToggle" class="nav-toggle-btn" aria-label="القائمة"><i class="fas fa-bars"></i></label>
         <nav>
             <a href="index.html" >الرئيسية</a>
             <a href="programs.html">البرامج</a>

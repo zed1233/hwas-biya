@@ -12,7 +12,7 @@
 
         .contact-hero {
             height: 50vh;
-            background: url('https://loremflickr.com/800/500/oasis,palm') center/cover no-repeat fixed;
+            background: url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=800') center/cover no-repeat fixed;
             position: relative;
             display: flex; align-items: center; justify-content: center; text-align: center;
             border-radius: 0 0 50px 50px; overflow: hidden; margin-bottom: 60px;
@@ -43,7 +43,7 @@
             width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
             display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
         }
-        .info-card-text h4 { color: white; font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+        .info-card-text h4 { color: var(--text-main); font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
         .info-card-text p { color: var(--text-sec); font-size: 0.88rem; }
         .info-card-text a { color: var(--secondary-color); text-decoration: none; }
         .info-card-text a:hover { text-decoration: underline; }
@@ -70,7 +70,7 @@
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
         }
-        .form-title { font-size: 1.4rem; font-weight: 800; color: white; margin-bottom: 5px; }
+        .form-title { font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
         .form-subtitle { color: var(--text-sec); font-size: 0.9rem; margin-bottom: 25px; }
 
         .form-tabs { display: flex; gap: 8px; margin-bottom: 25px; }
@@ -92,7 +92,7 @@
         .form-group input, .form-group select, .form-group textarea {
             width: 100%; padding: 13px 15px;
             background: var(--main-bg); border: 1px solid var(--border-color);
-            border-radius: 12px; color: white; font-family: 'Changa', sans-serif; font-size: 0.95rem;
+            border-radius: 12px; color: var(--text-main); font-family: 'Changa', sans-serif; font-size: 0.95rem;
             transition: 0.3s;
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
@@ -127,13 +127,13 @@
             border-radius: 20px; overflow: hidden;
         }
         .map-header { padding: 20px 25px; display: flex; align-items: center; justify-content: space-between; }
-        .map-header h3 { font-size: 1.15rem; font-weight: 800; color: white; }
+        .map-header h3 { font-size: 1.15rem; font-weight: 800; color: var(--text-main); }
         .map-card iframe { width: 100%; height: 350px; border: none; display: block; }
 
         /* FAQ */
         .faq-section { max-width: 900px; margin: 0 auto 60px; padding: 0 20px; }
         .faq-title {
-            text-align: center; font-size: 2rem; font-weight: 900; color: white;
+            text-align: center; font-size: 2rem; font-weight: 900; color: var(--text-main);
             margin-bottom: 10px;
         }
         .faq-subtitle { text-align: center; color: var(--text-sec); margin-bottom: 40px; }
@@ -179,6 +179,8 @@
 <header>
     <div class="header-inner">
         <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <input type="checkbox" id="navToggle" class="nav-toggle-checkbox" hidden>
+        <label for="navToggle" class="nav-toggle-btn" aria-label="القائمة"><i class="fas fa-bars"></i></label>
         <nav>
             <a href="index.html" >الرئيسية</a>
             <a href="programs.html">البرامج</a>
@@ -259,7 +261,7 @@
 
         <!-- Social -->
         <div style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:18px;padding:22px;">
-            <h4 style="color:white;font-weight:700;margin-bottom:14px;"><i class="fas fa-share-alt" style="color:var(--primary-color);margin-left:8px;"></i> تابعنا على</h4>
+            <h4 style="color:var(--text-main);font-weight:700;margin-bottom:14px;"><i class="fas fa-share-alt" style="color:var(--primary-color);margin-left:8px;"></i> تابعنا على</h4>
             <div class="social-btns">
                 <a href="#" class="social-btn btn-whatsapp"><i class="fab fa-whatsapp"></i> واتساب</a>
                 <a href="#" class="social-btn btn-instagram"><i class="fab fa-instagram"></i> انستغرام</a>
@@ -272,7 +274,7 @@
         <div style="background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(45,212,191,0.08));border:1px solid rgba(139,92,246,0.2);border-radius:16px;padding:20px;display:flex;align-items:center;gap:15px;">
             <i class="fas fa-bolt" style="font-size:2rem;color:#f59e0b;"></i>
             <div>
-                <div style="color:white;font-weight:800;">متوسط وقت الرد: <span style="color:var(--secondary-color);">أقل من ساعتين</span></div>
+                <div style="color:var(--text-main);font-weight:800;">متوسط وقت الرد: <span style="color:var(--secondary-color);">أقل من ساعتين</span></div>
                 <div style="color:var(--text-sec);font-size:0.85rem;margin-top:4px;">نضمن لك رداً سريعاً على كل استفساراتك</div>
             </div>
         </div>

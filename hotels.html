@@ -97,6 +97,8 @@
 <header>
     <div class="header-inner">
         <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <input type="checkbox" id="navToggle" class="nav-toggle-checkbox" hidden>
+        <label for="navToggle" class="nav-toggle-btn" aria-label="القائمة"><i class="fas fa-bars"></i></label>
         <nav>
             <a href="index.html" >الرئيسية</a>
             <a href="programs.html">البرامج</a>
@@ -403,7 +405,8 @@ window.resetFilters=function(){
 };
 
 window.openBooking=function(h){
-    if(!user.username){alert('يجب تسجيل الدخول أولاً');window.location.href='login.html';return;}
+    const user=JSON.parse(localStorage.getItem('hawsbiyaUser')||'null');
+    if(!user||!user.username){alert('يجب تسجيل الدخول أولاً');window.location.href='login.html';return;}
     document.getElementById('serviceId').value=h.id;
     document.getElementById('serviceName').value=h.name;
     document.getElementById('servicePrice').value=h.price;
@@ -431,15 +434,16 @@ window.confirmBooking=async function(){
     const name=document.getElementById('bkName').value.trim();
     if(!cin||!name){alert('يرجى تعبئة جميع الحقول');return;}
     if(cout&&cout<cin){alert('تاريخ المغادرة يجب أن يكون بعد تاريخ الوصول');return;}
+    const user=JSON.parse(localStorage.getItem('hawsbiyaUser')||'null');
     const btn=document.getElementById('confirmBtn');
     btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري الحجز...'; btn.disabled=true;
     const data={
         serviceId:document.getElementById('serviceId').value,
-        serviceName:document.getElementById('serviceName').value,
+        name:document.getElementById('serviceName').value,
         price:parseInt(document.getElementById('servicePrice').value),
         customerName:name, phone:document.getElementById('bkPhone').value,
-        date:cin, checkOut:cout, pax:document.getElementById('bkPax').value,
-        user:user.username, status:'pending', type:'فندق',
+        date:cin, checkIn:cin, checkOut:cout, travelers:parseInt(document.getElementById('bkPax').value)||1,
+        userId:user?user.id:0, status:'pending', type:'فندق',
         loyaltyPoints:Math.round(parseInt(document.getElementById('servicePrice').value)*0.005)
     };
     try {

@@ -99,13 +99,13 @@
         }
         .filter-input {
             background: var(--card-bg); border: 1px solid var(--border-color);
-            color: white; padding: 10px 15px; border-radius: 10px;
+            color: var(--text-main); padding: 10px 15px; border-radius: 10px;
             font-family: 'Changa', sans-serif; font-size: 0.9rem; flex: 1; min-width: 200px;
         }
         .filter-input:focus { outline: none; border-color: var(--primary-color); }
         .filter-select {
             background: var(--card-bg); border: 1px solid var(--border-color);
-            color: white; padding: 10px 15px; border-radius: 10px;
+            color: var(--text-main); padding: 10px 15px; border-radius: 10px;
             font-family: 'Changa', sans-serif; font-size: 0.9rem;
         }
 
@@ -136,7 +136,7 @@
         .type-hotel { background: rgba(45,212,191,0.12); color: var(--secondary-color); border: 1px solid rgba(45,212,191,0.3); }
         .type-souvenir { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
 
-        .booking-name { font-size: 1.15rem; font-weight: 800; color: white; margin-bottom: 5px; }
+        .booking-name { font-size: 1.15rem; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
         .booking-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
         .booking-meta-item {
             display: flex; align-items: center; gap: 6px;
@@ -201,7 +201,7 @@
         .booking-price-row {
             display: flex; align-items: center; gap: 12px; margin-top: 8px;
         }
-        .booking-price { font-size: 1.1rem; font-weight: 900; color: white; }
+        .booking-price { font-size: 1.1rem; font-weight: 900; color: var(--text-main); }
         .booking-loyalty {
             background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
             color: #f59e0b; padding: 3px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: 700;
@@ -221,7 +221,7 @@
             border-radius: 20px;
         }
         .empty-icon { font-size: 4rem; color: var(--text-sec); margin-bottom: 20px; display: block; }
-        .empty-title { font-size: 1.4rem; font-weight: 800; color: white; margin-bottom: 10px; }
+        .empty-title { font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 10px; }
         .empty-text { color: var(--text-sec); margin-bottom: 25px; }
         .btn-explore {
             background: linear-gradient(135deg, var(--primary-color), #6d28d9);
@@ -242,7 +242,7 @@
             border-radius: 25px; padding: 40px; max-width: 480px; width: 95%;
             text-align: center;
         }
-        .modal-title { font-size: 1.4rem; font-weight: 800; color: white; margin-bottom: 10px; }
+        .modal-title { font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 10px; }
         .modal-text { color: var(--text-sec); margin-bottom: 25px; }
         .modal-btns { display: flex; gap: 15px; justify-content: center; }
         .btn-modal-confirm {
@@ -278,6 +278,8 @@
 <header>
     <div class="header-inner">
         <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <input type="checkbox" id="navToggle" class="nav-toggle-checkbox" hidden>
+        <label for="navToggle" class="nav-toggle-btn" aria-label="القائمة"><i class="fas fa-bars"></i></label>
         <nav>
             <a href="index.html" >الرئيسية</a>
             <a href="programs.html">البرامج</a>
@@ -429,7 +431,7 @@
             <span class="rating-star" data-v="5" onclick="setRating(5)"><i class="far fa-star"></i></span>
         </div>
         <textarea id="ratingComment" rows="3"
-            style="width:100%;background:var(--main-bg);border:1px solid var(--border-color);border-radius:10px;padding:12px;color:white;font-family:'Changa',sans-serif;resize:none;margin-bottom:15px;"
+            style="width:100%;background:var(--main-bg);border:1px solid var(--border-color);border-radius:10px;padding:12px;color:var(--text-main);font-family:'Changa',sans-serif;resize:none;margin-bottom:15px;"
             placeholder="شارك تجربتك مع المسافرين الآخرين..."></textarea>
         <button class="rating-submit-btn" onclick="submitRating()">
             <i class="fas fa-paper-plane"></i> إرسال التقييم
@@ -636,7 +638,7 @@ function buildBookingCard(b, idx) {
     const type = typeConfig[b.type] || typeConfig.program;
     const date = b.date ? new Date(b.date).toLocaleDateString('ar-DZ') : 'غير محدد';
     const created = b.createdAt ? new Date(b.createdAt).toLocaleDateString('ar-DZ') : '';
-    const img = b.image || `https://loremflickr.com/300/200/algeria,travel`;
+    const img = b.image || `https://images.unsplash.com/photo-1528543606781-2f6e6857f318?auto=format&fit=crop&q=80&w=300`;
 
     // Timeline steps
     const steps = [
@@ -797,9 +799,9 @@ async function submitRating() {
 // ===== FALLBACK DATA =====
 function getFallbackBookings(userId) {
     return [
-        { id: 1, userId, type: 'program', name: 'رحلة غرداية التراثية', price: 8500, travelers: 2, date: '2025-07-15', status: 'confirmed', createdAt: '2025-06-20T10:00:00Z', image: 'https://loremflickr.com/400/300/algeria,architecture' },
+        { id: 1, userId, type: 'program', name: 'رحلة غرداية التراثية', price: 8500, travelers: 2, date: '2025-07-15', status: 'confirmed', createdAt: '2025-06-20T10:00:00Z', image: 'https://images.unsplash.com/photo-1528543606781-2f6e6857f318?auto=format&fit=crop&q=80&w=400' },
         { id: 2, userId, type: 'hotel', name: 'فندق الأغواط الكبير', price: 12000, travelers: 2, date: '2025-08-01', checkIn: '2025-08-01', checkOut: '2025-08-04', status: 'pending', createdAt: '2025-06-25T14:00:00Z' },
-        { id: 3, userId, type: 'program', name: 'مغامرة صحراء تمنراست', price: 22000, travelers: 3, date: '2025-06-01', status: 'completed', rated: false, createdAt: '2025-05-10T08:00:00Z', image: 'https://loremflickr.com/400/300/desert,camel' },
+        { id: 3, userId, type: 'program', name: 'مغامرة صحراء تمنراست', price: 22000, travelers: 3, date: '2025-06-01', status: 'completed', rated: false, createdAt: '2025-05-10T08:00:00Z', image: 'https://images.unsplash.com/photo-1509023464722-18d996393ca8?auto=format&fit=crop&q=80&w=400' },
         { id: 4, userId, type: 'souvenir', name: 'سجادة أمازيغية يدوية', price: 3500, travelers: 1, date: '2025-06-18', status: 'completed', rated: true, userRating: 5, createdAt: '2025-06-10T11:00:00Z' },
         { id: 5, userId, type: 'program', name: 'جولة قسنطينة الجسور', price: 6500, travelers: 2, date: '2025-07-20', status: 'cancelled', deleted: true, createdAt: '2025-06-01T09:00:00Z' }
     ];

@@ -11,7 +11,7 @@
         /* ===== Hero ===== */
         .hero-section {
             height: 92vh;
-            background: url('https://loremflickr.com/1600/900/algeria,desert') center/cover no-repeat fixed;
+            background: url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=1600') center/cover no-repeat fixed;
             display: flex; align-items: center; justify-content: center;
             text-align: center; position: relative; overflow: hidden;
         }
@@ -210,6 +210,14 @@
         .footer-bottom { text-align: center; color: #334155; font-size: 0.85rem; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); }
         @media(max-width:900px){ .footer-grid { grid-template-columns: 1fr 1fr; } }
         @media(max-width:500px){ .footer-grid { grid-template-columns: 1fr; } }
+
+        /* ===== Light mode fixes ===== */
+        body.light-mode .stats-banner { background: rgba(255,255,255,0.75); border-color: rgba(0,0,0,0.08); }
+        body.light-mode .stat-lbl { color: #64748b; }
+        body.light-mode .how-section { background: rgba(226,232,240,0.5); }
+        body.light-mode .partners-section { background: rgba(226,232,240,0.6); }
+        body.light-mode .section-title h2 { color: #0f172a; }
+        body.light-mode .section-title p { color: #64748b; }
     </style>
 </head>
 <body>
@@ -217,6 +225,8 @@
 <header>
     <div class="header-inner">
         <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <input type="checkbox" id="navToggle" class="nav-toggle-checkbox" hidden>
+        <label for="navToggle" class="nav-toggle-btn" aria-label="القائمة"><i class="fas fa-bars"></i></label>
         <nav>
             <a href="index.html" class="active">الرئيسية</a>
             <a href="programs.html">البرامج</a>

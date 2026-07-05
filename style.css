@@ -66,7 +66,7 @@ body.light-mode {
   --border:      rgba(0,0,0,0.08);
   --text-primary:#0f172a;
   --text-muted:  #475569;
-  --text-dim:    #94a3b8;
+  --text-dim:    #64748b;
 
   /* Legacy light overrides */
   --main-bg:      #f1f5f9;
@@ -74,6 +74,7 @@ body.light-mode {
   --border-color: rgba(0,0,0,0.08);
   --text-color:   #0f172a;
   --text-sec:     #475569;
+  --text-main:    #0f172a;
   --surface:      rgba(248,250,252,0.95);
 }
 
@@ -310,6 +311,69 @@ header nav a.active { color: var(--primary); }
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+}
+
+/* ============================================================
+   MOBILE NAV TOGGLE — pure CSS checkbox hack, no JS required
+   ============================================================ */
+.nav-toggle-checkbox { display: none; }
+
+.nav-toggle-btn {
+  display: none;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 1.15rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+
+.nav-toggle-btn:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+@media (max-width: 860px) {
+  .nav-toggle-btn { display: flex; }
+
+  .header-inner { flex-wrap: wrap; }
+
+  header nav,
+  #mainNav {
+    flex-basis: 100%;
+    order: 5;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    max-height: 0;
+    overflow: hidden;
+    background: var(--main-bg);
+    border-radius: 14px;
+    border: 1px solid transparent;
+    transition: max-height 0.35s ease, margin-top 0.35s ease, border-color 0.35s ease;
+  }
+
+  header nav a,
+  #mainNav a {
+    padding: 14px 18px;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  .nav-toggle-checkbox:checked ~ nav,
+  .nav-toggle-checkbox:checked ~ #mainNav {
+    max-height: 70vh;
+    overflow-y: auto;
+    margin-top: 10px;
+    border-color: var(--border);
+  }
 }
 
 /* Auth area (alternative id name) */

@@ -72,6 +72,22 @@
       "preferences": [],
       "createdAt": "2026-07-03T21:25:16.998Z",
       "lastLogin": "2026-07-03T21:25:16.999Z"
+    },
+    {
+      "id": 5,
+      "name": "Test User QA",
+      "username": "testqa1783247886429",
+      "email": "testqa1783247886429@test.com",
+      "phone": "",
+      "password": "$2b$10$266AOZLkqMtohAmbU9NU.OHe0ezbkDUe6kOuMvN8//Bx00YBkQdXe",
+      "token": "0512e7e3844362bee17256d0b741590c0af08c0a1c709fc994fa57cc0542d895",
+      "role": "user",
+      "loyaltyPoints": 130,
+      "city": "",
+      "bio": "",
+      "preferences": [],
+      "createdAt": "2026-07-05T10:38:06.666Z",
+      "lastLogin": "2026-07-05T10:38:06.668Z"
     }
   ],
   "programs": [
@@ -99,7 +115,7 @@
         "متحف الفنون والتقاليد",
         "الحي القديم"
       ],
-      "image": "https://loremflickr.com/800/500/algeria,architecture",
+      "image": "https://images.unsplash.com/photo-1528543606781-2f6e6857f318?auto=format&fit=crop&q=80&w=800",
       "maxPax": 20,
       "difficulty": "سهل",
       "deleted": false,
@@ -130,7 +146,7 @@
         "ليالي النجوم",
         "ثقافة الطوارق"
       ],
-      "image": "https://loremflickr.com/800/500/desert,camel",
+      "image": "https://images.unsplash.com/photo-1509023464722-18d996393ca8?auto=format&fit=crop&q=80&w=800",
       "maxPax": 12,
       "difficulty": "متوسط",
       "deleted": false,
@@ -159,7 +175,7 @@
         "القصبة العتيقة",
         "أسواق التوابل"
       ],
-      "image": "https://loremflickr.com/800/500/constantine,bridge",
+      "image": "https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?auto=format&fit=crop&q=80&w=800",
       "maxPax": 25,
       "difficulty": "سهل",
       "deleted": false,
@@ -188,7 +204,7 @@
         "شاطئ أثري",
         "منارة بحرية"
       ],
-      "image": "https://loremflickr.com/800/500/roman,ruins",
+      "image": "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&q=80&w=800",
       "maxPax": 30,
       "difficulty": "سهل",
       "deleted": false,
@@ -217,7 +233,7 @@
         "قرى الأوراس التقليدية",
         "مشي في الطبيعة"
       ],
-      "image": "https://loremflickr.com/800/500/mountains,landscape",
+      "image": "https://images.unsplash.com/photo-1451337516015-6b6e9a44a8a3?auto=format&fit=crop&q=80&w=800",
       "maxPax": 16,
       "difficulty": "متوسط",
       "deleted": false,
@@ -246,7 +262,7 @@
         "قصبة وهران",
         "سوق الضلعة"
       ],
-      "image": "https://loremflickr.com/800/500/mediterranean,harbor",
+      "image": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=800",
       "maxPax": 20,
       "difficulty": "سهل",
       "deleted": false,
@@ -276,7 +292,7 @@
         "جبل قوراية",
         "رياضات مائية"
       ],
-      "image": "https://loremflickr.com/800/500/coast,boat",
+      "image": "https://images.unsplash.com/photo-1524230507669-5ff97982bb5e?auto=format&fit=crop&q=80&w=800",
       "maxPax": 20,
       "difficulty": "سهل",
       "deleted": false,
@@ -306,7 +322,7 @@
         "سوق التمر",
         "كثبان رمال صغيرة"
       ],
-      "image": "https://loremflickr.com/800/500/oasis,palm",
+      "image": "https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&q=80&w=800",
       "maxPax": 25,
       "difficulty": "سهل",
       "deleted": false,
@@ -334,7 +350,7 @@
         "متحف سطيف",
         "عين الفوارة"
       ],
-      "image": "https://loremflickr.com/800/500/ancient,ruins",
+      "image": "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&q=80&w=800",
       "maxPax": 15,
       "difficulty": "سهل",
       "deleted": false,
@@ -363,7 +379,7 @@
         "قصر تيميمون",
         "الكثبان الذهبية"
       ],
-      "image": "https://loremflickr.com/800/500/desert,dunes",
+      "image": "https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&q=80&w=800",
       "maxPax": 12,
       "difficulty": "متوسط",
       "deleted": false,
@@ -391,7 +407,7 @@
         "شاطئ تاسوست",
         "غابة قوراية"
       ],
-      "image": "https://loremflickr.com/800/500/beach,mediterranean",
+      "image": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&q=80&w=800",
       "maxPax": 25,
       "difficulty": "سهل",
       "deleted": false,
@@ -419,7 +435,7 @@
         "واحة تيميمون",
         "سماء صافية للتصوير الفلكي"
       ],
-      "image": "https://loremflickr.com/800/500/desert,camel",
+      "image": "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&q=80&w=800",
       "maxPax": 10,
       "difficulty": "صعب",
       "deleted": false,
@@ -446,7 +462,7 @@
         "تلفاز ذكي",
         "خدمة الغرف"
       ],
-      "image": "https://loremflickr.com/800/500/hotel,luxury",
+      "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=800",
       "rooms": 85,
       "checkInTime": "14:00",
       "checkOutTime": "12:00",
@@ -474,7 +490,7 @@
         "حديقة",
         "شاي مجاني"
       ],
-      "image": "https://loremflickr.com/800/500/oasis,palm",
+      "image": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=800",
       "rooms": 30,
       "checkInTime": "15:00",
       "checkOutTime": "11:00",
@@ -499,7 +515,7 @@
         "تلفاز ذكي",
         "إفطار"
       ],
-      "image": "https://loremflickr.com/800/500/hotel,garden",
+      "image": "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&q=80&w=800",
       "rooms": 50,
       "checkInTime": "14:00",
       "checkOutTime": "12:00",
@@ -524,7 +540,7 @@
         "إفطار",
         "جولات سياحية"
       ],
-      "image": "https://loremflickr.com/800/500/riad,traditional",
+      "image": "https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&q=80&w=800",
       "rooms": 12,
       "checkInTime": "13:00",
       "checkOutTime": "11:00",
@@ -551,7 +567,7 @@
         "5G",
         "إفطار"
       ],
-      "image": "https://loremflickr.com/800/500/resort,oasis",
+      "image": "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&q=80&w=800",
       "rooms": 45,
       "checkInTime": "14:00",
       "checkOutTime": "12:00",
@@ -571,7 +587,7 @@
       "reviews": 42,
       "artisan": "رشيدة ح.",
       "description": "سجادة مصنوعة يدوياً من صوف طبيعي بزخارف أمازيغية أصيلة متوارثة عبر الأجيال. كل قطعة فريدة من نوعها لا تتكرر.",
-      "image": "https://loremflickr.com/600/400/kilim,rug",
+      "image": "https://images.unsplash.com/photo-1610375461369-d613b564f4c4?auto=format&fit=crop&q=80&w=600",
       "deleted": false,
       "createdAt": "2025-01-10T08:00:00Z"
     },
@@ -586,7 +602,7 @@
       "reviews": 28,
       "artisan": "محمد ب.",
       "description": "إناء فخاري تقليدي مصنوع ومزخرف يدوياً بأشكال هندسية موروثة. يُستخدم كقطعة ديكور أو للخدمة التقليدية.",
-      "image": "https://loremflickr.com/600/400/pottery,ceramic",
+      "image": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=600",
       "deleted": false,
       "createdAt": "2025-01-12T08:00:00Z"
     },
@@ -601,7 +617,7 @@
       "reviews": 19,
       "artisan": "حوماني ن.",
       "description": "جلباب رجالي فاخر مطرز يدوياً بخيوط الحرير. من مشغولات تلمسان الشهيرة بجودتها العالية وأناقتها الرفيعة.",
-      "image": "https://loremflickr.com/600/400/djellaba,morocco",
+      "image": "https://images.unsplash.com/photo-1600166898405-da9535204843?auto=format&fit=crop&q=80&w=600",
       "deleted": false,
       "createdAt": "2025-01-15T08:00:00Z"
     },
@@ -616,7 +632,7 @@
       "reviews": 11,
       "artisan": "مباركي ف.",
       "description": "مجموعة من الحلي الفضية الأمازيغية الأصيلة، محفورة يدوياً بنقوش تراثية من الجنوب الجزائري.",
-      "image": "https://loremflickr.com/600/400/silver,jewelry",
+      "image": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=600",
       "deleted": false,
       "createdAt": "2025-01-18T08:00:00Z"
     },
@@ -631,7 +647,7 @@
       "reviews": 55,
       "artisan": "عطار الواحة",
       "description": "عطر مسك طبيعي نقي مستخلص من أجود المكونات الطبيعية الصحراوية. رائحة شرقية عميقة تدوم طويلاً.",
-      "image": "https://loremflickr.com/600/400/perfume,bottle",
+      "image": "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=600",
       "deleted": false,
       "createdAt": "2025-01-20T08:00:00Z"
     },
@@ -646,7 +662,7 @@
       "reviews": 8,
       "artisan": "حداد الواحة",
       "description": "خنجر تقليدي جزائري أصيل للزينة. مقبض من العظم الطبيعي وقراب مطرز بخيوط ذهبية، قطعة فنية نادرة.",
-      "image": "https://loremflickr.com/600/400/dagger,ornament",
+      "image": "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&q=80&w=600",
       "deleted": false,
       "createdAt": "2025-02-01T08:00:00Z"
     },
@@ -661,7 +677,7 @@
       "reviews": 33,
       "artisan": "نسوة الحي",
       "description": "قفة مصنوعة يدوياً من نبات الحلفاء الجزائري المجدول بأسلوب تقليدي متوارث. متينة وجميلة.",
-      "image": "https://loremflickr.com/600/400/straw,basket",
+      "image": "https://images.unsplash.com/photo-1600607687644-c7171b42498f?auto=format&fit=crop&q=80&w=600",
       "deleted": false,
       "createdAt": "2025-02-05T08:00:00Z"
     },
@@ -676,7 +692,7 @@
       "reviews": 91,
       "artisan": "مقهى الأجداد",
       "description": "مزيج قهوة قصور أصيل محمص بطريقة تقليدية ومنكّه بماء الزهر وكردمون جبلي وفق وصفة جدية سرية.",
-      "image": "https://loremflickr.com/600/400/coffee,spice",
+      "image": "https://images.unsplash.com/photo-1523294587484-bae6cc870010?auto=format&fit=crop&q=80&w=600",
       "deleted": false,
       "createdAt": "2025-02-10T08:00:00Z"
     }
@@ -767,6 +783,44 @@
       "rated": true,
       "userRating": 5,
       "createdAt": "2025-06-10T11:00:00Z"
+    },
+    {
+      "id": 6,
+      "userId": 5,
+      "type": "فندق",
+      "name": "فندق الأغواط الكبير",
+      "phone": "0555123456",
+      "price": 4500,
+      "loyaltyPts": 36,
+      "travelers": 1,
+      "date": "2026-07-05",
+      "checkIn": "2026-07-05",
+      "checkOut": null,
+      "address": null,
+      "quantity": 1,
+      "status": "pending",
+      "deleted": false,
+      "rated": false,
+      "createdAt": "2026-07-05T10:44:04.934Z"
+    },
+    {
+      "id": 7,
+      "userId": 5,
+      "type": "souvenir",
+      "name": "سجادة أمازيغية يدوية",
+      "phone": "0555123456",
+      "price": 5500,
+      "loyaltyPts": 44,
+      "travelers": 1,
+      "date": "2026-07-05T10:54:40.737Z",
+      "checkIn": null,
+      "checkOut": null,
+      "address": "حي السلام، الأغواط",
+      "quantity": 1,
+      "status": "pending",
+      "deleted": false,
+      "rated": false,
+      "createdAt": "2026-07-05T10:54:40.731Z"
     }
   ],
   "messages": [
@@ -899,6 +953,32 @@
       "label": "إلغاء حجز: رحلة غرداية التراثية",
       "bookingId": 1,
       "createdAt": "2026-07-03T21:26:26.596Z"
+    },
+    {
+      "id": 10,
+      "userId": 5,
+      "amount": 50,
+      "type": "plus",
+      "label": "مكافأة الترحيب",
+      "createdAt": "2026-07-05T10:38:06.668Z"
+    },
+    {
+      "id": 11,
+      "userId": 5,
+      "amount": 36,
+      "type": "plus",
+      "label": "حجز: فندق الأغواط الكبير",
+      "bookingId": 6,
+      "createdAt": "2026-07-05T10:44:04.934Z"
+    },
+    {
+      "id": 12,
+      "userId": 5,
+      "amount": 44,
+      "type": "plus",
+      "label": "حجز: سجادة أمازيغية يدوية",
+      "bookingId": 7,
+      "createdAt": "2026-07-05T10:54:40.731Z"
     }
   ]
 }

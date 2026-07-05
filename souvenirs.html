@@ -65,7 +65,7 @@
         .filter-input:focus { outline: none; border-color: var(--primary-color); }
         .filter-select {
             background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 12px; color: white; padding: 12px 15px;
+            border-radius: 12px; color: var(--text-main); padding: 12px 15px;
             font-family: 'Changa', sans-serif; font-size: 0.9rem;
         }
 
@@ -122,7 +122,7 @@
             font-size: 0.78rem; color: var(--primary-color); font-weight: 700;
             text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;
         }
-        .product-name { font-size: 1.05rem; font-weight: 800; color: white; margin-bottom: 6px; }
+        .product-name { font-size: 1.05rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px; }
         .product-origin {
             display: flex; align-items: center; gap: 5px;
             color: var(--text-sec); font-size: 0.82rem; margin-bottom: 10px;
@@ -138,7 +138,7 @@
             display: flex; align-items: center; justify-content: space-between;
             border-top: 1px solid var(--border-color); padding-top: 14px;
         }
-        .product-price { font-size: 1.2rem; font-weight: 900; color: white; }
+        .product-price { font-size: 1.2rem; font-weight: 900; color: var(--text-main); }
         .product-price small { font-size: 0.75rem; color: var(--text-sec); font-weight: 400; }
         .loyalty-tag {
             background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
@@ -163,7 +163,7 @@
             padding: 30px; display: flex; align-items: center; gap: 25px; flex-wrap: wrap;
         }
         .artisan-icon { font-size: 3.5rem; }
-        .artisan-text h3 { color: white; font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
+        .artisan-text h3 { color: var(--text-main); font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
         .artisan-text p { color: var(--text-sec); font-size: 0.9rem; }
         .btn-join-artisan {
             background: linear-gradient(135deg, #d97706, #f59e0b);
@@ -196,27 +196,27 @@
             background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2);
             border-radius: 12px; padding: 12px 18px; margin-bottom: 20px;
         }
-        .modal-price { font-size: 1.3rem; font-weight: 900; color: white; }
+        .modal-price { font-size: 1.3rem; font-weight: 900; color: var(--text-main); }
         .modal-pts { color: #f59e0b; font-weight: 700; font-size: 0.9rem; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; color: var(--text-sec); font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea {
             width: 100%; padding: 12px 15px; background: var(--main-bg);
             border: 1px solid var(--border-color); border-radius: 10px;
-            color: white; font-family: 'Changa', sans-serif; font-size: 0.9rem;
+            color: var(--text-main); font-family: 'Changa', sans-serif; font-size: 0.9rem;
         }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .qty-wrap { display: flex; align-items: center; gap: 10px; }
         .qty-btn {
             width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border-color);
-            background: var(--main-bg); color: white; cursor: pointer; font-size: 1.1rem;
+            background: var(--main-bg); color: var(--text-main); cursor: pointer; font-size: 1.1rem;
             display: flex; align-items: center; justify-content: center; transition: 0.2s;
         }
         .qty-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
         .qty-display {
             width: 50px; text-align: center; background: var(--main-bg);
             border: 1px solid var(--border-color); border-radius: 8px; padding: 8px;
-            color: white; font-weight: 700; font-size: 1rem;
+            color: var(--text-main); font-weight: 700; font-size: 1rem;
         }
         .btn-confirm {
             width: 100%; background: linear-gradient(135deg, var(--primary-color), #6d28d9);
@@ -257,6 +257,8 @@
 <header>
     <div class="header-inner">
         <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <input type="checkbox" id="navToggle" class="nav-toggle-checkbox" hidden>
+        <label for="navToggle" class="nav-toggle-btn" aria-label="القائمة"><i class="fas fa-bars"></i></label>
         <nav>
             <a href="index.html" >الرئيسية</a>
             <a href="programs.html">البرامج</a>
@@ -371,7 +373,7 @@
                     <button class="qty-btn" onclick="changeQty(-1)">−</button>
                     <input type="text" class="qty-display" id="qtyDisplay" value="1" readonly>
                     <button class="qty-btn" onclick="changeQty(1)">+</button>
-                    <span style="color:var(--text-sec);font-size:0.85rem;margin-right:10px;">الإجمالي: <strong id="totalDisplay" style="color:white;"></strong> دج</span>
+                    <span style="color:var(--text-sec);font-size:0.85rem;margin-right:10px;">الإجمالي: <strong id="totalDisplay" style="color:var(--text-main);"></strong> دج</span>
                 </div>
             </div>
             <div style="background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:10px 15px;margin-bottom:15px;display:flex;align-items:center;gap:8px;color:#10b981;font-size:0.85rem;font-weight:600;">
@@ -388,7 +390,7 @@
 <div class="success-overlay" id="successModal">
     <div class="success-box">
         <div class="success-icon"><i class="fas fa-check"></i></div>
-        <h3 style="font-size:1.5rem;font-weight:800;color:white;margin-bottom:8px;">تم الطلب! 🎉</h3>
+        <h3 style="font-size:1.5rem;font-weight:800;color:var(--text-main);margin-bottom:8px;">تم الطلب! 🎉</h3>
         <p style="color:var(--text-sec);margin-bottom:5px;">سيتم التواصل معك لتأكيد الطلب والتوصيل</p>
         <div class="success-pts"><i class="fas fa-star"></i> ربحت <span id="sPoints">0</span> نقطة ولاء!</div>
         <button onclick="closeSuccess()" style="background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;padding:12px 35px;border-radius:12px;font-weight:700;cursor:pointer;font-family:'Changa',sans-serif;font-size:1rem;">رائع!</button>
@@ -498,7 +500,7 @@ function renderProducts() {
     if (!list.length) {
         grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;">
             <i class="fas fa-box-open" style="font-size:3.5rem;color:var(--text-sec);display:block;margin-bottom:15px;"></i>
-            <h3 style="color:white;font-size:1.3rem;">لا توجد منتجات</h3>
+            <h3 style="color:var(--text-main);font-size:1.3rem;">لا توجد منتجات</h3>
             <p style="color:var(--text-sec);">جرب تغيير الفلتر أو البحث بكلمة مختلفة</p>
         </div>`;
         return;
@@ -510,7 +512,7 @@ function renderProducts() {
         const liked = wishlist.includes(p.id);
         const stockClass = !p.stock || p.stock === 0 ? 'out-stock' : p.stock < 5 ? 'low-stock' : 'in-stock';
         const stockLabel = !p.stock || p.stock === 0 ? 'نفد المخزون' : p.stock < 5 ? `آخر ${p.stock} قطع` : 'متاح';
-        const img = p.image || `https://loremflickr.com/400/300/handcraft,traditional`;
+        const img = p.image || `https://images.unsplash.com/photo-1610375461369-d613b564f4c4?auto=format&fit=crop&q=80&w=400`;
 
         return `
         <div class="product-card" data-aos="fade-up" data-aos-delay="${i * 60}">
@@ -601,6 +603,7 @@ async function confirmPurchase() {
     if (!name || !phone || !addr) { alert('يرجى ملء جميع الحقول'); return; }
 
     const pts = Math.round((currentProduct.price||0) * 0.008) * currentQty;
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
     const booking = {
         type: 'souvenir',
         name: currentProduct.name,
@@ -608,11 +611,11 @@ async function confirmPurchase() {
         quantity: currentQty,
         address: addr,
         phone, date: new Date().toISOString(), status: 'pending',
+        userId: user ? user.id : 0,
         createdAt: new Date().toISOString()
     };
     try { await fetch('/api/bookings', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(booking) }); } catch {}
 
-    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
     if (user) { user.loyaltyPoints = (user.loyaltyPoints||0) + pts; localStorage.setItem('hawsbiyaUser', JSON.stringify(user)); }
 
     closeModal();
@@ -627,12 +630,12 @@ function closeSuccess() {
 
 function getFallback() {
     return [
-        { id:1, name:'سجادة أمازيغية يدوية', category:'نسيج', origin:'غرداية', price:5500, stock:8, rating:4.9, reviews:42, artisan:'رشيدة ح.', description:'سجادة مصنوعة يدوياً من صوف طبيعي بزخارف أمازيغية أصيلة متوارثة جيلاً بعد جيل', image:'https://loremflickr.com/400/300/carpet,rug' },
-        { id:2, name:'فخار لاغواطي مزخرف', category:'فخار', origin:'الأغواط', price:1800, stock:15, rating:4.7, reviews:28, artisan:'محمد ب.', description:'إناء فخاري تقليدي مصنوع ومزخرف يدوياً بأشكال هندسية موروثة عن الحضارة الصحراوية', image:'https://loremflickr.com/400/300/pottery,ceramic' },
-        { id:3, name:'جلباب جزائري رجالي', category:'لباس', origin:'تلمسان', price:8900, stock:4, rating:4.8, reviews:19, artisan:'حوماني ن.', description:'جلباب رجالي فاخر مطرز يدوياً بإبرة الحرير بتقنيات مشغولات تلمسان الشهيرة', image:'https://loremflickr.com/400/300/djellaba,morocco' },
-        { id:4, name:'حلي فضية أمازيغية', category:'مجوهرات', origin:'تمنراست', price:12000, stock:3, rating:5.0, reviews:11, artisan:'مباركي ف.', description:'مجموعة من الحلي الفضية الأمازيغية الأصيلة محفورة يدوياً بنقوش تراثية من الجنوب الجزائري', image:'https://loremflickr.com/400/300/silver,jewelry' },
-        { id:5, name:'عطر مسك الأغواط', category:'عطور', origin:'الأغواط', price:2500, stock:20, rating:4.6, reviews:55, artisan:'عطار الواحة', description:'عطر مسك طبيعي نقي مستخلص من أجود المكونات الطبيعية من الصحراء الجزائرية', image:'https://loremflickr.com/400/300/perfume,bottle' },        { id:7, name:'قفة تقليدية من الحلفاء', category:'سلال', origin:'الأغواط', price:900, stock:12, rating:4.5, reviews:33, artisan:'نسوة الحي', description:'قفة مصنوعة يدوياً من نبات الحلفاء المجدول بأسلوب تقليدي جميل ومتين', image:'https://loremflickr.com/400/300/straw,basket' },
-        { id:8, name:'قهوة قصور بالنكهات', category:'مأكولات', origin:'غرداية', price:1200, stock:0, rating:4.7, reviews:91, artisan:'مقهى الأجداد', description:'مزيج قهوة قصور فريد محمص بالأعشاب الجبلية وماء الزهر وفق وصفة جدية سرية', image:'https://loremflickr.com/400/300/coffee,spice' }
+        { id:1, name:'سجادة أمازيغية يدوية', category:'نسيج', origin:'غرداية', price:5500, stock:8, rating:4.9, reviews:42, artisan:'رشيدة ح.', description:'سجادة مصنوعة يدوياً من صوف طبيعي بزخارف أمازيغية أصيلة متوارثة جيلاً بعد جيل', image:'https://images.unsplash.com/photo-1610375461369-d613b564f4c4?auto=format&fit=crop&q=80&w=400' },
+        { id:2, name:'فخار لاغواطي مزخرف', category:'فخار', origin:'الأغواط', price:1800, stock:15, rating:4.7, reviews:28, artisan:'محمد ب.', description:'إناء فخاري تقليدي مصنوع ومزخرف يدوياً بأشكال هندسية موروثة عن الحضارة الصحراوية', image:'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=400' },
+        { id:3, name:'جلباب جزائري رجالي', category:'لباس', origin:'تلمسان', price:8900, stock:4, rating:4.8, reviews:19, artisan:'حوماني ن.', description:'جلباب رجالي فاخر مطرز يدوياً بإبرة الحرير بتقنيات مشغولات تلمسان الشهيرة', image:'https://images.unsplash.com/photo-1600166898405-da9535204843?auto=format&fit=crop&q=80&w=400' },
+        { id:4, name:'حلي فضية أمازيغية', category:'مجوهرات', origin:'تمنراست', price:12000, stock:3, rating:5.0, reviews:11, artisan:'مباركي ف.', description:'مجموعة من الحلي الفضية الأمازيغية الأصيلة محفورة يدوياً بنقوش تراثية من الجنوب الجزائري', image:'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=400' },
+        { id:5, name:'عطر مسك الأغواط', category:'عطور', origin:'الأغواط', price:2500, stock:20, rating:4.6, reviews:55, artisan:'عطار الواحة', description:'عطر مسك طبيعي نقي مستخلص من أجود المكونات الطبيعية من الصحراء الجزائرية', image:'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=400' },        { id:7, name:'قفة تقليدية من الحلفاء', category:'سلال', origin:'الأغواط', price:900, stock:12, rating:4.5, reviews:33, artisan:'نسوة الحي', description:'قفة مصنوعة يدوياً من نبات الحلفاء المجدول بأسلوب تقليدي جميل ومتين', image:'https://images.unsplash.com/photo-1600607687644-c7171b42498f?auto=format&fit=crop&q=80&w=400' },
+        { id:8, name:'قهوة قصور بالنكهات', category:'مأكولات', origin:'غرداية', price:1200, stock:0, rating:4.7, reviews:91, artisan:'مقهى الأجداد', description:'مزيج قهوة قصور فريد محمص بالأعشاب الجبلية وماء الزهر وفق وصفة جدية سرية', image:'https://images.unsplash.com/photo-1523294587484-bae6cc870010?auto=format&fit=crop&q=80&w=400' }
     ];
 }
 

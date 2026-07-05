@@ -10,7 +10,7 @@
     <style>
         .programs-hero {
             height: 62vh;
-            background: url('https://loremflickr.com/1600/900/desert,dunes') center/cover no-repeat fixed;
+            background: url('https://images.unsplash.com/photo-1509023464722-18d996393ca8?auto=format&fit=crop&q=80&w=1600') center/cover no-repeat fixed;
             position: relative; display: flex; align-items: center; justify-content: center; text-align: center;
             border-radius: 0 0 50px 50px; overflow: hidden; margin-bottom: 10px;
         }
@@ -122,6 +122,8 @@
 <header>
     <div class="header-inner">
         <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <input type="checkbox" id="navToggle" class="nav-toggle-checkbox" hidden>
+        <label for="navToggle" class="nav-toggle-btn" aria-label="القائمة"><i class="fas fa-bars"></i></label>
         <nav>
             <a href="index.html" >الرئيسية</a>
             <a href="programs.html" class="active">البرامج</a>
@@ -355,8 +357,8 @@ async function loadPrograms(){
         allPrograms = await res.json();
     } catch(e){
         allPrograms = [
-            { id:1, name:"رحلة غرداية والمزاب", location:"غرداية", price:18900, rating:4.8, days:3, type:"ثقافي", desc:"اكتشف جمال القصبة القديمة وعمارة المزاب الأصيلة", image:"https://loremflickr.com/1600/900/algeria,architecture" },
-            { id:2, name:"مغامرة تمنراست والهقار", location:"تمنراست", price:38900, rating:4.9, days:5, type:"مغامرة", desc:"رحلة لا تُنسى في قلب الصحراء الكبرى وجبال الهقار", image:"https://loremflickr.com/1600/900/desert,dunes" },
+            { id:1, name:"رحلة غرداية والمزاب", location:"غرداية", price:18900, rating:4.8, days:3, type:"ثقافي", desc:"اكتشف جمال القصبة القديمة وعمارة المزاب الأصيلة", image:"https://images.unsplash.com/photo-1528543606781-2f6e6857f318?auto=format&fit=crop&q=80&w=1600" },
+            { id:2, name:"مغامرة تمنراست والهقار", location:"تمنراست", price:38900, rating:4.9, days:5, type:"مغامرة", desc:"رحلة لا تُنسى في قلب الصحراء الكبرى وجبال الهقار", image:"https://images.unsplash.com/photo-1509023464722-18d996393ca8?auto=format&fit=crop&q=80&w=1600" },
             { id:3, name:"جولة قسنطينة الجسور المعلقة", location:"قسنطينة", price:24500, rating:4.7, days:4, type:"ثقافي", desc:"استكشف عاصمة الثقافة ومدينة الجسور المعلقة", image:"https://picsum.photos/id/1015/600/400" },
             { id:4, name:"استجمام شواطئ الجزائر", location:"تيبازة", price:12000, rating:4.6, days:2, type:"استرخاء", desc:"عطلة شاطئية مريحة بجوار الآثار الرومانية", image:"https://picsum.photos/id/201/600/400" },
             { id:5, name:"رحلة الأسرة إلى الأوراس", location:"باتنة", price:16500, rating:4.7, days:3, type:"عائلي", desc:"استمتع بالطبيعة الجبالية الخلابة مع عائلتك", image:"https://picsum.photos/id/1033/600/400" },
@@ -432,7 +434,8 @@ window.resetFilters = function(){
 
 /* Booking Modal */
 window.openBooking = function(prog){
-    if(!user.username){ alert('يجب تسجيل الدخول أولاً'); window.location.href='login.html'; return; }
+    const user=JSON.parse(localStorage.getItem('hawsbiyaUser')||'null');
+    if(!user||!user.username){ alert('يجب تسجيل الدخول أولاً'); window.location.href='login.html'; return; }
     document.getElementById('serviceId').value   = prog.id;
     document.getElementById('serviceName').value = prog.name;
     document.getElementById('servicePrice').value= prog.price;
@@ -460,16 +463,17 @@ window.confirmBooking = async function(){
     const date = document.getElementById('bkDate').value;
     const name = document.getElementById('bkName').value.trim();
     if(!date||!name){ alert('يرجى تعبئة جميع الحقول'); return; }
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser')||'null');
     const btn = document.getElementById('confirmBtn');
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحجز...'; btn.disabled = true;
     const data = {
         serviceId: document.getElementById('serviceId').value,
-        serviceName: document.getElementById('serviceName').value,
+        name: document.getElementById('serviceName').value,
         price: parseInt(document.getElementById('servicePrice').value),
         customerName: name,
         phone: document.getElementById('bkPhone').value,
-        date, pax: document.getElementById('bkPax').value,
-        user: user.username, status:'pending', type:'برنامج سياحي',
+        date, travelers: parseInt(document.getElementById('bkPax').value)||1,
+        userId: user?user.id:0, status:'pending', type:'برنامج سياحي',
         loyaltyPoints: Math.round(parseInt(document.getElementById('servicePrice').value)*0.01)
     };
     try {

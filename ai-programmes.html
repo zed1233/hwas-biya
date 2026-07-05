@@ -505,6 +505,8 @@
 <header>
     <div class="header-inner">
         <a href="index.html" class="logo"><i class="fas fa-map-marked-alt"></i> حوس بيا</a>
+        <input type="checkbox" id="navToggle" class="nav-toggle-checkbox" hidden>
+        <label for="navToggle" class="nav-toggle-btn" aria-label="القائمة"><i class="fas fa-bars"></i></label>
         <nav>
             <a href="index.html" >الرئيسية</a>
             <a href="programs.html">البرامج</a>
@@ -1146,7 +1148,7 @@ function showResults() {
         const loyaltyPts = Math.round(price * 0.01);
         const matchClass = p.score >= 60 ? 'high' : 'medium';
         const color = typeColors[p.type] || 'var(--primary-color)';
-        const img = p.image || `https://loremflickr.com/400/300/algeria,travel`;
+        const img = p.image || `https://images.unsplash.com/photo-1528543606781-2f6e6857f318?auto=format&fit=crop&q=80&w=400`;
 
         const reasonsHtml = p.reasons && p.reasons.length ?
             `<div class="match-reasons">
@@ -1315,14 +1317,14 @@ function resetWizard() {
 // ==================== FALLBACK DATA ====================
 function getFallbackPrograms() {
     return [
-        { id: 1, name: 'رحلة غرداية التراثية', type: 'ثقافي', price: 8500, duration: 3, rating: 4.8, description: 'استكشف مدينة غرداية التاريخية وقصر بني ميزاب ومعالمها الأثرية الفريدة', location: 'غرداية', image: 'https://loremflickr.com/800/500/algeria,architecture' },
-        { id: 2, name: 'مغامرة صحراء تمنراست', type: 'مغامرة', price: 22000, duration: 7, rating: 4.9, description: 'رحلة استثنائية إلى قلب الصحراء الكبرى وسط كثبان الأهقار والهوقار', location: 'تمنراست', image: 'https://loremflickr.com/800/500/desert,camel' },
-        { id: 3, name: 'جولة قسنطينة الجسور', type: 'ثقافي', price: 6500, duration: 2, rating: 4.7, description: 'تجول فوق جسور قسنطينة المعلقة واكتشف المدينة التاريخية الرائعة', location: 'قسنطينة', image: 'https://loremflickr.com/800/500/constantine,bridge' },
-        { id: 4, name: 'بحيرة تيبازة والآثار الرومانية', type: 'ثقافي', price: 5000, duration: 1, rating: 4.6, description: 'زيارة المدينة الرومانية تيبازة على ساحل البحر المتوسط وتلمس التاريخ العريق', location: 'تيبازة', image: 'https://loremflickr.com/800/500/roman,ruins' },
-        { id: 5, name: 'منتزه باتنة الطبيعي', type: 'طبيعة', price: 9800, duration: 5, rating: 4.5, description: 'استكشف جمال الطبيعة الجزائرية في أودية باتنة وجبال الأوراس الخضراء', location: 'باتنة', image: 'https://loremflickr.com/800/500/mountains,landscape' },
-        { id: 6, name: 'مدينة وهران الفيحاء', type: 'استرخاء', price: 11500, duration: 4, rating: 4.7, description: 'اكتشف وهران العريقة بين شواطئها الذهبية وقصباتها الأصيلة ومطبخها الشهي', location: 'وهران', image: 'https://loremflickr.com/800/500/mediterranean,harbor' },
-        { id: 7, name: 'رحلة عائلية بجاية البحرية', type: 'عائلي', price: 14000, duration: 5, rating: 4.8, description: 'استمتع مع عائلتك بجمال بجاية المتوسطية وشواطئها النقية وطبيعتها الخلابة', location: 'بجاية', image: 'https://loremflickr.com/800/500/coast,boat' },
-        { id: 8, name: 'واحة الأغواط الصحراوية', type: 'صحراء', price: 7500, duration: 3, rating: 4.6, description: 'بوابة الصحراء الجزائرية — تجربة أصيلة في قلب واحة الأغواط بين النخيل والكثبان', location: 'الأغواط', image: 'https://loremflickr.com/800/500/oasis,palm' }
+        { id: 1, name: 'رحلة غرداية التراثية', type: 'ثقافي', price: 8500, duration: 3, rating: 4.8, description: 'استكشف مدينة غرداية التاريخية وقصر بني ميزاب ومعالمها الأثرية الفريدة', location: 'غرداية', image: 'https://images.unsplash.com/photo-1528543606781-2f6e6857f318?auto=format&fit=crop&q=80&w=800' },
+        { id: 2, name: 'مغامرة صحراء تمنراست', type: 'مغامرة', price: 22000, duration: 7, rating: 4.9, description: 'رحلة استثنائية إلى قلب الصحراء الكبرى وسط كثبان الأهقار والهوقار', location: 'تمنراست', image: 'https://images.unsplash.com/photo-1509023464722-18d996393ca8?auto=format&fit=crop&q=80&w=800' },
+        { id: 3, name: 'جولة قسنطينة الجسور', type: 'ثقافي', price: 6500, duration: 2, rating: 4.7, description: 'تجول فوق جسور قسنطينة المعلقة واكتشف المدينة التاريخية الرائعة', location: 'قسنطينة', image: 'https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?auto=format&fit=crop&q=80&w=800' },
+        { id: 4, name: 'بحيرة تيبازة والآثار الرومانية', type: 'ثقافي', price: 5000, duration: 1, rating: 4.6, description: 'زيارة المدينة الرومانية تيبازة على ساحل البحر المتوسط وتلمس التاريخ العريق', location: 'تيبازة', image: 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&q=80&w=800' },
+        { id: 5, name: 'منتزه باتنة الطبيعي', type: 'طبيعة', price: 9800, duration: 5, rating: 4.5, description: 'استكشف جمال الطبيعة الجزائرية في أودية باتنة وجبال الأوراس الخضراء', location: 'باتنة', image: 'https://images.unsplash.com/photo-1451337516015-6b6e9a44a8a3?auto=format&fit=crop&q=80&w=800' },
+        { id: 6, name: 'مدينة وهران الفيحاء', type: 'استرخاء', price: 11500, duration: 4, rating: 4.7, description: 'اكتشف وهران العريقة بين شواطئها الذهبية وقصباتها الأصيلة ومطبخها الشهي', location: 'وهران', image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=800' },
+        { id: 7, name: 'رحلة عائلية بجاية البحرية', type: 'عائلي', price: 14000, duration: 5, rating: 4.8, description: 'استمتع مع عائلتك بجمال بجاية المتوسطية وشواطئها النقية وطبيعتها الخلابة', location: 'بجاية', image: 'https://images.unsplash.com/photo-1524230507669-5ff97982bb5e?auto=format&fit=crop&q=80&w=800' },
+        { id: 8, name: 'واحة الأغواط الصحراوية', type: 'صحراء', price: 7500, duration: 3, rating: 4.6, description: 'بوابة الصحراء الجزائرية — تجربة أصيلة في قلب واحة الأغواط بين النخيل والكثبان', location: 'الأغواط', image: 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&q=80&w=800' }
     ];
 }
 
