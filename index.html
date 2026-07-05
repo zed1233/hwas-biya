@@ -614,8 +614,9 @@ function renderCards(data, containerId, type){
 window.handleSearch = function(){
     const q = document.getElementById('searchInput').value.toLowerCase().trim();
     if(!q){ renderCards(allPrograms.slice(0,3),'programsGrid','program'); renderCards(allHotels.slice(0,3),'hotelsGrid','hotel'); return; }
-    renderCards(allPrograms.filter(p=>p.name.toLowerCase().includes(q)||( p.location&&p.location.toLowerCase().includes(q))), 'programsGrid','program');
-    renderCards(allHotels.filter(h=>h.name.toLowerCase().includes(q)||(h.location&&h.location.toLowerCase().includes(q))), 'hotelsGrid','hotel');
+    const match = (item) => [item.name, item.location, item.type, item.description].some(f => f && f.toLowerCase().includes(q));
+    renderCards(allPrograms.filter(match), 'programsGrid','program');
+    renderCards(allHotels.filter(match), 'hotelsGrid','hotel');
 };
 
 loadData();
