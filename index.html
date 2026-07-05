@@ -549,6 +549,9 @@ initAuth();
 let allPrograms = [], allHotels = [];
 
 async function loadData(){
+    const searchBox = document.getElementById('searchInput');
+    searchBox.disabled = true;
+    searchBox.placeholder = 'جاري تحميل البيانات...';
     try {
         const [pRes, hRes] = await Promise.all([fetch('/api/programs'), fetch('/api/hotels')]);
         allPrograms = await pRes.json();
@@ -572,6 +575,9 @@ async function loadData(){
         allPrograms = fallbackPrograms; allHotels = fallbackHotels;
         renderCards(allPrograms, 'programsGrid', 'program');
         renderCards(allHotels,   'hotelsGrid',   'hotel');
+    } finally {
+        searchBox.disabled = false;
+        searchBox.placeholder = 'ابحث عن برنامج أو فندق...';
     }
 }
 
