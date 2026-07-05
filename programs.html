@@ -391,7 +391,7 @@ function renderPrograms(programs){
             <div class="card-content">
                 <span class="tag-badge" style="background:${clr}22; color:${clr}; border-color:${clr}44;">${escHtml(p.type)}</span>
                 <h3>${escHtml(p.name)}</h3>
-                <p class="card-desc">${escHtml(p.desc||'برنامج سياحي مميز')}</p>
+                <p class="card-desc">${escHtml((p.description||p.desc||'برنامج سياحي مميز').substring(0,90))}</p>
                 <div class="card-meta">
                     <span><i class="fas fa-map-marker-alt"></i> ${escHtml(p.location||'الجزائر')}</span>
                 </div>

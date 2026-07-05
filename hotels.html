@@ -363,7 +363,7 @@ function renderHotels(hotels){
             <div class="hotel-rating-badge">${starsHtml(h.rating)} <span style="color:#374151;font-size:0.8rem;">${h.rating}</span></div>
             <div class="card-content">
                 <h3>${escHtml(h.name)}</h3>
-                <p style="color:var(--text-sec);font-size:0.88rem;line-height:1.5;margin-bottom:8px;">${escHtml(h.desc||'إقامة مريحة')}</p>
+                <p style="color:var(--text-sec);font-size:0.88rem;line-height:1.5;margin-bottom:8px;">${escHtml((h.description||h.desc||'إقامة مريحة').substring(0,90))}</p>
                 <div class="card-meta" style="margin-bottom:8px;">
                     <span><i class="fas fa-map-marker-alt"></i> ${escHtml(h.location||'الجزائر')}</span>
                 </div>
@@ -374,7 +374,7 @@ function renderHotels(hotels){
                         <div class="points-hint"><i class="fas fa-star"></i> +${pts} نقطة ولاء</div>
                     </div>
                     <button onclick='openBooking(${JSON.stringify(h).replace(/'/g,"&#39;")})' class="btn-book">
-                        احجز <i class="fas fa-arrow-left"></i>
+                        احجز الآن <i class="fas fa-arrow-left"></i>
                     </button>
                 </div>
             </div>
