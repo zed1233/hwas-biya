@@ -85,7 +85,7 @@
         .btn-confirm { width:100%; padding:15px; background:linear-gradient(135deg,var(--secondary-color),#0d9488); color:#0f172a; border:none; border-radius:14px; font-weight:800; font-size:1.05rem; cursor:pointer; margin-top:10px; font-family:inherit; transition:0.3s; }
         .btn-confirm:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(45,212,191,0.5); }
         .success-modal-content { max-width:400px; text-align:center; padding:50px 30px; border-radius:30px; background:var(--card-bg); border:1px solid var(--border-color); }
-        @media(max-width:768px){ .modal-container { grid-template-columns:1fr; } .modal-img-col { height:200px; } }
+        @media(max-width:768px){ .modal-container { grid-template-columns:1fr; grid-template-rows:200px minmax(0,1fr); } .modal-img-col { height:200px; } }
 
         .site-footer { background:#020617; padding:60px 20px 30px; border-top:1px solid rgba(255,255,255,0.05); }
         .footer-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:40px; }
