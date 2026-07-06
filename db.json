@@ -28,7 +28,7 @@
       "password": "password123",
       "token": null,
       "role": "user",
-      "loyaltyPoints": 220,
+      "loyaltyPoints": 50,
       "city": "الأغواط",
       "bio": "مسافر شغوف يحب استكشاف الجزائر",
       "preferences": [
@@ -47,7 +47,7 @@
       "password": "password123",
       "token": null,
       "role": "user",
-      "loyaltyPoints": 820,
+      "loyaltyPoints": 50,
       "city": "الجزائر",
       "bio": "أحب السياحة الثقافية والتاريخية",
       "preferences": [
@@ -82,7 +82,7 @@
       "password": "$2b$10$266AOZLkqMtohAmbU9NU.OHe0ezbkDUe6kOuMvN8//Bx00YBkQdXe",
       "token": "0512e7e3844362bee17256d0b741590c0af08c0a1c709fc994fa57cc0542d895",
       "role": "user",
-      "loyaltyPoints": 130,
+      "loyaltyPoints": 50,
       "city": "",
       "bio": "",
       "preferences": [],
@@ -697,132 +697,7 @@
       "createdAt": "2025-02-10T08:00:00Z"
     }
   ],
-  "bookings": [
-    {
-      "id": 1,
-      "userId": 2,
-      "type": "program",
-      "name": "رحلة غرداية التراثية",
-      "phone": "+213661234567",
-      "price": 8500,
-      "loyaltyPts": 85,
-      "travelers": 2,
-      "date": "2025-07-15",
-      "status": "cancelled",
-      "deleted": true,
-      "rated": false,
-      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Gharda%C3%AFa_city.jpg/400px-Gharda%C3%AFa_city.jpg",
-      "createdAt": "2025-06-20T10:00:00Z",
-      "updatedAt": "2026-07-03T21:26:26.596Z"
-    },
-    {
-      "id": 2,
-      "userId": 2,
-      "type": "hotel",
-      "name": "فندق الأغواط الكبير",
-      "phone": "+213661234567",
-      "price": 9000,
-      "loyaltyPts": 45,
-      "travelers": 2,
-      "date": "2025-08-01",
-      "checkIn": "2025-08-01",
-      "checkOut": "2025-08-03",
-      "status": "cancelled",
-      "deleted": true,
-      "rated": false,
-      "createdAt": "2025-06-25T14:00:00Z",
-      "updatedAt": "2026-07-03T21:26:24.526Z"
-    },
-    {
-      "id": 3,
-      "userId": 2,
-      "type": "program",
-      "name": "واحة الأغواط الصحراوية",
-      "phone": "+213661234567",
-      "price": 7500,
-      "loyaltyPts": 75,
-      "travelers": 3,
-      "date": "2025-05-20",
-      "status": "completed",
-      "deleted": false,
-      "rated": true,
-      "userRating": 5,
-      "userComment": "رحلة رائعة! المرشد كان ممتازاً والمكان خلاب جداً",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/2/23/Laghouat_Centre_Ville.jpg",
-      "createdAt": "2025-05-01T08:00:00Z"
-    },
-    {
-      "id": 4,
-      "userId": 3,
-      "type": "program",
-      "name": "جولة قسنطينة الجسور",
-      "phone": "+213771234567",
-      "price": 6500,
-      "loyaltyPts": 65,
-      "travelers": 2,
-      "date": "2025-07-20",
-      "status": "confirmed",
-      "deleted": false,
-      "rated": false,
-      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Constantine_Pont_Sidi_M%27Cid.jpg/400px-Constantine_Pont_Sidi_M%27Cid.jpg",
-      "createdAt": "2025-06-28T09:00:00Z"
-    },
-    {
-      "id": 5,
-      "userId": 2,
-      "type": "souvenir",
-      "name": "سجادة أمازيغية يدوية",
-      "phone": "+213661234567",
-      "price": 5500,
-      "loyaltyPts": 44,
-      "travelers": 1,
-      "quantity": 1,
-      "date": "2025-06-18",
-      "status": "completed",
-      "deleted": false,
-      "rated": true,
-      "userRating": 5,
-      "createdAt": "2025-06-10T11:00:00Z"
-    },
-    {
-      "id": 6,
-      "userId": 5,
-      "type": "فندق",
-      "name": "فندق الأغواط الكبير",
-      "phone": "0555123456",
-      "price": 4500,
-      "loyaltyPts": 36,
-      "travelers": 1,
-      "date": "2026-07-05",
-      "checkIn": "2026-07-05",
-      "checkOut": null,
-      "address": null,
-      "quantity": 1,
-      "status": "pending",
-      "deleted": false,
-      "rated": false,
-      "createdAt": "2026-07-05T10:44:04.934Z"
-    },
-    {
-      "id": 7,
-      "userId": 5,
-      "type": "souvenir",
-      "name": "سجادة أمازيغية يدوية",
-      "phone": "0555123456",
-      "price": 5500,
-      "loyaltyPts": 44,
-      "travelers": 1,
-      "date": "2026-07-05T10:54:40.737Z",
-      "checkIn": null,
-      "checkOut": null,
-      "address": "حي السلام، الأغواط",
-      "quantity": 1,
-      "status": "pending",
-      "deleted": false,
-      "rated": false,
-      "createdAt": "2026-07-05T10:54:40.731Z"
-    }
-  ],
+  "bookings": [],
   "messages": [
     {
       "id": 1,
@@ -851,28 +726,7 @@
       "createdAt": "2025-02-15T09:00:00Z"
     }
   ],
-  "reviews": [
-    {
-      "id": 1,
-      "bookingId": 3,
-      "userId": 2,
-      "itemName": "واحة الأغواط الصحراوية",
-      "type": "program",
-      "rating": 5,
-      "comment": "رحلة رائعة! المرشد كان ممتازاً والمكان خلاب جداً. سأعود حتماً!",
-      "createdAt": "2025-05-25T12:00:00Z"
-    },
-    {
-      "id": 2,
-      "bookingId": 5,
-      "userId": 2,
-      "itemName": "سجادة أمازيغية يدوية",
-      "type": "souvenir",
-      "rating": 5,
-      "comment": "جودة استثنائية! السجادة تحفة فنية حقيقية تستحق كل دينار.",
-      "createdAt": "2025-06-15T14:00:00Z"
-    }
-  ],
+  "reviews": [],
   "visits": [],
   "chat_history": [],
   "loyalty_log": [
@@ -885,48 +739,12 @@
       "createdAt": "2025-03-15T10:00:00Z"
     },
     {
-      "id": 2,
-      "userId": 2,
-      "amount": 75,
-      "type": "plus",
-      "label": "حجز: واحة الأغواط الصحراوية",
-      "bookingId": 3,
-      "createdAt": "2025-05-01T08:00:00Z"
-    },
-    {
-      "id": 3,
-      "userId": 2,
-      "amount": 85,
-      "type": "plus",
-      "label": "حجز: رحلة غرداية التراثية",
-      "bookingId": 1,
-      "createdAt": "2025-06-20T10:00:00Z"
-    },
-    {
-      "id": 4,
-      "userId": 2,
-      "amount": 44,
-      "type": "plus",
-      "label": "حجز: سجادة أمازيغية يدوية",
-      "bookingId": 5,
-      "createdAt": "2025-06-10T11:00:00Z"
-    },
-    {
       "id": 5,
       "userId": 3,
       "amount": 50,
       "type": "plus",
       "label": "مكافأة الترحيب",
       "createdAt": "2025-02-10T09:00:00Z"
-    },
-    {
-      "id": 6,
-      "userId": 3,
-      "amount": 65,
-      "type": "plus",
-      "label": "حجز: جولة قسنطينة الجسور",
-      "bookingId": 4,
-      "createdAt": "2025-06-28T09:00:00Z"
     },
     {
       "id": 7,
@@ -937,48 +755,12 @@
       "createdAt": "2026-07-03T21:25:16.999Z"
     },
     {
-      "id": 8,
-      "userId": 2,
-      "amount": -45,
-      "type": "minus",
-      "label": "إلغاء حجز: فندق الأغواط الكبير",
-      "bookingId": 2,
-      "createdAt": "2026-07-03T21:26:24.526Z"
-    },
-    {
-      "id": 9,
-      "userId": 2,
-      "amount": -85,
-      "type": "minus",
-      "label": "إلغاء حجز: رحلة غرداية التراثية",
-      "bookingId": 1,
-      "createdAt": "2026-07-03T21:26:26.596Z"
-    },
-    {
       "id": 10,
       "userId": 5,
       "amount": 50,
       "type": "plus",
       "label": "مكافأة الترحيب",
       "createdAt": "2026-07-05T10:38:06.668Z"
-    },
-    {
-      "id": 11,
-      "userId": 5,
-      "amount": 36,
-      "type": "plus",
-      "label": "حجز: فندق الأغواط الكبير",
-      "bookingId": 6,
-      "createdAt": "2026-07-05T10:44:04.934Z"
-    },
-    {
-      "id": 12,
-      "userId": 5,
-      "amount": 44,
-      "type": "plus",
-      "label": "حجز: سجادة أمازيغية يدوية",
-      "bookingId": 7,
-      "createdAt": "2026-07-05T10:54:40.731Z"
     }
   ]
 }
