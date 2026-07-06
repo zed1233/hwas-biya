@@ -68,15 +68,15 @@
         .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(6px); z-index:2000; display:none; align-items:center; justify-content:center; }
         .modal-overlay.active { display:flex; animation:fadeIn 0.3s; }
         @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-        .modal-container { background:var(--card-bg); width:92%; max-width:860px; max-height:90vh; border-radius:28px; overflow:hidden; display:grid; grid-template-columns:40% 60%; border:1px solid var(--border-color); box-shadow:0 30px 80px rgba(0,0,0,0.6); }
+        .modal-container { background:var(--card-bg); width:92%; max-width:860px; max-height:90vh; border-radius:28px; overflow:hidden; display:grid; grid-template-columns:40% 60%; grid-template-rows:minmax(0,90vh); border:1px solid var(--border-color); box-shadow:0 30px 80px rgba(0,0,0,0.6); }
         .modal-img-col { position:relative; background:#000; overflow:hidden; }
         .modal-img-col img { width:100%; height:100%; object-fit:cover; opacity:0.9; }
-        .modal-img-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,0.75),transparent); display:flex; flex-direction:column; justify-content:flex-end; padding:25px; }
+        .modal-img-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,0.75),transparent); display:flex; flex-direction:column; justify-content:flex-end; padding:25px; pointer-events:none; }
         .modal-img-overlay h2 { color:white; font-size:1.4rem; font-weight:800; }
         .modal-img-overlay p { color:#cbd5e1; font-size:0.88rem; margin-top:5px; }
         .modal-close-btn { position:absolute; top:15px; right:15px; width:38px; height:38px; background:rgba(0,0,0,0.6); border:none; border-radius:50%; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.3s; }
         .modal-close-btn:hover { background:#ef4444; }
-        .modal-form-col { padding:30px; overflow-y:auto; }
+        .modal-form-col { padding:30px; overflow-y:auto; min-height:0; }
         .modal-price-row { display:flex; justify-content:space-between; align-items:center; margin:15px 0; padding:15px; background:rgba(245,158,11,0.08); border-radius:12px; border:1px solid rgba(245,158,11,0.25); }
         .modal-price-big { font-size:1.8rem; font-weight:800; color:#f59e0b; }
         .amenities-modal { display:flex; flex-wrap:wrap; gap:8px; margin:15px 0; }
