@@ -440,6 +440,7 @@ window.confirmBooking=async function(){
     const data={
         serviceId:document.getElementById('serviceId').value,
         name:document.getElementById('serviceName').value,
+        image:document.getElementById('serviceImg').value,
         price:parseInt(document.getElementById('servicePrice').value),
         customerName:name, phone:document.getElementById('bkPhone').value,
         date:cin, checkIn:cin, checkOut:cout, travelers:parseInt(document.getElementById('bkPax').value)||1,

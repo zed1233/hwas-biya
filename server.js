@@ -453,6 +453,7 @@ app.post('/api/bookings', async (req, res) => {
       userId:      data.userId || 0,
       type:        data.type || 'program',
       name:        data.name,
+      image:       data.image || null,
       phone:       data.phone,
       price,
       loyaltyPts:  pts,

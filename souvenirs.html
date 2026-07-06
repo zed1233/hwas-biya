@@ -607,6 +607,7 @@ async function confirmPurchase() {
     const booking = {
         type: 'souvenir',
         name: currentProduct.name,
+        image: currentProduct.image,
         price: (currentProduct.price||0) * currentQty,
         quantity: currentQty,
         address: addr,
