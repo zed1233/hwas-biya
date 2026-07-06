@@ -430,18 +430,15 @@ async function doRegister() {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(payload)
         });
+        const data = await res.json().catch(() => ({}));
         if (res.ok) {
-            const user = await res.json();
-            localStorage.setItem('hawsbiyaUser', JSON.stringify(user));
+            localStorage.setItem('hawsbiyaUser', JSON.stringify(data));
             window.location.href = 'index.html';
             return;
         }
-        showError('register', 'حدث خطأ أثناء التسجيل، حاول مرة أخرى');
-    } catch {
-        const user = { ...payload, id: Date.now() };
-        delete user.password;
-        localStorage.setItem('hawsbiyaUser', JSON.stringify(user));
-        window.location.href = 'index.html';
+        showError('register', data.message || 'حدث خطأ أثناء التسجيل، حاول مرة أخرى');
+    } catch (err) {
+        showError('register', 'تعذر الاتصال بالخادم، تحقق من اتصالك بالإنترنت وحاول مرة أخرى');
     } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-user-plus"></i> إنشاء الحساب';

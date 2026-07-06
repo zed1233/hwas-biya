@@ -526,7 +526,7 @@ function initProfile() {
 
 async function loadStats() {
     try {
-        const r = await fetch(`/api/bookings?userId=${user.id}`);
+        const r = await fetch(`/api/bookings?userId=${user.id}`, { headers: { 'Authorization': `Bearer ${user.token}` } });
         if (r.ok) {
             const bs = await r.json();
             const active = bs.filter(b => !b.deleted);
@@ -541,7 +541,7 @@ async function loadStats() {
 async function loadMiniBookings() {
     let bs = [];
     try {
-        const r = await fetch(`/api/bookings?userId=${user.id}`);
+        const r = await fetch(`/api/bookings?userId=${user.id}`, { headers: { 'Authorization': `Bearer ${user.token}` } });
         if (r.ok) bs = await r.json();
     } catch {
         bs = [
@@ -614,7 +614,7 @@ function saveProfile() {
     user.bio = document.getElementById('eBio').value.trim();
     localStorage.setItem('hawsbiyaUser', JSON.stringify(user));
 
-    fetch(`/api/users/${user.id}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify(user) }).catch(()=>{});
+    fetch(`/api/users/${user.id}`, { method: 'PATCH', headers: {'Content-Type':'application/json', 'Authorization': `Bearer ${user.token}`}, body: JSON.stringify(user) }).catch(()=>{});
 
     document.getElementById('userName').textContent = user.name;
     document.getElementById('avatarCircle').textContent = (user.name||'م')[0].toUpperCase();

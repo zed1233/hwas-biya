@@ -523,7 +523,9 @@ async function loadBookings() {
     }
 
     try {
-        const res = await fetch(`/api/bookings?userId=${user.id}`);
+        const res = await fetch(`/api/bookings?userId=${user.id}`, {
+            headers: { 'Authorization': `Bearer ${user.token}` }
+        });
         if (res.ok) {
             const data = await res.json();
             allBookings = Array.isArray(data) ? data : [];
@@ -751,7 +753,13 @@ async function restoreBooking(id) {
 async function deletePermanent(id) {
     if (!confirm('هل أنت متأكد من الحذف النهائي؟ لا يمكن التراجع.')) return;
     allBookings = allBookings.filter(x => x.id !== id);
-    try { await fetch(`/api/bookings/${id}`, { method: 'DELETE' }); } catch {}
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+    try {
+        await fetch(`/api/bookings/${id}`, {
+            method: 'DELETE',
+            headers: user ? { 'Authorization': `Bearer ${user.token}` } : {}
+        });
+    } catch {}
     updateStats();
     renderBookings();
 }
