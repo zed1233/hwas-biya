@@ -113,6 +113,19 @@ function adminRequired(req, res, next) {
   });
 }
 
+// Allows any of the given partner roles, or an admin
+function roleRequired(...roles) {
+  return (req, res, next) => authRequired(req, res, () => {
+    if (req.user.role !== 'admin' && !roles.includes(req.user.role))
+      return res.status(403).json({ message: 'هذا الإجراء غير متاح لهذا النوع من الحسابات' });
+    next();
+  });
+}
+
+function ownsOrAdmin(item, user) {
+  return item.ownerId === user.id || user.role === 'admin';
+}
+
 // ─────────────────────────────────────────────
 //  Loyalty Points Calculator
 // ─────────────────────────────────────────────
@@ -127,6 +140,25 @@ function getTier(points) {
   if (points >= 2000) return { name: 'ذهبي',   icon: '🥇', next: 'ماسي',  nextPts: 5000 };
   if (points >= 500)  return { name: 'فضي',    icon: '🥈', next: 'ذهبي',  nextPts: 2000 };
   return               { name: 'برونزي', icon: '🥉', next: 'فضي',   nextPts: 500  };
+}
+
+// Resolves the provider (vendor) userId that owns the booked item, so a
+// booking can be attributed to their ledger. Returns null for items with no
+// owner (official platform content) or when the frontend didn't send an id
+// (souvenirs.html / AI planner pages don't yet — tracked as a follow-up).
+function resolveProviderId(db, type, serviceId) {
+  if (!serviceId) return null;
+  const id = parseInt(serviceId);
+  const t  = (type || '').toLowerCase();
+  let item;
+  if (t.includes('فندق') || t.includes('نزل') || t.includes('منتجع') || t === 'hotel') {
+    item = db.hotels.find(h => h.id === id);
+  } else if (t.includes('تذكار') || t === 'souvenir') {
+    item = db.souvenirs.find(s => s.id === id);
+  } else {
+    item = db.programs.find(p => p.id === id);
+  }
+  return item ? (item.ownerId ?? null) : null;
 }
 
 // ─────────────────────────────────────────────
@@ -181,6 +213,13 @@ app.post('/api/logout', authRequired, (req, res) => {
   res.json({ message: 'تم تسجيل الخروج بنجاح' });
 });
 
+// Fields specific to each partner role (shared fields like phone/city reuse existing user columns)
+const PARTNER_PROFILE_FIELDS = {
+  agency:  ['agencyName', 'licenseNumber'],
+  hotel:   ['businessName', 'starRating'],
+  artisan: ['shopName', 'productType']
+};
+
 /**  POST /api/users  (Register)  */
 app.post('/api/users', async (req, res) => {
   try {
@@ -193,6 +232,18 @@ app.post('/api/users', async (req, res) => {
       return res.status(400).json({ message: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل' });
     if (!/\S+@\S+\.\S+/.test(email))
       return res.status(400).json({ message: 'البريد الإلكتروني غير صحيح' });
+
+    const role = PARTNER_PROFILE_FIELDS[data.role] ? data.role : 'user';
+    const profileDetails = {};
+    if (role !== 'user') {
+      if (!phone || !data.city)
+        return res.status(400).json({ message: 'الهاتف والولاية مطلوبان لحسابات الشركاء' });
+      for (const field of PARTNER_PROFILE_FIELDS[role]) {
+        if (!data.profileDetails || !data.profileDetails[field])
+          return res.status(400).json({ message: 'يرجى ملء جميع بيانات النشاط التجاري' });
+        profileDetails[field] = data.profileDetails[field];
+      }
+    }
 
     const db = readDB();
     if (db.users.find(u => u.username === username))
@@ -211,7 +262,8 @@ app.post('/api/users', async (req, res) => {
       phone:         phone || '',
       password:      hashed,
       token,
-      role:          'user',
+      role,
+      profileDetails,
       loyaltyPoints: 50,  // Welcome bonus
       city:          data.city || '',
       bio:           '',
@@ -311,6 +363,12 @@ app.get('/api/programs', (req, res) => {
   res.json(programs);
 });
 
+/**  GET /api/programs/mine  (Agency's own programs)  */
+app.get('/api/programs/mine', roleRequired('agency'), (req, res) => {
+  const db = readDB();
+  res.json(db.programs.filter(p => p.ownerId === req.user.id && !p.deleted));
+});
+
 /**  GET /api/programs/:id  */
 app.get('/api/programs/:id', (req, res) => {
   const db = readDB();
@@ -319,31 +377,33 @@ app.get('/api/programs/:id', (req, res) => {
   res.json({ ...p, loyaltyPoints: calcLoyaltyPoints('program', p.price) });
 });
 
-/**  POST /api/programs  (Admin only)  */
-app.post('/api/programs', adminRequired, (req, res) => {
+/**  POST /api/programs  (Agency)  */
+app.post('/api/programs', roleRequired('agency'), (req, res) => {
   const db   = readDB();
   const data = sanitize(req.body);
-  const prog = { id: nextId(db.programs), ...data, createdAt: new Date().toISOString() };
+  const prog = { id: nextId(db.programs), ...data, ownerId: req.user.id, createdAt: new Date().toISOString() };
   db.programs.push(prog);
   writeDB(db);
   res.status(201).json(prog);
 });
 
 /**  PATCH /api/programs/:id  */
-app.patch('/api/programs/:id', adminRequired, (req, res) => {
+app.patch('/api/programs/:id', roleRequired('agency'), (req, res) => {
   const db  = readDB();
   const idx = db.programs.findIndex(p => p.id === parseInt(req.params.id));
   if (idx === -1) return res.status(404).json({ message: 'البرنامج غير موجود' });
+  if (!ownsOrAdmin(db.programs[idx], req.user)) return res.status(403).json({ message: 'غير مصرح' });
   Object.assign(db.programs[idx], sanitize(req.body), { updatedAt: new Date().toISOString() });
   writeDB(db);
   res.json(db.programs[idx]);
 });
 
 /**  DELETE /api/programs/:id  */
-app.delete('/api/programs/:id', adminRequired, (req, res) => {
+app.delete('/api/programs/:id', roleRequired('agency'), (req, res) => {
   const db  = readDB();
   const idx = db.programs.findIndex(p => p.id === parseInt(req.params.id));
   if (idx === -1) return res.status(404).json({ message: 'غير موجود' });
+  if (!ownsOrAdmin(db.programs[idx], req.user)) return res.status(403).json({ message: 'غير مصرح' });
   db.programs[idx].deleted = true;
   writeDB(db);
   res.json({ message: 'تم الحذف' });
@@ -371,6 +431,12 @@ app.get('/api/hotels', (req, res) => {
   res.json(hotels);
 });
 
+/**  GET /api/hotels/mine  (Hotel owner's own hotels)  */
+app.get('/api/hotels/mine', roleRequired('hotel'), (req, res) => {
+  const db = readDB();
+  res.json(db.hotels.filter(h => h.ownerId === req.user.id && !h.deleted));
+});
+
 /**  GET /api/hotels/:id  */
 app.get('/api/hotels/:id', (req, res) => {
   const db = readDB();
@@ -379,14 +445,103 @@ app.get('/api/hotels/:id', (req, res) => {
   res.json({ ...h, price: h.pricePerNight, loyaltyPoints: calcLoyaltyPoints('hotel', h.pricePerNight) });
 });
 
-/**  POST /api/hotels  (Admin)  */
-app.post('/api/hotels', adminRequired, (req, res) => {
+/**  POST /api/hotels  (Hotel)  */
+app.post('/api/hotels', roleRequired('hotel'), (req, res) => {
   const db   = readDB();
   const data = sanitize(req.body);
-  const hotel = { id: nextId(db.hotels), ...data, createdAt: new Date().toISOString() };
+  const hotel = { id: nextId(db.hotels), ...data, ownerId: req.user.id, createdAt: new Date().toISOString() };
   db.hotels.push(hotel);
   writeDB(db);
   res.status(201).json(hotel);
+});
+
+/**  PATCH /api/hotels/:id  */
+app.patch('/api/hotels/:id', roleRequired('hotel'), (req, res) => {
+  const db  = readDB();
+  const idx = db.hotels.findIndex(h => h.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ message: 'الفندق غير موجود' });
+  if (!ownsOrAdmin(db.hotels[idx], req.user)) return res.status(403).json({ message: 'غير مصرح' });
+  Object.assign(db.hotels[idx], sanitize(req.body), { updatedAt: new Date().toISOString() });
+  writeDB(db);
+  res.json(db.hotels[idx]);
+});
+
+/**  DELETE /api/hotels/:id  */
+app.delete('/api/hotels/:id', roleRequired('hotel'), (req, res) => {
+  const db  = readDB();
+  const idx = db.hotels.findIndex(h => h.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ message: 'غير موجود' });
+  if (!ownsOrAdmin(db.hotels[idx], req.user)) return res.status(403).json({ message: 'غير مصرح' });
+  db.hotels[idx].deleted = true;
+  writeDB(db);
+  res.json({ message: 'تم الحذف' });
+});
+
+// ─────────────────────────────────────────────
+//  ██  ROOMS
+// ─────────────────────────────────────────────
+
+/**  GET /api/rooms/mine  (Rooms across all of the current hotel owner's hotels)  */
+app.get('/api/rooms/mine', roleRequired('hotel'), (req, res) => {
+  const db = readDB();
+  const myHotelIds = db.hotels.filter(h => h.ownerId === req.user.id).map(h => h.id);
+  res.json((db.rooms || []).filter(r => myHotelIds.includes(r.hotelId) && !r.deleted));
+});
+
+/**  GET /api/hotels/:hotelId/rooms  (Public — for tourist-facing room selection)  */
+app.get('/api/hotels/:hotelId/rooms', (req, res) => {
+  const db = readDB();
+  const hotelId = parseInt(req.params.hotelId);
+  res.json((db.rooms || []).filter(r => r.hotelId === hotelId && !r.deleted));
+});
+
+/**  POST /api/rooms  (Hotel owner)  */
+app.post('/api/rooms', roleRequired('hotel'), (req, res) => {
+  const db   = readDB();
+  const data = sanitize(req.body);
+  const hotel = db.hotels.find(h => h.id === parseInt(data.hotelId));
+  if (!hotel) return res.status(404).json({ message: 'الفندق غير موجود' });
+  if (!ownsOrAdmin(hotel, req.user)) return res.status(403).json({ message: 'غير مصرح' });
+
+  const room = {
+    id:            nextId(db.rooms || []),
+    hotelId:       hotel.id,
+    ownerId:       hotel.ownerId,
+    roomType:      data.roomType || '',
+    pricePerNight: parseInt(data.pricePerNight) || 0,
+    capacity:      parseInt(data.capacity) || 1,
+    amenities:     Array.isArray(data.amenities) ? data.amenities : [],
+    images:        Array.isArray(data.images) ? data.images : [],
+    quantity:      parseInt(data.quantity) || 1,
+    deleted:       false,
+    createdAt:     new Date().toISOString()
+  };
+  if (!db.rooms) db.rooms = [];
+  db.rooms.push(room);
+  writeDB(db);
+  res.status(201).json(room);
+});
+
+/**  PATCH /api/rooms/:id  */
+app.patch('/api/rooms/:id', roleRequired('hotel'), (req, res) => {
+  const db  = readDB();
+  const idx = (db.rooms || []).findIndex(r => r.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ message: 'الغرفة غير موجودة' });
+  if (!ownsOrAdmin(db.rooms[idx], req.user)) return res.status(403).json({ message: 'غير مصرح' });
+  Object.assign(db.rooms[idx], sanitize(req.body), { updatedAt: new Date().toISOString() });
+  writeDB(db);
+  res.json(db.rooms[idx]);
+});
+
+/**  DELETE /api/rooms/:id  */
+app.delete('/api/rooms/:id', roleRequired('hotel'), (req, res) => {
+  const db  = readDB();
+  const idx = (db.rooms || []).findIndex(r => r.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ message: 'غير موجود' });
+  if (!ownsOrAdmin(db.rooms[idx], req.user)) return res.status(403).json({ message: 'غير مصرح' });
+  db.rooms[idx].deleted = true;
+  writeDB(db);
+  res.json({ message: 'تم الحذف' });
 });
 
 // ─────────────────────────────────────────────
@@ -410,12 +565,50 @@ app.get('/api/souvenirs', (req, res) => {
   res.json(items);
 });
 
+/**  GET /api/souvenirs/mine  (Artisan's own products)  */
+app.get('/api/souvenirs/mine', roleRequired('artisan'), (req, res) => {
+  const db = readDB();
+  res.json(db.souvenirs.filter(s => s.ownerId === req.user.id && !s.deleted));
+});
+
 /**  GET /api/souvenirs/:id  */
 app.get('/api/souvenirs/:id', (req, res) => {
   const db = readDB();
   const s  = db.souvenirs.find(s => s.id === parseInt(req.params.id) && !s.deleted);
   if (!s) return res.status(404).json({ message: 'المنتج غير موجود' });
   res.json(s);
+});
+
+/**  POST /api/souvenirs  (Artisan)  */
+app.post('/api/souvenirs', roleRequired('artisan'), (req, res) => {
+  const db   = readDB();
+  const data = sanitize(req.body);
+  const item = { id: nextId(db.souvenirs), ...data, ownerId: req.user.id, createdAt: new Date().toISOString() };
+  db.souvenirs.push(item);
+  writeDB(db);
+  res.status(201).json(item);
+});
+
+/**  PATCH /api/souvenirs/:id  */
+app.patch('/api/souvenirs/:id', roleRequired('artisan'), (req, res) => {
+  const db  = readDB();
+  const idx = db.souvenirs.findIndex(s => s.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ message: 'المنتج غير موجود' });
+  if (!ownsOrAdmin(db.souvenirs[idx], req.user)) return res.status(403).json({ message: 'غير مصرح' });
+  Object.assign(db.souvenirs[idx], sanitize(req.body), { updatedAt: new Date().toISOString() });
+  writeDB(db);
+  res.json(db.souvenirs[idx]);
+});
+
+/**  DELETE /api/souvenirs/:id  */
+app.delete('/api/souvenirs/:id', roleRequired('artisan'), (req, res) => {
+  const db  = readDB();
+  const idx = db.souvenirs.findIndex(s => s.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ message: 'غير موجود' });
+  if (!ownsOrAdmin(db.souvenirs[idx], req.user)) return res.status(403).json({ message: 'غير مصرح' });
+  db.souvenirs[idx].deleted = true;
+  writeDB(db);
+  res.json({ message: 'تم الحذف' });
 });
 
 // ─────────────────────────────────────────────
@@ -435,6 +628,12 @@ app.get('/api/bookings', authRequired, (req, res) => {
   res.json(bookings);
 });
 
+/**  GET /api/bookings/provider  (Agency/hotel/artisan booking ledger)  */
+app.get('/api/bookings/provider', roleRequired('agency', 'hotel', 'artisan'), (req, res) => {
+  const db = readDB();
+  res.json(db.bookings.filter(b => b.providerId === req.user.id));
+});
+
 /**  POST /api/bookings  */
 app.post('/api/bookings', async (req, res) => {
   try {
@@ -451,6 +650,8 @@ app.post('/api/bookings', async (req, res) => {
     const booking = {
       id:          nextId(db.bookings),
       userId:      data.userId || 0,
+      providerId:  resolveProviderId(db, data.type, data.serviceId),
+      roomId:      data.roomId ? parseInt(data.roomId) : null,
       type:        data.type || 'program',
       name:        data.name,
       image:       data.image || null,
@@ -500,11 +701,17 @@ app.post('/api/bookings', async (req, res) => {
 });
 
 /**  PATCH /api/bookings/:id  (update status, soft-delete, rate)  */
-app.patch('/api/bookings/:id', (req, res) => {
+app.patch('/api/bookings/:id', authRequired, (req, res) => {
   try {
     const db  = readDB();
     const idx = db.bookings.findIndex(b => b.id === parseInt(req.params.id));
     if (idx === -1) return res.status(404).json({ message: 'الحجز غير موجود' });
+
+    const booking = db.bookings[idx];
+    const isOwnBooking = booking.userId === req.user.id;
+    const isProvider   = booking.providerId === req.user.id;
+    if (!isOwnBooking && !isProvider && req.user.role !== 'admin')
+      return res.status(403).json({ message: 'غير مصرح' });
 
     const allowed = ['status','deleted','rated','userRating','userComment','checkIn','checkOut'];
     const updates = sanitize(req.body);
@@ -1016,8 +1223,19 @@ app.listen(PORT, () => {
   // Ensure DB has required collections
   const db = readDB();
   let changed = false;
-  ['users','programs','hotels','souvenirs','bookings','messages','partners','reviews','visits','chat_history','loyalty_log'].forEach(col => {
+  ['users','programs','hotels','souvenirs','bookings','messages','partners','reviews','visits','chat_history','loyalty_log','rooms'].forEach(col => {
     if (!db[col]) { db[col] = []; changed = true; }
   });
+
+  // Multi-vendor marketplace migration: existing content stays owner-less ("official")
+  db.users.forEach(u => { if (!u.profileDetails) { u.profileDetails = {}; changed = true; } });
+  ['programs','hotels','souvenirs'].forEach(col => {
+    db[col].forEach(item => { if (item.ownerId === undefined) { item.ownerId = null; changed = true; } });
+  });
+  db.bookings.forEach(b => {
+    if (b.providerId === undefined) { b.providerId = null; changed = true; }
+    if (b.roomId === undefined)     { b.roomId = null;     changed = true; }
+  });
+
   if (changed) writeDB(db);
 });

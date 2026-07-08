@@ -6,8 +6,8 @@
       "username": "admin",
       "email": "admin@hawsbiya.dz",
       "phone": "+213555000000",
-      "password": "admin123",
-      "token": null,
+      "password": "$2b$10$Z4o6jXSA2KiUacp5FI7L6O1wgXSQlT6EaoLzG4MLsLGNzrJy9e3g2",
+      "token": "7c754da1f35c80e8e25f9ce8d204906d71330873b14fe7e040d33b8f10da469f",
       "role": "admin",
       "loyaltyPoints": 9999,
       "city": "الأغواط",
@@ -17,7 +17,8 @@
         "مغامرة"
       ],
       "createdAt": "2025-01-01T08:00:00Z",
-      "lastLogin": null
+      "lastLogin": "2026-07-08T18:26:31.381Z",
+      "profileDetails": {}
     },
     {
       "id": 2,
@@ -36,7 +37,8 @@
         "صحراء"
       ],
       "createdAt": "2025-03-15T10:00:00Z",
-      "lastLogin": null
+      "lastLogin": null,
+      "profileDetails": {}
     },
     {
       "id": 3,
@@ -55,7 +57,8 @@
         "عائلي"
       ],
       "createdAt": "2025-02-10T09:00:00Z",
-      "lastLogin": null
+      "lastLogin": null,
+      "profileDetails": {}
     },
     {
       "id": 4,
@@ -71,7 +74,8 @@
       "bio": "",
       "preferences": [],
       "createdAt": "2026-07-03T21:25:16.998Z",
-      "lastLogin": "2026-07-03T21:25:16.999Z"
+      "lastLogin": "2026-07-03T21:25:16.999Z",
+      "profileDetails": {}
     },
     {
       "id": 5,
@@ -87,7 +91,8 @@
       "bio": "",
       "preferences": [],
       "createdAt": "2026-07-05T10:38:06.666Z",
-      "lastLogin": "2026-07-05T10:38:06.668Z"
+      "lastLogin": "2026-07-05T10:38:06.668Z",
+      "profileDetails": {}
     }
   ],
   "programs": [
@@ -119,7 +124,8 @@
       "maxPax": 20,
       "difficulty": "سهل",
       "deleted": false,
-      "createdAt": "2025-01-10T08:00:00Z"
+      "createdAt": "2025-01-10T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 2,
@@ -150,7 +156,8 @@
       "maxPax": 12,
       "difficulty": "متوسط",
       "deleted": false,
-      "createdAt": "2025-01-12T08:00:00Z"
+      "createdAt": "2025-01-12T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 3,
@@ -179,7 +186,8 @@
       "maxPax": 25,
       "difficulty": "سهل",
       "deleted": false,
-      "createdAt": "2025-01-15T08:00:00Z"
+      "createdAt": "2025-01-15T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 4,
@@ -208,7 +216,8 @@
       "maxPax": 30,
       "difficulty": "سهل",
       "deleted": false,
-      "createdAt": "2025-01-18T08:00:00Z"
+      "createdAt": "2025-01-18T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 5,
@@ -237,7 +246,8 @@
       "maxPax": 16,
       "difficulty": "متوسط",
       "deleted": false,
-      "createdAt": "2025-01-20T08:00:00Z"
+      "createdAt": "2025-01-20T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 6,
@@ -266,7 +276,8 @@
       "maxPax": 20,
       "difficulty": "سهل",
       "deleted": false,
-      "createdAt": "2025-02-01T08:00:00Z"
+      "createdAt": "2025-02-01T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 7,
@@ -296,7 +307,8 @@
       "maxPax": 20,
       "difficulty": "سهل",
       "deleted": false,
-      "createdAt": "2025-02-05T08:00:00Z"
+      "createdAt": "2025-02-05T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 8,
@@ -326,7 +338,8 @@
       "maxPax": 25,
       "difficulty": "سهل",
       "deleted": false,
-      "createdAt": "2025-02-10T08:00:00Z"
+      "createdAt": "2025-02-10T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 9,
@@ -354,7 +367,8 @@
       "maxPax": 15,
       "difficulty": "سهل",
       "deleted": false,
-      "createdAt": "2025-02-01T08:00:00Z"
+      "createdAt": "2025-02-01T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 10,
@@ -383,7 +397,8 @@
       "maxPax": 12,
       "difficulty": "متوسط",
       "deleted": false,
-      "createdAt": "2025-02-01T08:00:00Z"
+      "createdAt": "2025-02-01T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 11,
@@ -411,7 +426,8 @@
       "maxPax": 25,
       "difficulty": "سهل",
       "deleted": false,
-      "createdAt": "2025-02-01T08:00:00Z"
+      "createdAt": "2025-02-01T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 12,
@@ -439,7 +455,8 @@
       "maxPax": 10,
       "difficulty": "صعب",
       "deleted": false,
-      "createdAt": "2025-02-01T08:00:00Z"
+      "createdAt": "2025-02-01T08:00:00Z",
+      "ownerId": null
     }
   ],
   "hotels": [
@@ -467,7 +484,8 @@
       "checkInTime": "14:00",
       "checkOutTime": "12:00",
       "deleted": false,
-      "createdAt": "2025-01-10T08:00:00Z"
+      "createdAt": "2025-01-10T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 2,
@@ -495,7 +513,8 @@
       "checkInTime": "15:00",
       "checkOutTime": "11:00",
       "deleted": false,
-      "createdAt": "2025-01-15T08:00:00Z"
+      "createdAt": "2025-01-15T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 3,
@@ -520,7 +539,8 @@
       "checkInTime": "14:00",
       "checkOutTime": "12:00",
       "deleted": false,
-      "createdAt": "2025-01-20T08:00:00Z"
+      "createdAt": "2025-01-20T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 4,
@@ -545,7 +565,8 @@
       "checkInTime": "13:00",
       "checkOutTime": "11:00",
       "deleted": false,
-      "createdAt": "2025-02-01T08:00:00Z"
+      "createdAt": "2025-02-01T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 5,
@@ -572,7 +593,8 @@
       "checkInTime": "14:00",
       "checkOutTime": "12:00",
       "deleted": false,
-      "createdAt": "2025-02-10T08:00:00Z"
+      "createdAt": "2025-02-10T08:00:00Z",
+      "ownerId": null
     }
   ],
   "souvenirs": [
@@ -589,7 +611,8 @@
       "description": "سجادة مصنوعة يدوياً من صوف طبيعي بزخارف أمازيغية أصيلة متوارثة عبر الأجيال. كل قطعة فريدة من نوعها لا تتكرر.",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Swatches_of_berber_carpet.jpg/500px-Swatches_of_berber_carpet.jpg",
       "deleted": false,
-      "createdAt": "2025-01-10T08:00:00Z"
+      "createdAt": "2025-01-10T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 2,
@@ -604,7 +627,8 @@
       "description": "إناء فخاري تقليدي مصنوع ومزخرف يدوياً بأشكال هندسية موروثة. يُستخدم كقطعة ديكور أو للخدمة التقليدية.",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Traditional_pottery_in_Nigeria_%28Ikpu_ite%29_19.jpg/500px-Traditional_pottery_in_Nigeria_%28Ikpu_ite%29_19.jpg",
       "deleted": false,
-      "createdAt": "2025-01-12T08:00:00Z"
+      "createdAt": "2025-01-12T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 3,
@@ -619,7 +643,8 @@
       "description": "جلباب رجالي فاخر مطرز يدوياً بخيوط الحرير. من مشغولات تلمسان الشهيرة بجودتها العالية وأناقتها الرفيعة.",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Morocco%2C_djellaba%2C_end_of_20th_century_-_Bunka_Gakuen_Costume_Museum_-_DSC05317.JPG/500px-Morocco%2C_djellaba%2C_end_of_20th_century_-_Bunka_Gakuen_Costume_Museum_-_DSC05317.JPG",
       "deleted": false,
-      "createdAt": "2025-01-15T08:00:00Z"
+      "createdAt": "2025-01-15T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 4,
@@ -634,7 +659,8 @@
       "description": "مجموعة من الحلي الفضية الأمازيغية الأصيلة، محفورة يدوياً بنقوش تراثية من الجنوب الجزائري.",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Parure_de_femme_berb%C3%A8re_%28Mus%C3%A9e_du_quai_Branly_-_Jacques_Chirac%2C_Paris%29_%2849286249956%29.jpg/500px-Parure_de_femme_berb%C3%A8re_%28Mus%C3%A9e_du_quai_Branly_-_Jacques_Chirac%2C_Paris%29_%2849286249956%29.jpg",
       "deleted": false,
-      "createdAt": "2025-01-18T08:00:00Z"
+      "createdAt": "2025-01-18T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 5,
@@ -649,7 +675,8 @@
       "description": "عطر مسك طبيعي نقي مستخلص من أجود المكونات الطبيعية الصحراوية. رائحة شرقية عميقة تدوم طويلاً.",
       "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=500",
       "deleted": false,
-      "createdAt": "2025-01-20T08:00:00Z"
+      "createdAt": "2025-01-20T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 6,
@@ -664,7 +691,8 @@
       "description": "خنجر تقليدي جزائري أصيل للزينة. مقبض من العظم الطبيعي وقراب مطرز بخيوط ذهبية، قطعة فنية نادرة.",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Jambiya.jpg/500px-Jambiya.jpg",
       "deleted": false,
-      "createdAt": "2025-02-01T08:00:00Z"
+      "createdAt": "2025-02-01T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 7,
@@ -679,7 +707,8 @@
       "description": "قفة مصنوعة يدوياً من نبات الحلفاء الجزائري المجدول بأسلوب تقليدي متوارث. متينة وجميلة.",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Baskets_in_Haikou_03.jpg/500px-Baskets_in_Haikou_03.jpg",
       "deleted": false,
-      "createdAt": "2025-02-05T08:00:00Z"
+      "createdAt": "2025-02-05T08:00:00Z",
+      "ownerId": null
     },
     {
       "id": 8,
@@ -694,7 +723,8 @@
       "description": "مزيج قهوة قصور أصيل محمص بطريقة تقليدية ومنكّه بماء الزهر وكردمون جبلي وفق وصفة جدية سرية.",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/A_dallah_a_traditional_Arabic_coffee_pot_with_cups_and_coffee_beans.jpg/500px-A_dallah_a_traditional_Arabic_coffee_pot_with_cups_and_coffee_beans.jpg",
       "deleted": false,
-      "createdAt": "2025-02-10T08:00:00Z"
+      "createdAt": "2025-02-10T08:00:00Z",
+      "ownerId": null
     }
   ],
   "bookings": [],
@@ -762,5 +792,6 @@
       "label": "مكافأة الترحيب",
       "createdAt": "2026-07-05T10:38:06.668Z"
     }
-  ]
+  ],
+  "rooms": []
 }

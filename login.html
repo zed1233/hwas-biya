@@ -88,6 +88,31 @@
         .panel-title { font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
         .panel-sub { color: var(--text-sec); font-size: 0.88rem; margin-bottom: 25px; }
 
+        .reg-choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 10px; }
+        .reg-choice-btn {
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            padding: 28px 15px; border-radius: 14px; border: 1.5px solid var(--border-color);
+            background: var(--main-bg); color: var(--text-main); cursor: pointer; transition: 0.3s;
+            font-family: 'Changa', sans-serif; font-size: 0.95rem; font-weight: 700;
+        }
+        .reg-choice-btn i { font-size: 1.6rem; color: var(--primary-color); }
+        .reg-choice-btn:hover { border-color: var(--primary-color); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(139,92,246,0.2); }
+        @media (max-width: 480px) { .reg-choice-grid { grid-template-columns: 1fr; } }
+
+        .back-step-btn {
+            display: flex; align-items: center; gap: 6px; background: none; border: none;
+            color: var(--text-sec); font-family: 'Changa', sans-serif; font-size: 0.85rem;
+            font-weight: 700; cursor: pointer; padding: 0; margin-bottom: 14px;
+        }
+        .back-step-btn:hover { color: var(--primary-color); }
+
+        .select-input {
+            width: 100%; padding: 13px 42px 13px 15px; appearance: none;
+            background: var(--main-bg); border: 1px solid var(--border-color);
+            border-radius: 12px; color: var(--text-main); font-family: 'Changa', sans-serif; font-size: 0.95rem;
+        }
+        .select-input:focus { outline: none; border-color: var(--primary-color); }
+
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; color: var(--text-sec); font-size: 0.88rem; font-weight: 600; margin-bottom: 7px; }
         .input-wrap { position: relative; }
@@ -260,50 +285,209 @@
 
                 <div class="error-msg" id="registerError"><i class="fas fa-exclamation-circle"></i> <span id="registerErrMsg"></span></div>
 
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                    <div class="form-group">
-                        <label>الاسم</label>
-                        <div class="input-wrap">
-                            <i class="fas fa-user"></i>
-                            <input type="text" id="rName" placeholder="اسمك الكامل">
-                        </div>
+                <!-- Step 1: account category -->
+                <div id="regChoice">
+                    <div class="reg-choice-grid">
+                        <button type="button" class="reg-choice-btn" onclick="selectRegType('tourist')">
+                            <i class="fas fa-suitcase-rolling"></i>
+                            <span>حساب سياحي</span>
+                        </button>
+                        <button type="button" class="reg-choice-btn" onclick="selectRegType('partner')">
+                            <i class="fas fa-handshake"></i>
+                            <span>حساب شريك / أعمال</span>
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label>اسم المستخدم</label>
-                        <div class="input-wrap">
-                            <i class="fas fa-at"></i>
-                            <input type="text" id="rUsername" placeholder="username">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>البريد الإلكتروني</label>
-                    <div class="input-wrap">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" id="rEmail" placeholder="example@email.com">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>رقم الهاتف</label>
-                    <div class="input-wrap">
-                        <i class="fas fa-phone"></i>
-                        <input type="tel" id="rPhone" placeholder="0xxx xxx xxx">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>كلمة المرور</label>
-                    <div class="input-wrap">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="rPassword" placeholder="8 أحرف على الأقل" oninput="checkStrength(this.value)">
-                        <button class="eye-btn" type="button" onclick="togglePass('rPassword', this)"><i class="far fa-eye"></i></button>
-                    </div>
-                    <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
-                    <div class="strength-text" id="strengthText"></div>
                 </div>
 
-                <button class="btn-submit" id="registerBtn" onclick="doRegister()" style="background:linear-gradient(135deg,var(--secondary-color),#0284c7);">
-                    <i class="fas fa-user-plus"></i> إنشاء الحساب
-                </button>
+                <!-- Step 2a: tourist fields -->
+                <div id="regTourist" style="display:none;">
+                    <button type="button" class="back-step-btn" onclick="backToChoice()"><i class="fas fa-arrow-right"></i> رجوع</button>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                        <div class="form-group">
+                            <label>الاسم</label>
+                            <div class="input-wrap">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="rName" placeholder="اسمك الكامل">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>اسم المستخدم</label>
+                            <div class="input-wrap">
+                                <i class="fas fa-at"></i>
+                                <input type="text" id="rUsername" placeholder="username">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="rEmail" placeholder="example@email.com">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>رقم الهاتف</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" id="rPhone" placeholder="0xxx xxx xxx">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="rPassword" placeholder="8 أحرف على الأقل" oninput="checkStrength(this.value)">
+                            <button class="eye-btn" type="button" onclick="togglePass('rPassword', this)"><i class="far fa-eye"></i></button>
+                        </div>
+                        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+                        <div class="strength-text" id="strengthText"></div>
+                    </div>
+
+                    <button class="btn-submit" id="registerBtn" onclick="doRegister()" style="background:linear-gradient(135deg,var(--secondary-color),#0284c7);">
+                        <i class="fas fa-user-plus"></i> إنشاء الحساب
+                    </button>
+                </div>
+
+                <!-- Step 2b: partner fields -->
+                <div id="regPartner" style="display:none;">
+                    <button type="button" class="back-step-btn" onclick="backToChoice()"><i class="fas fa-arrow-right"></i> رجوع</button>
+
+                    <div class="form-group">
+                        <label>نوع النشاط</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-briefcase"></i>
+                            <select id="rpType" class="select-input" onchange="updatePartnerFields()">
+                                <option value="">اختر نوع النشاط</option>
+                                <option value="agency">وكالة سياحة وأسفار</option>
+                                <option value="hotel">فندق / دار ضيافة</option>
+                                <option value="artisan">حرفي / بائع تذكارات</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                        <div class="form-group">
+                            <label>اسم المسؤول</label>
+                            <div class="input-wrap">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="rpName" placeholder="اسمك الكامل">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>اسم المستخدم</label>
+                            <div class="input-wrap">
+                                <i class="fas fa-at"></i>
+                                <input type="text" id="rpUsername" placeholder="username">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="rpEmail" placeholder="example@email.com">
+                        </div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                        <div class="form-group">
+                            <label>الهاتف</label>
+                            <div class="input-wrap">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="rpPhone" placeholder="0xxx xxx xxx">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>الولاية</label>
+                            <div class="input-wrap">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" id="rpCity" placeholder="مثال: الأغواط">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic fields: agency -->
+                    <div class="partner-fields" id="fields-agency" style="display:none;">
+                        <div class="form-group">
+                            <label>اسم الوكالة</label>
+                            <div class="input-wrap">
+                                <i class="fas fa-building"></i>
+                                <input type="text" id="rpAgencyName" placeholder="اسم الوكالة">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>رقم السجل التجاري / الترخيص</label>
+                            <div class="input-wrap">
+                                <i class="fas fa-id-card"></i>
+                                <input type="text" id="rpLicenseNumber" placeholder="رقم السجل التجاري">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic fields: hotel -->
+                    <div class="partner-fields" id="fields-hotel" style="display:none;">
+                        <div class="form-group">
+                            <label>اسم المنشأة</label>
+                            <div class="input-wrap">
+                                <i class="fas fa-hotel"></i>
+                                <input type="text" id="rpBusinessName" placeholder="اسم الفندق / المنشأة">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>تصنيف النجوم / نوع الإقامة</label>
+                            <div class="input-wrap">
+                                <i class="fas fa-star"></i>
+                                <select id="rpStarRating" class="select-input">
+                                    <option value="">اختر التصنيف</option>
+                                    <option value="فندق 3 نجوم">فندق 3 نجوم</option>
+                                    <option value="فندق 4 نجوم">فندق 4 نجوم</option>
+                                    <option value="فندق 5 نجوم">فندق 5 نجوم</option>
+                                    <option value="دار ضيافة">دار ضيافة</option>
+                                    <option value="نزل تقليدي">نزل تقليدي</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic fields: artisan -->
+                    <div class="partner-fields" id="fields-artisan" style="display:none;">
+                        <div class="form-group">
+                            <label>اسم المتجر / الحرفي</label>
+                            <div class="input-wrap">
+                                <i class="fas fa-store"></i>
+                                <input type="text" id="rpShopName" placeholder="اسم المتجر">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>نوع المنتجات</label>
+                            <div class="input-wrap">
+                                <i class="fas fa-gift"></i>
+                                <select id="rpProductType" class="select-input">
+                                    <option value="">اختر نوع المنتجات</option>
+                                    <option value="فخار وخزف">فخار وخزف</option>
+                                    <option value="نسيج وزرابي">نسيج وزرابي</option>
+                                    <option value="مجوهرات تقليدية">مجوهرات تقليدية</option>
+                                    <option value="منتجات جلدية">منتجات جلدية</option>
+                                    <option value="أخرى">أخرى</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>كلمة المرور</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="rpPassword" placeholder="8 أحرف على الأقل" oninput="checkStrength(this.value, 'strengthFillP', 'strengthTextP')">
+                            <button class="eye-btn" type="button" onclick="togglePass('rpPassword', this)"><i class="far fa-eye"></i></button>
+                        </div>
+                        <div class="strength-bar"><div class="strength-fill" id="strengthFillP"></div></div>
+                        <div class="strength-text" id="strengthTextP"></div>
+                    </div>
+
+                    <button class="btn-submit" id="registerPartnerBtn" onclick="doRegister()" style="background:linear-gradient(135deg,var(--secondary-color),#0284c7);">
+                        <i class="fas fa-user-plus"></i> إنشاء حساب الشريك
+                    </button>
+                </div>
 
                 <p class="terms-note">بالتسجيل أنت توافق على <a href="#">شروط الاستخدام</a> و<a href="#">سياسة الخصوصية</a></p>
                 <p class="terms-note" style="margin-top:10px;">لديك حساب؟ <a href="#" onclick="switchAuth('login')">سجل الدخول</a></p>
@@ -328,6 +512,11 @@ if (localStorage.getItem('hawsbiyaUser')) {
     window.location.href = 'index.html';
 }
 
+// Where each role lands after login/register. Partner roles all point to
+// index.html for now until their dashboards ship in a later phase — update
+// the relevant line here once dashboard-agency/hotel/artisan.html exist.
+const roleRedirect = { user: 'index.html', agency: 'index.html', hotel: 'index.html', artisan: 'index.html' };
+
 function switchAuth(tab) {
     document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-switch-btn').forEach(b => b.classList.remove('active'));
@@ -336,6 +525,25 @@ function switchAuth(tab) {
     // Clear errors
     document.getElementById('loginError').classList.remove('show');
     document.getElementById('registerError').classList.remove('show');
+    if (tab === 'register') backToChoice();
+}
+
+function selectRegType(kind) {
+    document.getElementById('regChoice').style.display = 'none';
+    document.getElementById('regTourist').style.display = kind === 'tourist' ? 'block' : 'none';
+    document.getElementById('regPartner').style.display = kind === 'partner' ? 'block' : 'none';
+}
+
+function backToChoice() {
+    document.getElementById('regChoice').style.display = 'block';
+    document.getElementById('regTourist').style.display = 'none';
+    document.getElementById('regPartner').style.display = 'none';
+}
+
+function updatePartnerFields() {
+    const type = document.getElementById('rpType').value;
+    document.querySelectorAll('.partner-fields').forEach(el => el.style.display = 'none');
+    if (type) document.getElementById('fields-' + type).style.display = 'block';
 }
 
 function togglePass(inputId, btn) {
@@ -345,9 +553,9 @@ function togglePass(inputId, btn) {
     btn.querySelector('i').className = isText ? 'far fa-eye' : 'far fa-eye-slash';
 }
 
-function checkStrength(val) {
-    const fill = document.getElementById('strengthFill');
-    const text = document.getElementById('strengthText');
+function checkStrength(val, fillId = 'strengthFill', textId = 'strengthText') {
+    const fill = document.getElementById(fillId);
+    const text = document.getElementById(textId);
     let score = 0;
     if (val.length >= 8) score++;
     if (/[A-Z]/.test(val)) score++;
@@ -390,39 +598,75 @@ async function doLogin() {
         if (res.ok) {
             const user = await res.json();
             localStorage.setItem('hawsbiyaUser', JSON.stringify(user));
-            const redirect = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
+            const redirect = new URLSearchParams(window.location.search).get('redirect') || roleRedirect[user.role] || 'index.html';
             window.location.href = redirect;
             return;
         }
         const data = await res.json().catch(() => ({}));
         showError('login', data.message || 'اسم المستخدم أو كلمة المرور غير صحيحة');
     } catch {
-        // Fallback demo login
-        const demoUser = { id: 1, name: 'مستخدم تجريبي', username, email: username + '@demo.dz', loyaltyPoints: 350 };
-        localStorage.setItem('hawsbiyaUser', JSON.stringify(demoUser));
-        window.location.href = 'index.html';
+        showError('login', 'تعذر الاتصال بالخادم، يرجى المحاولة لاحقاً');
     } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> دخول';
     }
 }
 
-async function doRegister() {
+function buildTouristPayload() {
     const name = document.getElementById('rName').value.trim();
     const username = document.getElementById('rUsername').value.trim();
     const email = document.getElementById('rEmail').value.trim();
     const phone = document.getElementById('rPhone').value.trim();
     const password = document.getElementById('rPassword').value;
 
-    if (!name || !username || !email || !password) { showError('register', 'يرجى ملء جميع الحقول الإلزامية'); return; }
-    if (password.length < 8) { showError('register', 'كلمة المرور يجب أن تكون 8 أحرف على الأقل'); return; }
-    if (!/\S+@\S+\.\S+/.test(email)) { showError('register', 'يرجى إدخال بريد إلكتروني صحيح'); return; }
+    if (!name || !username || !email || !password) return { error: 'يرجى ملء جميع الحقول الإلزامية' };
+    if (password.length < 8) return { error: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل' };
+    if (!/\S+@\S+\.\S+/.test(email)) return { error: 'يرجى إدخال بريد إلكتروني صحيح' };
 
-    const btn = document.getElementById('registerBtn');
+    return { payload: { name, username, email, phone, password, role: 'user' } };
+}
+
+const PARTNER_LABELS = { agency: 'وكالة سياحة', hotel: 'فندق', artisan: 'حرفي' };
+const PARTNER_PROFILE_FIELDS = {
+    agency:  [['rpAgencyName', 'agencyName'], ['rpLicenseNumber', 'licenseNumber']],
+    hotel:   [['rpBusinessName', 'businessName'], ['rpStarRating', 'starRating']],
+    artisan: [['rpShopName', 'shopName'], ['rpProductType', 'productType']]
+};
+
+function buildPartnerPayload() {
+    const type = document.getElementById('rpType').value;
+    if (!type) return { error: 'يرجى اختيار نوع النشاط' };
+
+    const name = document.getElementById('rpName').value.trim();
+    const username = document.getElementById('rpUsername').value.trim();
+    const email = document.getElementById('rpEmail').value.trim();
+    const phone = document.getElementById('rpPhone').value.trim();
+    const city = document.getElementById('rpCity').value.trim();
+    const password = document.getElementById('rpPassword').value;
+
+    if (!name || !username || !email || !phone || !city || !password) return { error: 'يرجى ملء جميع الحقول الإلزامية' };
+    if (password.length < 8) return { error: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل' };
+    if (!/\S+@\S+\.\S+/.test(email)) return { error: 'يرجى إدخال بريد إلكتروني صحيح' };
+
+    const profileDetails = {};
+    for (const [inputId, key] of PARTNER_PROFILE_FIELDS[type]) {
+        const val = document.getElementById(inputId).value.trim();
+        if (!val) return { error: `يرجى ملء جميع بيانات ${PARTNER_LABELS[type]}` };
+        profileDetails[key] = val;
+    }
+
+    return { payload: { name, username, email, phone, city, password, role: type, profileDetails } };
+}
+
+async function doRegister() {
+    const isPartner = document.getElementById('regPartner').style.display === 'block';
+    const { payload, error } = isPartner ? buildPartnerPayload() : buildTouristPayload();
+    if (error) { showError('register', error); return; }
+
+    const btn = document.getElementById(isPartner ? 'registerPartnerBtn' : 'registerBtn');
+    const originalHtml = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري التسجيل...';
-
-    const payload = { name, username, email, phone, password, role: 'user', loyaltyPoints: 50, createdAt: new Date().toISOString() };
 
     try {
         const res = await fetch('/api/users', {
@@ -433,7 +677,7 @@ async function doRegister() {
         const data = await res.json().catch(() => ({}));
         if (res.ok) {
             localStorage.setItem('hawsbiyaUser', JSON.stringify(data));
-            window.location.href = 'index.html';
+            window.location.href = roleRedirect[data.role] || 'index.html';
             return;
         }
         showError('register', data.message || 'حدث خطأ أثناء التسجيل، حاول مرة أخرى');
@@ -441,7 +685,7 @@ async function doRegister() {
         showError('register', 'تعذر الاتصال بالخادم، تحقق من اتصالك بالإنترنت وحاول مرة أخرى');
     } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-user-plus"></i> إنشاء الحساب';
+        btn.innerHTML = originalHtml;
     }
 }
 </script>

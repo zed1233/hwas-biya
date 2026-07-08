@@ -729,8 +729,14 @@ async function confirmCancel() {
     if (b) {
         b.deleted = true;
         b.status = 'cancelled';
-        try { await fetch(`/api/bookings/${cancelTargetId}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ deleted: true, status: 'cancelled' }) }); }
-        catch {}
+        const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+        try {
+            await fetch(`/api/bookings/${cancelTargetId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user?.token}` },
+                body: JSON.stringify({ deleted: true, status: 'cancelled' })
+            });
+        } catch {}
     }
     closeCancelModal();
     updateStats();
@@ -743,8 +749,14 @@ async function restoreBooking(id) {
     if (b) {
         b.deleted = false;
         b.status = 'pending';
-        try { await fetch(`/api/bookings/${id}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ deleted: false, status: 'pending' }) }); }
-        catch {}
+        const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
+        try {
+            await fetch(`/api/bookings/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user?.token}` },
+                body: JSON.stringify({ deleted: false, status: 'pending' })
+            });
+        } catch {}
     }
     updateStats();
     renderBookings();
@@ -794,9 +806,11 @@ async function submitRating() {
     const comment = document.getElementById('ratingComment').value.trim();
     const b = allBookings.find(x => x.id === ratingTargetId);
     if (b) { b.rated = true; b.userRating = currentRating; }
+    const user = JSON.parse(localStorage.getItem('hawsbiyaUser') || 'null');
     try {
         await fetch(`/api/bookings/${ratingTargetId}`, {
-            method: 'PATCH', headers: {'Content-Type':'application/json'},
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user?.token}` },
             body: JSON.stringify({ rated: true, userRating: currentRating, userComment: comment })
         });
     } catch {}
